@@ -1,0 +1,26 @@
+site_name: ContentCreaJudge
+theme: material
+
+nav:
+  - Home: README.md
+  - Cadrage Équipe: CADRAGE_EQUIPE.md
+  - Architecture: ARCHITECTURE.md
+  - Configuration Des Règles: RULES_CONFIGURATION.md
+  - API Contract: API_CONTRACT.md
+  - Developer Guide: DEVELOPER_GUIDE.md
+  - Contributing: CONTRIBUTING.md
+  - Security: SECURITY.md
+  - Changelog: CHANGELOG.md
+  - Code of Conduct: CODE_OF_CONDUCT.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            members_order: source
+            show_source: false
+            extensions:
+              - griffe_inherited_docstrings

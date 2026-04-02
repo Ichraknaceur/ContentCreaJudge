@@ -1,0 +1,43 @@
+# Note: This file applies to the Python project template itself.
+# Projects generated from this template will have their own version of this file.
+
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-yaml
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: name-tests-test
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.2
+    hooks:
+      - id: codespell
+        exclude: ^docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.11.2
+    hooks:
+      - id: uv-lock
+
+  - repo: https://github.com/owenlamont/uv-secure
+    rev: 0.17.0
+    hooks:
+      - id: uv-secure
+        args: [ --show-severity, --ignore-unfixed, --severity=medium ]
+
+  - repo: https://github.com/mrtazz/checkmake.git
+    rev: 0.2.2
+    hooks:
+      - id: checkmake
