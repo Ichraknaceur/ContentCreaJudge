@@ -61,8 +61,19 @@ def request_json(
         )
         response = connection.getresponse()
         raw_payload = response.read().decode("utf-8")
-        parsed_payload = json.loads(raw_payload) if raw_payload else {}
         status_code = response.status
+        if raw_payload:
+            try:
+                parsed_payload = json.loads(raw_payload)
+            except json.JSONDecodeError:
+                return ApiCallResult(
+                    ok=False,
+                    status_code=status_code,
+                    payload={},
+                    error="Backend returned a non-JSON response.",
+                )
+        else:
+            parsed_payload = {}
         is_success = HTTP_SUCCESS_MIN <= status_code < HTTP_REDIRECT_MIN
         return ApiCallResult(
             ok=is_success,
