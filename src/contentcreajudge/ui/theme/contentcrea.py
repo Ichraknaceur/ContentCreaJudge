@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import streamlit as st
 
 DEFAULT_API_URL = os.getenv("CONTENTCREAJUDGE_API_URL", "http://127.0.0.1:8000")
+PAGE_ICON_PATH = Path(__file__).resolve().parent.parent / "assets" / "logo-fond-bleu-64x64.jpg"
 
 
 def initialize_ui() -> None:
@@ -14,7 +16,7 @@ def initialize_ui() -> None:
     _ensure_demo_defaults()
     st.set_page_config(
         page_title="ContentCreaEvaluator",
-        page_icon="CC",
+        page_icon=str(PAGE_ICON_PATH),
         layout="wide",
         initial_sidebar_state="expanded",
     )
@@ -381,13 +383,32 @@ def _theme_css() -> str:
     }
     .stButton button, .stFormSubmitButton button {
         min-height: 3rem;
-        border: none;
-        border-radius: 10px;
-        background: #4f78f2;
+        border-radius: 12px;
+        border: 1px solid #8fb3ff;
+        background: linear-gradient(180deg, #7fb0ff 0%, #5f95ff 100%);
         color: #ffffff;
         font-weight: 800;
         letter-spacing: 0.04em;
-        box-shadow: none;
+        box-shadow: 0 10px 20px rgba(95, 149, 255, 0.24);
+        cursor: pointer;
+        transition:
+            background 0.18s ease,
+            transform 0.18s ease,
+            box-shadow 0.18s ease,
+            border-color 0.18s ease;
+    }
+    .stButton button:hover, .stFormSubmitButton button:hover {
+        border-color: #6f9fff;
+        background: linear-gradient(180deg, #96beff 0%, #6ea0ff 100%);
+        box-shadow: 0 14px 28px rgba(95, 149, 255, 0.3);
+        transform: translateY(-1px);
+    }
+    .stButton button:focus, .stFormSubmitButton button:focus {
+        outline: none;
+        border-color: #4f78f2;
+        box-shadow:
+            0 0 0 3px rgba(79, 120, 242, 0.18),
+            0 12px 24px rgba(95, 149, 255, 0.28);
     }
     .stAlert {
         border-radius: 14px;
