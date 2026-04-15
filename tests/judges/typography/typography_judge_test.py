@@ -74,6 +74,11 @@ def test_find_repeated_line_breaks() -> None:
     result = find_repeated_line_breaks(content)
     assert len(result) == 1
 
+def test_find_attached_links_ignores_links_inside_list_items() -> None:
+    content = '<ul><li><a href="https://example.com">Source</a></li></ul>'
+    result = find_attached_links(content)
+    assert result == []
+
 def test_run_typography_judge_pass() -> None:
     content = "<p>Bonjour\u00A0!</p><p>Texte propre.</p>"
     preprocessed = preprocess_typography_content(content)

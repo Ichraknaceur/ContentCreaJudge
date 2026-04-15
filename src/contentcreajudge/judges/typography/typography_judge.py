@@ -36,8 +36,12 @@ def find_french_nbsp_issues(decoded_text: str) -> list[str]:
 
 
 def find_attached_links(original_content: str) -> list[str]:
-    """Find anchor tags directly attached to the previous word."""
-    return re.findall(r"[^\s(]<a\b", original_content, flags=re.IGNORECASE)
+    """Find anchor tags directly attached to the previous visible word."""
+    return re.findall(
+        r"[\wÀ-ÖØ-öø-ÿ0-9]<a\b",
+        original_content,
+        flags=re.IGNORECASE,
+    )
 
 
 def find_repeated_line_breaks(original_content: str) -> list[str]:
