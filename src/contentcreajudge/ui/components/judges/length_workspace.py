@@ -5,7 +5,20 @@ from typing import Any
 import requests
 import streamlit as st
 
+def _read_uploaded_text_file(uploaded_file: Any) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
 
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
+    
 def _render_exchange_summary(exchange: dict[str, object]) -> None:
     """Render the API response in a much more readable way"""
     response_status = exchange.get("response_status")
@@ -94,11 +107,27 @@ def render_length_form(selected_item: Any) -> None:
     """Render the length judge form"""
     st.markdown("### Length test input")
 
+    if "length_content_input" not in st.session_state:
+        st.session_state["length_content_input"] = ""
+
     with st.form("length_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="length_content_file_uploader",
+        )
+
+        content_value = st.session_state["length_content_input"]
+        if uploaded_content_file is not None:
+            content_value = _read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
             placeholder="Paste the content to evaluate here...",
+            value=content_value,
         )
 
         expected_format = st.selectbox(
@@ -109,8 +138,17 @@ def render_length_form(selected_item: Any) -> None:
 
         content_type = st.selectbox(
             "Content type",
-            options=["articles", "questAnswers", "practicalGuide", "audioScript", "videoScript",
-                     "caseStudy", "whiteBook", "comparative", "quiz"],
+            options=[
+                "articles",
+                "questAnswers",
+                "practicalGuide",
+                "audioScript",
+                "videoScript",
+                "caseStudy",
+                "whiteBook",
+                "comparative",
+                "quiz",
+            ],
             index=0,
         )
 
@@ -121,6 +159,8 @@ def render_length_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run Length Judge")
+
+    st.session_state["length_content_input"] = content
 
     if not submitted:
         return
