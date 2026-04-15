@@ -5,6 +5,19 @@ from typing import Any
 import requests
 import streamlit as st
 
+def _read_uploaded_text_file(uploaded_file: Any) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
+
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
 
 def _render_exchange_summary(exchange: dict[str, object]) -> None:
     """Render the API response in a much more readable way"""
@@ -112,32 +125,36 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:
                             f"{key}: {value}" for key, value in evidence.items()
                         )
                     )
-
-    if isinstance(aggregation, dict):
-        st.markdown("**Aggregation**")
-        agg_left, agg_right = st.columns(2)
-        with agg_left:
-            st.metric("Global status", str(aggregation.get("status", "unknown")))
-        with agg_right:
-            st.metric("Global score", str(aggregation.get("score", "n/a")))
-
-        summary = aggregation.get("summary")
-        if summary:
-            st.caption(str(summary))
-
+                    
     with st.expander("Show raw API exchange"):
         st.json(exchange)
 
 
 def render_typography_form(selected_item: Any) -> None:
-    """Render the typography judge form"""
+    """Render the typography judge form."""
     st.markdown("### Typography test input")
 
+    if "typography_content_input" not in st.session_state:
+        st.session_state["typography_content_input"] = ""
+
     with st.form("typography_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="typography_content_file_uploader",
+        )
+
+        content_value = st.session_state["typography_content_input"]
+        if uploaded_content_file is not None:
+            content_value = _read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
             placeholder="Paste the content to evaluate here...",
+            value=content_value,
         )
 
         locale = st.text_input(
@@ -147,6 +164,8 @@ def render_typography_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run Typography Judge")
+
+    st.session_state["typography_content_input"] = content
 
     if not submitted:
         return

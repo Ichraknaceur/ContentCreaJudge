@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import streamlit as st
 
 DEFAULT_API_URL = os.getenv("CONTENTCREAJUDGE_API_URL", "http://127.0.0.1:8000")
+PAGE_ICON_PATH = Path(__file__).resolve().parent.parent / "assets" / "logo fond bleu 64x64.jpg"
 
 
 def initialize_ui() -> None:
@@ -14,7 +16,7 @@ def initialize_ui() -> None:
     _ensure_demo_defaults()
     st.set_page_config(
         page_title="ContentCreaEvaluator",
-        page_icon="CC",
+        page_icon=str(PAGE_ICON_PATH),
         layout="wide",
         initial_sidebar_state="expanded",
     )
