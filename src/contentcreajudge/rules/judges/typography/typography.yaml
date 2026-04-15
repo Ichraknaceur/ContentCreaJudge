@@ -1,0 +1,99 @@
+judge_id: typography
+version: 1
+label: "Typography judge"
+description: "Validate typography, punctuation, spacing, text cleanliness, and lightweight HTML cleanliness."
+
+typography_rules:
+  enforce_typography_rules: true
+
+  locale_support:
+    default_locale: "fr-FR"
+    supported_locales:
+      - "fr-FR"
+
+  spacing:
+    forbid_double_spaces: true
+    forbid_trailing_spaces: true
+    forbid_space_before_dot: true
+    forbid_space_before_comma: true
+    enforce_nbsp_before_double_punctuation: true
+    enforce_space_before_link: true
+
+  punctuation:
+    forbid_multiple_punctuation: true
+    enforce_standard_punctuation: true
+
+  capitalization:
+    forbid_all_caps_words: true
+    forbid_all_caps_sentences: true
+
+  cleanliness:
+    forbid_noise_characters: true
+    forbid_repeated_symbols: true
+
+  html_cleanliness:
+    forbid_repeated_line_breaks: true
+    forbid_attached_links: true
+
+  rules:
+    - rule_id: typography.double_spaces
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.trailing_spaces
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.space_before_dot
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.space_before_comma
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.french_nbsp_before_double_punctuation
+      enabled: true
+      severity: major
+
+    - rule_id: typography.multiple_punctuation
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.all_caps_words
+      enabled: true
+      severity: major
+
+    - rule_id: typography.all_caps_sentences
+      enabled: true
+      severity: major
+
+    - rule_id: typography.noise_characters
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.repeated_symbols
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.repeated_line_breaks
+      enabled: true
+      severity: minor
+
+    - rule_id: typography.attached_links
+      enabled: true
+      severity: minor
+
+  messages:
+    double_spaces: "The text contains multiple consecutive spaces."
+    trailing_spaces: "The text contains trailing spaces."
+    space_before_dot: "A space was found before a period."
+    space_before_comma: "A space was found before a comma."
+    french_nbsp_before_double_punctuation: "French typography requires a non-breaking space before : ; ! ? %."
+    multiple_punctuation: "Excessive punctuation detected."
+    all_caps_words: "Excessive use of uppercase words detected."
+    all_caps_sentences: "Excessive use of uppercase sentences detected."
+    noise_characters: "Unnecessary or noisy characters detected."
+    repeated_symbols: "Repeated symbols detected."
+    repeated_line_breaks: "Excessive line breaks or repeated <br> tags detected."
+    attached_links: "A link is attached directly to the previous word or missing required spacing."
