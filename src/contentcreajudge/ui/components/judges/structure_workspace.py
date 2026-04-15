@@ -6,6 +6,20 @@ import requests
 import streamlit as st
 
 
+def _read_uploaded_text_file(uploaded_file: Any) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
+
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
+
 def _render_exchange_summary(exchange: dict[str, object]) -> None:
     """Render the API response in a much more readable way"""
     response_status = exchange.get("response_status")
@@ -131,17 +145,47 @@ def render_structure_form(selected_item: Any) -> None:
     """Render the structure judge form"""
     st.markdown("### Structure test input")
 
+    if "structure_generated_html_input" not in st.session_state:
+        st.session_state["structure_generated_html_input"] = ""
+
+    if "structure_expected_outline_input" not in st.session_state:
+        st.session_state["structure_expected_outline_input"] = ""
+
     with st.form("structure_judge_form"):
+        st.markdown("**Generated content**")
+        uploaded_generated_file = st.file_uploader(
+            "Upload generated HTML/text file",
+            type=["html", "htm", "txt"],
+            key="structure_generated_file_uploader",
+        )
+
+        generated_value = st.session_state["structure_generated_html_input"]
+        if uploaded_generated_file is not None:
+            generated_value = _read_uploaded_text_file(uploaded_generated_file)
+
         content = st.text_area(
             "Generated HTML to evaluate",
             height=260,
             placeholder="Paste the generated HTML here...",
+            value=generated_value,
         )
+
+        st.markdown("**Expected structure**")
+        uploaded_expected_file = st.file_uploader(
+            "Upload expected outline HTML/text file",
+            type=["html", "htm", "txt"],
+            key="structure_expected_file_uploader",
+        )
+
+        expected_value = st.session_state["structure_expected_outline_input"]
+        if uploaded_expected_file is not None:
+            expected_value = _read_uploaded_text_file(uploaded_expected_file)
 
         expected_outline_html = st.text_area(
             "Expected outline HTML",
             height=260,
             placeholder="Paste the expected outline HTML here...",
+            value=expected_value,
         )
 
         locale = st.text_input(
@@ -151,6 +195,9 @@ def render_structure_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run Structure Judge")
+
+    st.session_state["structure_generated_html_input"] = content
+    st.session_state["structure_expected_outline_input"] = expected_outline_html
 
     if not submitted:
         return
