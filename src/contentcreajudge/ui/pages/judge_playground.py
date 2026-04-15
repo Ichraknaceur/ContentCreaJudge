@@ -15,6 +15,7 @@ from contentcreajudge.ui.viewmodels.judge_playground_vm import (
 WORKSPACE_MODULES = {
     "length": "contentcreajudge.ui.components.judges.length_workspace",
     "structure": "contentcreajudge.ui.components.judges.structure_workspace",
+    "typography": "contentcreajudge.ui.components.judges.typography_workspace",
 }
 
 def get_workspace_renderer_config(selected_key: str) -> dict[str, object] | None:
