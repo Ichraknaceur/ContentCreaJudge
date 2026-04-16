@@ -1,0 +1,53 @@
+# les règles liées à la Longueur
+  length_rules:
+    is_blocking_rule: true
+    measurement_unit: "words"
+    count_scope: "body_text_only"
+    exclude_html_tags: true
+    tolerance_pct: 10
+
+    ranges_by_content_type:
+      articles:
+        SIMPLE: {min_words: 800, max_words: 1000}
+        MEDIUM: {min_words: 1000, max_words: 1999}
+        LONG: {min_words: 2000, max_words: 3000}
+
+      questAnswers:
+        SIMPLE: {min_words: 0, max_words: 1499}
+        MEDIUM: {min_words: 1500, max_words: 3500}
+        LONG: {min_words: 3501, max_words: null}
+
+      practicalGuide:
+        SIMPLE: {min_words: 0, max_words: 1499}
+        MEDIUM: {min_words: 1500, max_words: 3000}
+        LONG: {min_words: 3001, max_words: null}
+
+      audioScript:
+        SIMPLE: {min_words: 800, max_words: 1500}
+        MEDIUM: {min_words: 1500, max_words: 3000}
+        LONG: {min_words: 3000, max_words: 4500}
+
+      videoScript:
+        SIMPLE: {min_words: 800, max_words: 1500}
+        MEDIUM: {min_words: 1500, max_words: 3000}
+        LONG: {min_words: 3000, max_words: 4500}
+
+      caseStudy:
+        SIMPLE: {min_words: 0, max_words: 1499}
+        MEDIUM: {min_words: 1500, max_words: 3500}
+        LONG: {min_words: 3501, max_words: null}
+
+      whiteBook:
+        SIMPLE: {min_words: 0, max_words: 1499}
+        MEDIUM: {min_words: 1500, max_words: 3000}
+        LONG: {min_words: 3001, max_words: null}
+
+      comparative:
+        SIMPLE: {min_words: 0, max_words: 1499}
+        MEDIUM: {min_words: 1500, max_words: 3500}
+        LONG: {min_words: 3501, max_words: null}
+
+      quiz:
+        SIMPLE: {min_words: 0, max_words: 999}
+        MEDIUM: {min_words: 1000, max_words: 1500}
+        LONG: {min_words: 1501, max_words: null}
