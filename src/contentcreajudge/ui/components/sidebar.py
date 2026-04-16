@@ -1,8 +1,16 @@
 """Sidebar component for the Streamlit UI."""
 
 from __future__ import annotations
+from pathlib import Path
 
 import streamlit as st
+
+LOGO_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "assets"
+    / "logo fond bleu 64x64.jpg"
+)
+
 
 
 def render_sidebar(default_api_url: str) -> str:
@@ -12,7 +20,9 @@ def render_sidebar(default_api_url: str) -> str:
             '<div class="sidebar-badge">ContentCrea</div>',
             unsafe_allow_html=True,
         )
-        st.markdown('<div class="brand-mark"></div>', unsafe_allow_html=True)
+        _, logo_column, _ = st.columns([1, 1.8, 1])
+        with logo_column:
+            st.image(str(LOGO_PATH), width=148)
         st.markdown(
             """
             <div class="sidebar-brand">
