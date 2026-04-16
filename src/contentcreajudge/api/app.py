@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
 from contentcreajudge.api.root import router as root_router
+from contentcreajudge.api.judges.structure import router as structure_judge_router
 
 
 def _resolve_package_version() -> str:
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
     application.include_router(root_router)
     application.include_router(health_router)
     application.include_router(evaluations_router)
+    application.include_router(structure_judge_router)
     return application
 
 
