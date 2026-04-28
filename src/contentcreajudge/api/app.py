@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
 from contentcreajudge.api.root import router as root_router
-
+from contentcreajudge.api.judges.sources import router as sources_judge_router
 
 def _resolve_package_version() -> str:
     """Return the installed package version or a safe development fallback."""
@@ -31,6 +31,7 @@ def create_app() -> FastAPI:
     application.include_router(root_router)
     application.include_router(health_router)
     application.include_router(evaluations_router)
+    application.include_router(sources_judge_router)
     return application
 
 

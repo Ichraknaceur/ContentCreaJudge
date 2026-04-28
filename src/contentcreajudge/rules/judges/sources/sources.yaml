@@ -1,0 +1,255 @@
+judge_id: sources
+version: 1
+label: "Sources judge"
+description: "Evaluate source compliance through link format, URL accessibility, source reliability, and editorial safety rules."
+
+sources_rules:
+  require_real_sources: true
+  forbid_fictional_sources: true
+  require_accessible_urls: true
+
+  allowed_source_types:
+    - institutional_publication
+    - academic_study
+    - industry_report
+    - recognized_specialized_media
+    - recognized_research_institute
+    - public_organization
+    - recognized_business_or_technology_media_section
+
+  forbidden_source_types:
+    - personal_blog
+    - disguised_sponsored_content
+    - unverifiable_platform
+    - unclear_editorial_reliability
+
+  html_link_format:
+    require_html_anchor: true
+    forbid_raw_urls: true
+    forbid_markdown_links: true
+    required_attributes:
+      target: "_blank"
+      rel: "noopener noreferrer"
+    require_descriptive_anchor_text: true
+    forbidden_anchor_texts:
+      - "cliquez ici"
+      - "lire plus"
+      - "click here"
+      - "read more"
+
+  url_cleaning:
+    forbid_tracking_parameters: true
+    forbidden_query_parameters:
+      - "utm_*"
+      - "ref"
+      - "trk"
+      - "src"
+      - "source"
+      - "campaign"
+      - "mc_cid"
+      - "mc_eid"
+      - "gclid"
+      - "fbclid"
+      - "msclkid"
+
+  network_validation:
+    enabled: true
+    require_accessibility_check: true
+    timeout_seconds: 5
+    follow_redirects: true
+    method_priority:
+      - HEAD
+      - GET
+    allowed_http_status_codes:
+      - 200
+      - 301
+      - 302
+    forbidden_http_status_codes:
+      - 400
+      - 404
+      - 410
+    unknown_http_status_codes:
+      - 401
+      - 403
+      - 406
+      - 202
+      - 500
+      - 502
+      - 503
+    unknown_on_timeout: true
+    unknown_on_connection_error: true
+    unknown_on_ssl_error: true
+
+  source_placement:
+    integrate_sources_in_relevant_paragraph: true
+    forbid_sources_only_in_final_list: true
+    forbid_external_links_in_title: true
+    forbid_external_links_in_introduction: true
+    require_space_before_anchor_if_after_word: true
+    forbid_duplicate_external_links: true
+
+  references_by_length:
+    SIMPLE:
+      max_external_references_total: 1
+    MEDIUM:
+      min_external_references_per_h2: 1
+      max_external_references_per_h2: 2
+    LONG:
+      max_external_references_per_h2: 3
+
+  data_claims:
+    require_source_for_statistics: true
+    forbid_unsourced_percentages: true
+    forbid_unsourced_estimates: true
+    forbid_invented_numbers: true
+    require_unit_source_and_year_for_numbers: true
+    allow_neutral_reformulation_if_no_reliable_source: true
+
+  uncertainty_management:
+    delete_uncertain_source: true
+    delete_if_study_reality_uncertain: true
+    delete_if_url_accuracy_uncertain: true
+    delete_if_organization_existence_uncertain: true
+    forbid_source_completion_by_guessing: true
+
+  source_recency:
+    prefer_last_3_years: true
+    fast_moving_domains_max_age_months: 12
+    stable_domains_allow_older_sources: true
+    require_explicit_note_for_old_critical_sources: true
+
+  content_type_policy:
+    allowed:
+      - articles
+      - practicalGuide
+      - caseStudy
+      - whiteBook
+      - comparative
+    allowed_with_caution:
+      - audioScript
+      - videoScript
+    forbidden_except_official_or_regulatory_need:
+      - questAnswers
+      - quiz
+
+  complementary_reading:
+    enabled_when_relevant: true
+    allow_only_internal_links: true
+    require_links_from_organization_website: true
+    required_domain: "https://contentcrea.com"
+    forbid_external_links: true
+    forbid_www_variant: true
+    forbid_http_variant: true
+    forbid_subdomains: true
+    require_canonical_url: true
+    forbid_tracking_parameters: true
+    enforce_language_consistency: true
+    require_direct_relevance_to_content: true
+    sort_links_by_relevance_desc: true
+    max_links: 7
+    omit_section_if_no_relevant_link: true
+    forbidden_internal_pages:
+      - terms
+      - privacy_policy
+      - legal_notice
+      - contact
+      - pricing
+      - about
+      - general_navigation
+
+  post_creation_checks:
+    check_no_tracking_parameters: true
+    check_all_statistics_have_valid_sources: true
+    check_no_uncertain_sources: true
+    check_external_sources_are_accessible: true
+    check_anchor_text_matches_real_source_name: true
+    check_source_recency: true
+    delete_invalid_or_obsolete_references: true
+
+  conflict_resolution:
+    priority: "editorial_safety"
+    forbid_source_invention: true
+    fallback_if_no_reliable_source: "remove_source_and_rewrite_neutrally"
+    accuracy_over_readability_over_format: true
+
+  rules:
+    - rule_id: sources.real_and_accessible_sources
+      enabled: true
+      severity: major
+
+    - rule_id: sources.network_accessibility
+      enabled: true
+      severity: major
+
+    - rule_id: sources.allowed_source_type
+      enabled: true
+      severity: major
+      evaluation_mode: "not_implemented_in_v1"
+
+    - rule_id: sources.html_anchor_format
+      enabled: true
+      severity: major
+
+    - rule_id: sources.no_raw_or_markdown_url
+      enabled: true
+      severity: major
+
+    - rule_id: sources.no_tracking_parameters
+      enabled: true
+      severity: major
+
+    - rule_id: sources.descriptive_anchor_text
+      enabled: true
+      severity: minor
+
+    - rule_id: sources.no_duplicate_links
+      enabled: true
+      severity: minor
+
+    - rule_id: sources.valid_statistics_sources
+      enabled: true
+      severity: major
+
+    - rule_id: sources.uncertainty_management
+      enabled: true
+      severity: major
+
+    - rule_id: sources.recency_policy
+      enabled: true
+      severity: minor
+      evaluation_mode: "not_implemented_in_v1"
+
+    - rule_id: sources.content_type_policy
+      enabled: true
+      severity: major
+
+    - rule_id: sources.complementary_reading_policy
+      enabled: true
+      severity: minor
+
+    - rule_id: sources.post_creation_checks
+      enabled: true
+      severity: minor
+
+    - rule_id: sources.conflict_resolution
+      enabled: true
+      severity: major
+
+  messages:
+    real_and_accessible_sources: "External sources must be real, accessible, and directly related to the claim."
+    network_accessibility: "Source URLs must be checked through a network accessibility validation."
+    allowed_source_type: "The source type is not allowed or its editorial reliability is unclear."
+    html_anchor_format: "External sources must use the required HTML anchor format."
+    no_raw_or_markdown_url: "Raw URLs and Markdown links are forbidden."
+    no_tracking_parameters: "URLs must not contain tracking parameters."
+    descriptive_anchor_text: "Link anchor text must be descriptive."
+    no_duplicate_links: "Each external source must appear only once."
+    valid_statistics_sources: "Statistics and numerical claims must be supported by a valid external source."
+    uncertainty_management: "Uncertain, unverifiable, or incomplete sources must be removed."
+    recency_policy: "The source may be too old for this type of information."
+    content_type_policy: "External links are not allowed for this content type unless officially required."
+    complementary_reading_policy: "Complementary reading links must follow the internal-link policy."
+    post_creation_checks: "Post-creation source checks were not fully satisfied."
+    conflict_resolution: "Editorial safety prevails: uncertain sources must not be invented or completed."
+    external_reference_count_by_length: "The number of external references must be consistent with the expected content length."
+    
