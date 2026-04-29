@@ -13,6 +13,7 @@ from contentcreajudge.api.judges.structure import router as structure_judge_rout
 from contentcreajudge.api.judges.typography import router as typography_judge_router
 from contentcreajudge.api.judges.seo import router as seo_judge_router
 
+from contentcreajudge.api.judges.sources import router as sources_judge_router
 
 def _resolve_package_version() -> str:
     """Return the installed package version or a safe development fallback."""
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
     application.include_router(structure_judge_router)
     application.include_router(typography_judge_router)
     application.include_router(seo_judge_router)
+    application.include_router(sources_judge_router)
     return application
 
 

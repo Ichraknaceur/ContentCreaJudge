@@ -17,6 +17,7 @@ WORKSPACE_MODULES = {
     "structure": "contentcreajudge.ui.components.judges.structure_workspace",
     "typography": "contentcreajudge.ui.components.judges.typography_workspace",
     "seo": "contentcreajudge.ui.components.judges.seo_workspace",
+    "sources": "contentcreajudge.ui.components.judges.sources_workspace",
 }
 
 def get_workspace_renderer_config(selected_key: str) -> dict[str, object] | None:
