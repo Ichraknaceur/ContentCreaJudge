@@ -8,7 +8,9 @@ from pathlib import Path
 import streamlit as st
 
 DEFAULT_API_URL = os.getenv("CONTENTCREAJUDGE_API_URL", "http://127.0.0.1:8000")
-PAGE_ICON_PATH = Path(__file__).resolve().parent.parent / "assets" / "logo fond bleu 64x64.jpg"
+PAGE_ICON_PATH = (
+    Path(__file__).resolve().parent.parent / "assets" / "logo fond bleu 64x64.jpg"
+)
 
 
 def initialize_ui() -> None:

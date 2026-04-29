@@ -52,12 +52,12 @@ def find_repeated_line_breaks(original_content: str) -> list[str]:
         flags=re.IGNORECASE,
     )
 
-def run_typography_judge(
+
+def run_typography_judge(  # noqa: C901
     preprocessed_content: dict[str, object],
     judge_rules: dict[str, object],
 ) -> dict[str, object]:
     """Evaluate the content against typography rules."""
-
     decoded_text = str(preprocessed_content["decoded_text"])
     original_content = str(preprocessed_content["original_content"])
     original_lines = list(preprocessed_content["original_lines"])
@@ -84,7 +84,7 @@ def run_typography_judge(
                 "severity": severity_by_rule_id[rule_id],
                 "message": messages[message_key],
                 "evidence": evidence,
-            }
+            },
         )
 
     double_spaces_matches = find_double_spaces(decoded_text)
@@ -163,7 +163,7 @@ def run_typography_judge(
                     "severity": "info",
                     "message": "Typography rules passed successfully.",
                     "evidence": {"matches_count": 0},
-                }
+                },
             ],
         }
 
@@ -172,10 +172,7 @@ def run_typography_judge(
 
     score = max(0, 100 - (major_count * 25) - (minor_count * 10))
 
-    if major_count > 0:
-        status = "fail"
-    else:
-        status = "warn"
+    status = "fail" if major_count > 0 else "warn"
 
     return {
         "dimension": "typography",

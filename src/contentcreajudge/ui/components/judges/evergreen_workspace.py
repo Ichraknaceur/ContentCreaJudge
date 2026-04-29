@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING
 
 import requests
 import streamlit as st
@@ -13,14 +13,7 @@ HTTP_SUCCESS_MIN = 200
 HTTP_REDIRECT_MIN = 300
 
 
-class UploadedTextFile(Protocol):
-    """Readable uploaded file interface used by Streamlit."""
-
-    def read(self) -> bytes:
-        """Read uploaded file bytes."""
-
-
-def _read_uploaded_text_file(uploaded_file: UploadedTextFile | None) -> str:
+def _read_uploaded_text_file(uploaded_file: object) -> str:
     """Read an uploaded text-based file and return its UTF-8 content."""
     if uploaded_file is None:
         return ""
@@ -36,7 +29,7 @@ def _read_uploaded_text_file(uploaded_file: UploadedTextFile | None) -> str:
 
 
 def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901, PLR0912, PLR0915
-    """Render the API response in a much more readable way."""
+    """Render the API response in a readable way."""
     response_status = exchange.get("response_status")
     response_body = exchange.get("response_body") or {}
     error = exchange.get("error")
@@ -46,7 +39,7 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901
     elif (
         response_status and HTTP_SUCCESS_MIN <= int(response_status) < HTTP_REDIRECT_MIN
     ):
-        st.success("Typography judge executed successfully.")
+        st.success("Evergreen judge executed successfully.")
     else:
         st.error(f"Request failed with status {response_status}.")
 
@@ -85,38 +78,30 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901
         with pre_left:
             st.metric("Is empty", str(preprocessing.get("is_empty", "n/a")))
             st.metric(
-                "BR tag count",
-                str(preprocessing.get("br_tag_count", "n/a")),
+                "Temporal references",
+                str(preprocessing.get("temporal_references_count", "n/a")),
             )
 
         with pre_right:
-            st.metric(
-                "Anchor tag count",
-                str(preprocessing.get("anchor_tag_count", "n/a")),
-            )
-            st.metric(
-                "Decoded lines",
-                len(preprocessing.get("decoded_lines", [])),
-            )
+            st.metric("Locale key", str(preprocessing.get("locale_key", "n/a")))
+
+        with st.expander("Show detected temporal references"):
+            st.json(preprocessing.get("temporal_references", []))
 
         with st.expander("Show preprocessing text signals"):
             st.json(
                 {
-                    "text_without_html": preprocessing.get("text_without_html", ""),
-                    "decoded_text": preprocessing.get("decoded_text", ""),
                     "normalized_text": preprocessing.get("normalized_text", ""),
-                    "decoded_text_no_newlines": preprocessing.get(
-                        "decoded_text_no_newlines",
-                        "",
-                    ),
                 },
             )
 
     if isinstance(judge_result, dict):
         st.markdown("**Judge result**")
         judge_left, judge_right = st.columns(2)
+
         with judge_left:
             st.metric("Judge status", str(judge_result.get("status", "unknown")))
+
         with judge_right:
             st.metric("Judge score", str(judge_result.get("score", "n/a")))
 
@@ -131,9 +116,11 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901
             for finding in findings:
                 if not isinstance(finding, dict):
                     continue
+
                 severity = str(finding.get("severity", "unknown"))
                 finding_message = str(finding.get("message", "No message"))
                 rule_id = str(finding.get("rule_id", "unknown"))
+
                 st.markdown(f"- `{severity}` - {finding_message} (`{rule_id}`)")
 
                 evidence = finding.get("evidence")
@@ -146,25 +133,25 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901
         st.json(exchange)
 
 
-def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:
-    """Render the typography judge form."""
+def render_evergreen_form(selected_item: JudgeWorkbenchItem) -> None:
+    """Render the evergreen judge form."""
     del selected_item
 
-    st.markdown("### Typography test input")
+    st.markdown("### Evergreen test input")
 
-    if "typography_content_input" not in st.session_state:
-        st.session_state["typography_content_input"] = ""
+    if "evergreen_content_input" not in st.session_state:
+        st.session_state["evergreen_content_input"] = ""
 
-    with st.form("typography_judge_form"):
+    with st.form("evergreen_judge_form"):
         st.markdown("**Content input**")
 
         uploaded_content_file = st.file_uploader(
             "Upload content file",
             type=["html", "htm", "txt"],
-            key="typography_content_file_uploader",
+            key="evergreen_content_file_uploader",
         )
 
-        content_value = st.session_state["typography_content_input"]
+        content_value = st.session_state["evergreen_content_input"]
         if uploaded_content_file is not None:
             content_value = _read_uploaded_text_file(uploaded_content_file)
 
@@ -175,15 +162,44 @@ def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:
             value=content_value,
         )
 
+        evergreen = st.checkbox(
+            "Evergreen required",
+            value=True,
+        )
+
+        st.caption(
+            "If enabled, the judge detects temporal references that may make "
+            "the content quickly outdated.",
+        )
+
         locale = st.text_input(
             "Locale",
             value="fr-FR",
             placeholder="fr-FR",
         )
 
-        submitted = st.form_submit_button("Run Typography Judge")
+        st.markdown("**Brief input**")
 
-    st.session_state["typography_content_input"] = content
+        uploaded_brief_file = st.file_uploader(
+            "Upload brief file",
+            type=["txt", "md"],
+            key="evergreen_brief_file_uploader",
+        )
+
+        brief_value = ""
+        if uploaded_brief_file is not None:
+            brief_value = _read_uploaded_text_file(uploaded_brief_file)
+
+        brief = st.text_area(
+            "Brief",
+            height=120,
+            placeholder="Paste the brief here or upload a brief file...",
+            value=brief_value,
+        )
+
+        submitted = st.form_submit_button("Run Evergreen Judge")
+
+    st.session_state["evergreen_content_input"] = content
 
     if not submitted:
         return
@@ -192,18 +208,23 @@ def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:
         "content": content,
         "profile": "default",
         "context": {
+            "evergreen": evergreen,
             "locale": locale.strip() or None,
+            "brief": brief.strip() or None,
         },
     }
 
-    st.session_state["typography_payload"] = payload
-    st.session_state["typography_run_requested"] = True
+    st.session_state["evergreen_payload"] = payload
+    st.session_state["evergreen_run_requested"] = True
 
 
-def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
+def render_evergreen_result(
+    api_url: str,
+    selected_item: JudgeWorkbenchItem,
+) -> None:
     """Read the payload and display the API response."""
     st.markdown(
-        '<div class="section-label">Typography result</div>',
+        '<div class="section-label">Evergreen result</div>',
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -211,15 +232,15 @@ def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) ->
         unsafe_allow_html=True,
     )
 
-    payload = st.session_state.get("typography_payload")
+    payload = st.session_state.get("evergreen_payload")
 
     if not payload:
-        st.info("Fill the form and run the Typography judge to see the response here.")
+        st.info("Fill the form and run the Evergreen judge to see the response here.")
         return
 
-    should_run = st.session_state.get("typography_run_requested", False)
+    should_run = st.session_state.get("evergreen_run_requested", False)
     if not should_run:
-        last_exchange = st.session_state.get("last_typography_exchange")
+        last_exchange = st.session_state.get("last_evergreen_exchange")
         if last_exchange:
             _render_exchange_summary(last_exchange)
         return
@@ -230,12 +251,12 @@ def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) ->
 
     if not str(content).strip():
         st.warning("Please provide content to evaluate.")
-        st.session_state["typography_run_requested"] = False
+        st.session_state["evergreen_run_requested"] = False
         return
 
     if not str(locale).strip():
         st.warning("Please provide the locale.")
-        st.session_state["typography_run_requested"] = False
+        st.session_state["evergreen_run_requested"] = False
         return
 
     endpoint = f"{api_url.rstrip('/')}{selected_item.endpoint}"
@@ -249,9 +270,9 @@ def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) ->
             "response_body": None,
             "error": f"API request failed: {exc}",
         }
-        st.session_state["last_typography_exchange"] = exchange
+        st.session_state["last_evergreen_exchange"] = exchange
         _render_exchange_summary(exchange)
-        st.session_state["typography_run_requested"] = False
+        st.session_state["evergreen_run_requested"] = False
         return
 
     try:
@@ -263,18 +284,19 @@ def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) ->
             "response_body": response.text,
             "error": "The API returned a non-JSON response.",
         }
-        st.session_state["last_typography_exchange"] = exchange
+        st.session_state["last_evergreen_exchange"] = exchange
         _render_exchange_summary(exchange)
-        st.session_state["typography_run_requested"] = False
+        st.session_state["evergreen_run_requested"] = False
         return
 
     exchange = {
         "request_payload": payload,
         "response_status": response.status_code,
         "response_body": response_data,
-        "error": None if response.ok else "The Typography judge request failed.",
+        "error": None if response.ok else "The Evergreen judge request failed.",
     }
-    st.session_state["last_typography_exchange"] = exchange
+
+    st.session_state["last_evergreen_exchange"] = exchange
     _render_exchange_summary(exchange)
 
-    st.session_state["typography_run_requested"] = False
+    st.session_state["evergreen_run_requested"] = False
