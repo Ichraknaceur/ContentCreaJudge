@@ -3,6 +3,7 @@
 .env
 .pytest_cache/
 .ruff_cache/
+.pre-commit-cache/
 .venv/
 __pycache__/
 *.pyc
