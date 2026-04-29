@@ -1,0 +1,278 @@
+judge_id: cta
+version: 1
+label: "CTA judge"
+description: "Checks CTA presence, HTML format, placement, and business alignment with funnel and content purpose."
+
+cta_rules:
+  input_source:
+    use_cta_from_input: true
+    input_field: "content.cta"
+    forbid_invented_cta: true
+    require_exact_text_match_when_inserted: true
+
+  activation:
+    require_cta_only_when_applicable: true
+    skip_cta_if_conflicting_rule_requires_omission: true
+
+  quantity:
+    require_single_main_cta: true
+    forbid_multiple_main_ctas: true
+    forbid_duplicate_cta: true
+
+  html_format:
+    require_cta_paragraph: true
+    required_tag: "p"
+    required_class: "cta"
+    require_strong_tag: true
+    expected_format: '<p class="cta"><strong>{content.cta}</strong></p>'
+
+  placement:
+    default_position: "end_of_body"
+    place_at_end_if_no_complementary_reading: true
+    place_immediately_before_complementary_reading_if_present: true
+    forbid_cta_after_complementary_reading: true
+
+  quiz_specific:
+    enabled: true
+    place_after_quiz_correction_block: true
+    place_at_end_of_body: true
+    required_format: '<p class="cta"><strong>{content.cta}</strong></p>'
+
+  complementary_reading_conflict:
+    enabled: true
+    apply_priority_over_standard_cta_rules: true
+    if_complementary_reading_present:
+      forbid_read_more_cta: true
+      ignore_input_cta_if_value_is_read_more: true
+      allow_other_ctas_only_if_funnel_input_and_brief_compliant: true
+      complementary_reading_remains_final_section: true
+
+  funnel_alignment:
+    enabled: true
+    require_cta_consistent_with_funnel_stage: true
+    require_cta_not_more_commercial_than_funnel_allows: true
+
+    expected_by_funnel:
+      AWARENESS:
+        expected_intent:
+          - informational
+          - exploratory
+          - educational_continuation
+        allowed_cta_labels:
+          fr:
+            - "En savoir plus"
+            - "Lire la suite"
+            - "Découvrir"
+            - "Explorer"
+            - "Consulter"
+          en:
+            - "Learn more"
+            - "Read more"
+            - "Discover"
+            - "Explore"
+            - "View more"
+        forbidden_cta_labels:
+          fr:
+            - "Acheter"
+            - "Souscrire"
+            - "Réserver"
+            - "Demander une démo"
+            - "Nous contacter"
+          en:
+            - "Buy"
+            - "Subscribe"
+            - "Book"
+            - "Request a demo"
+            - "Contact us"
+
+      CONSIDERATION:
+        expected_intent:
+          - evaluation
+          - comparison
+          - solution_exploration
+          - soft_contact
+        allowed_cta_labels:
+          fr:
+            - "En savoir plus"
+            - "Comparer"
+            - "Télécharger"
+            - "Nous contacter"
+            - "Soumettre un formulaire"
+            - "Demander une démo"
+          en:
+            - "Learn more"
+            - "Compare"
+            - "Download"
+            - "Contact us"
+            - "Submit a form"
+            - "Request a demo"
+        forbidden_cta_labels:
+          fr:
+            - "Acheter"
+            - "Souscrire"
+          en:
+            - "Buy"
+            - "Subscribe"
+
+      DECISION:
+        expected_intent:
+          - conversion
+          - direct_action
+          - contact
+          - subscription
+          - booking
+        allowed_cta_labels:
+          fr:
+            - "Nous contacter"
+            - "Soumettre un formulaire"
+            - "Souscrire"
+            - "Télécharger"
+            - "S'enregistrer"
+            - "S'inscrire"
+            - "Réserver"
+            - "Commencer"
+          en:
+            - "Contact us"
+            - "Submit a form"
+            - "Subscribe"
+            - "Download"
+            - "Register"
+            - "Sign up"
+            - "Book"
+            - "Get started"
+        require_concrete_next_step: true
+
+  content_purpose_alignment:
+    enabled: true
+    require_cta_consistent_with_content_purpose: true
+    avoid_conversion_cta_for_educational_content: true
+    educational_purposes:
+      - "Educate"
+      - "Inform"
+      - "Awareness"
+      - "Sensibilisation"
+
+  brief_alignment:
+    enabled: false
+    require_cta_consistent_with_brief: true
+    forbid_cta_that_adds_unrequested_promise: true
+    forbid_cta_that_changes_content_intent: true
+    forbid_cta_that_introduces_unprovided_offer: true
+
+  anchor_quality:
+    enabled: true
+    require_actionable_anchor: true
+    require_precise_anchor: true
+    forbid_empty_anchor: true
+    forbid_vague_anchor_if_not_provided_as_input: true
+    allow_generic_anchor_if_exactly_provided_in_input: true
+    vague_anchors:
+      fr:
+        - "Cliquez ici"
+        - "Voir"
+        - "Plus"
+      en:
+        - "Click here"
+        - "See"
+        - "More"
+
+  language_policy:
+    enabled: true
+    allow_french_cta: true
+    allow_english_cta: true
+    require_cta_language_consistent_with_output_language_when_possible: true
+    allow_input_language_to_override_output_language: true
+  
+  persona_constraints:
+    enabled: false
+    forbid_persona_first_name: true
+    forbid_persona_last_name: true
+
+  style_constraints:
+    enabled: true
+    require_professional_tone: true
+    require_natural_integration: true
+    forbid_overly_salesy_cta_for_awareness: true
+    forbid_aggressive_or_pressuring_formulation: true
+    aggressive_labels:
+      fr:
+        - "Achetez maintenant"
+        - "Ne ratez pas cette offre"
+        - "Offre limitée"
+      en:
+        - "Buy now"
+        - "Don't miss out"
+        - "Limited offer"
+
+  semantic_fallback:
+    enabled: false
+    allow_semantic_check_for_unknown_or_custom_cta: true
+    compare_cta_intent_to_funnel_stage: true
+    compare_cta_intent_to_content_purpose: true
+    compare_cta_intent_to_brief: true
+
+  rules:
+    - rule_id: cta.presence_when_required
+      enabled: true
+      severity: major
+
+    - rule_id: cta.absence_when_forbidden
+      enabled: true
+      severity: major
+
+    - rule_id: cta.exact_text_match
+      enabled: true
+      severity: major
+
+    - rule_id: cta.single_main_cta
+      enabled: true
+      severity: major
+
+    - rule_id: cta.html_format
+      enabled: true
+      severity: major
+
+    - rule_id: cta.position
+      enabled: true
+      severity: major
+
+    - rule_id: cta.quiz_position
+      enabled: true
+      severity: major
+
+    - rule_id: cta.complementary_reading_conflict
+      enabled: true
+      severity: major
+
+    - rule_id: cta.funnel_alignment
+      enabled: true
+      severity: major
+
+    - rule_id: cta.content_purpose_alignment
+      enabled: true
+      severity: major
+
+    - rule_id: cta.anchor_quality
+      enabled: true
+      severity: minor
+
+    - rule_id: cta.language_consistency
+      enabled: true
+      severity: minor
+
+  messages:
+    pass: "The CTA is compliant."
+    not_applicable: "CTA evaluation is not applicable for this content."
+    presence_when_required: "The CTA is missing when it should be present."
+    absence_when_forbidden: "The CTA is present even though a rule requires it to be omitted."
+    exact_text_match: "The CTA text does not match the expected input CTA."
+    single_main_cta: "Only one main CTA is allowed."
+    html_format: "The CTA must use the required HTML format."
+    position: "The CTA is not placed in the expected position."
+    quiz_position: "For quizzes, the CTA must be placed after the correction block at the end of the body."
+    complementary_reading_conflict: "A Read more CTA must not be inserted when a complementary reading section is present."
+    funnel_alignment: "The CTA is not aligned with the funnel stage."
+    content_purpose_alignment: "The CTA is not aligned with the content purpose."
+    anchor_quality: "The CTA anchor must be actionable and precise."
+    language_consistency: "The CTA language should be consistent with the content language unless the input CTA explicitly overrides it."
+    persona_name_forbidden: "The CTA must not mention the persona first name or last name."
