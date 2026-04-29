@@ -1,11 +1,9 @@
 .DEFAULT_GOAL := help
 
 ifeq ($(OS),Windows_NT)
-# Windows helpers
-UV_COMMAND := $(shell where.exe uv 2>NUL)
+UV_COMMAND := $(shell where uv 2>NUL)
 COPY_ENV_COMMAND = if not exist .env copy .env.example .env
 else
-# Unix helpers (macOS/Linux)
 UV_COMMAND := $(shell command -v uv 2> /dev/null)
 COPY_ENV_COMMAND = cp .env.example .env || true
 endif
@@ -38,7 +36,7 @@ run-ui: check-uv install ## Run the Streamlit client UI
 .PHONY: init
 init: check-uv pyproject.toml .pre-commit-config.yaml install ## Initialize project (first installation)
 	uv run -- pre-commit install
-	$(COPY_ENV_COMMAND)
+	cp .env.example .env || true
 
 .PHONY: format
 format: check-uv ## Format code
