@@ -1,0 +1,2605 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../RULES_CONFIGURATION/">
+      
+      
+        <link rel="next" href="../DEVELOPER_GUIDE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>API Contract - ContentCreaJudge</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-contract" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ContentCreaJudge" class="md-header__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ContentCreaJudge
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Contract
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ContentCreaJudge" class="md-nav__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ContentCreaJudge
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CADRAGE_EQUIPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cadrage Équipe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ERROR_HANDLING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RULES_CONFIGURATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Des Règles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Contract
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Style
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primary-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primary Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-v1evaluations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /v1/evaluations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-exposed-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Exposed Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Exposed Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-request-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Request Shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content_title
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        channel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        locale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#target_keywords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        target_keywords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declared_sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        declared_sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        request_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client_context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        client_context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-request-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Request Semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Response Shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-level-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluation_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evaluation_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimension_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dimension_results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocking_issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blocking_issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-placeholder-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Placeholder Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-dimension-result-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Dimension Result Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-Dimension Result Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-logical-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-statuses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Statuses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meaning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-logical-fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-logical-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rule_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        severity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criticality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        criticality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        location
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggested_action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        suggested_action
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Design Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contract Design Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-keep-response-semantics-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Keep Response Semantics Stable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-always-return-explainable-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Always Return Explainable Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-keep-request-minimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Keep Request Minimal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-separate-policy-from-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Separate Policy from Transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-contract-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Contract Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relation-to-the-contracts-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation to the contracts/ Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Style
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#primary-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Primary Endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-v1evaluations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /v1/evaluations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-exposed-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Exposed Endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Exposed Endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#request-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Request Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-request-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Request Shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content_title" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content_title
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        content_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        channel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        locale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#target_keywords" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        target_keywords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declared_sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        declared_sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        request_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client_context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        client_context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-request-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Request Semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Response Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-response-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Response Shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-level-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluation_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evaluation_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#score" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        score
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimension_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dimension_results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocking_issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blocking_issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-placeholder-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Placeholder Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-dimension-result-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Dimension Result Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-Dimension Result Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-logical-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-statuses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Statuses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Meaning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-logical-fields_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Required Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-logical-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Logical Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#field-roles_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rule_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#severity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        severity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criticality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        criticality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        location
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suggested_action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        suggested_action
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contract-design-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Design Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contract Design Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-keep-response-semantics-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Keep Response Semantics Stable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-always-return-explainable-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Always Return Explainable Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-keep-request-minimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Keep Request Minimal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-separate-policy-from-transport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Separate Policy from Transport
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-contract-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Contract Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relation-to-the-contracts-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation to the contracts/ Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="api-contract">API Contract<a class="headerlink" href="#api-contract" title="Permanent link">&para;</a></h1>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This document defines the V1 API contract for ContentCreaEvaluator at a
+functional level. It does not prescribe implementation details or framework
+choices. Its goal is to keep request and response semantics stable and
+understandable for backend developers, client developers, and future
+integrations.</p>
+<h2 id="contract-scope">Contract Scope<a class="headerlink" href="#contract-scope" title="Permanent link">&para;</a></h2>
+<p>V1 covers a synchronous evaluation API for rule-based editorial validation.</p>
+<p>The contract supports:</p>
+<ul>
+<li>content submission for evaluation</li>
+<li>profile-based rule resolution</li>
+<li>explainable evaluation results</li>
+<li>per-dimension reporting</li>
+<li>stable top-level status and score semantics</li>
+</ul>
+<p>The contract does not yet support:</p>
+<ul>
+<li>content correction</li>
+<li>rewrite suggestions</li>
+<li>asynchronous jobs</li>
+<li>bulk processing</li>
+<li>semantic scoring</li>
+<li>model-generated rationale</li>
+</ul>
+<h2 id="api-style">API Style<a class="headerlink" href="#api-style" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Request-response, synchronous</li>
+<li>JSON payloads</li>
+<li>Versioned contract</li>
+<li>Explainable output by default</li>
+</ul>
+<h2 id="versioning-strategy">Versioning Strategy<a class="headerlink" href="#versioning-strategy" title="Permanent link">&para;</a></h2>
+<p>Use explicit API versioning from V1 onward.</p>
+<p>Recommended approach:</p>
+<ul>
+<li>API path versioning such as <code>/v1/...</code></li>
+<li>rule profile versioning inside the response metadata</li>
+<li>backward-incompatible response changes only in a new API version</li>
+</ul>
+<p>This separates:</p>
+<ul>
+<li>transport contract version</li>
+<li>business rule profile version</li>
+</ul>
+<p>Those versions should not be treated as the same thing.</p>
+<h2 id="primary-endpoint">Primary Endpoint<a class="headerlink" href="#primary-endpoint" title="Permanent link">&para;</a></h2>
+<h3 id="post-v1evaluations"><code>POST /v1/evaluations</code><a class="headerlink" href="#post-v1evaluations" title="Permanent link">&para;</a></h3>
+<p>Creates a single evaluation from one content payload.</p>
+<h2 id="current-exposed-endpoints">Current Exposed Endpoints<a class="headerlink" href="#current-exposed-endpoints" title="Permanent link">&para;</a></h2>
+<p>The current repository foundation exposes these routes:</p>
+<ul>
+<li><code>GET /</code></li>
+<li><code>GET /health</code></li>
+<li><code>POST /api/v1/evaluations</code></li>
+</ul>
+<p>The versioned business endpoint currently implemented in the codebase uses the
+path <code>/api/v1/evaluations</code>.</p>
+<h3 id="request-purpose">Request Purpose<a class="headerlink" href="#request-purpose" title="Permanent link">&para;</a></h3>
+<p>The client sends editorial content plus the minimum metadata needed to evaluate
+it against structural and formal rules.</p>
+<h3 id="response-purpose">Response Purpose<a class="headerlink" href="#response-purpose" title="Permanent link">&para;</a></h3>
+<p>The service returns:</p>
+<ul>
+<li>the overall evaluation decision</li>
+<li>a global score</li>
+<li>per-dimension outcomes</li>
+<li>findings with evidence and rule references</li>
+</ul>
+<h2 id="request-contract">Request Contract<a class="headerlink" href="#request-contract" title="Permanent link">&para;</a></h2>
+<h3 id="conceptual-request-shape">Conceptual Request Shape<a class="headerlink" href="#conceptual-request-shape" title="Permanent link">&para;</a></h3>
+<p>An evaluation request should contain these logical sections:</p>
+<ul>
+<li>request metadata</li>
+<li>content payload</li>
+<li>evaluation configuration</li>
+<li>optional client context</li>
+</ul>
+<h3 id="required-fields">Required Fields<a class="headerlink" href="#required-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>content</code></li>
+<li>the editorial content to evaluate</li>
+<li><code>profile</code></li>
+<li>the rule profile to apply</li>
+</ul>
+<h3 id="optional-fields">Optional Fields<a class="headerlink" href="#optional-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>content_title</code></li>
+<li><code>content_type</code></li>
+<li><code>channel</code></li>
+<li><code>locale</code></li>
+<li><code>target_keywords</code></li>
+<li><code>declared_sources</code></li>
+<li><code>request_id</code></li>
+<li><code>client_context</code></li>
+</ul>
+<h3 id="field-roles">Field Roles<a class="headerlink" href="#field-roles" title="Permanent link">&para;</a></h3>
+<h4 id="content"><code>content</code><a class="headerlink" href="#content" title="Permanent link">&para;</a></h4>
+<ul>
+<li>The main text body evaluated by the service.</li>
+<li>This is the only mandatory business payload for the actual content.</li>
+</ul>
+<h4 id="profile"><code>profile</code><a class="headerlink" href="#profile" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Selects the rule set and aggregation policy.</li>
+<li>Examples may later include profiles by brand, channel, or publication type.</li>
+</ul>
+<h4 id="content_title"><code>content_title</code><a class="headerlink" href="#content_title" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional title or headline.</li>
+<li>Useful for structure and SEO-related rules.</li>
+</ul>
+<h4 id="content_type"><code>content_type</code><a class="headerlink" href="#content_type" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional classification such as article, landing page, or newsletter.</li>
+<li>Can influence which rules apply.</li>
+</ul>
+<h4 id="channel"><code>channel</code><a class="headerlink" href="#channel" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional publication channel such as blog, website, or email.</li>
+<li>Supports future rule specialization.</li>
+</ul>
+<h4 id="locale"><code>locale</code><a class="headerlink" href="#locale" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional locale for typography and language-specific checks.</li>
+</ul>
+<h4 id="target_keywords"><code>target_keywords</code><a class="headerlink" href="#target_keywords" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional keyword list for basic SEO presence validation in V1.</li>
+</ul>
+<h4 id="declared_sources"><code>declared_sources</code><a class="headerlink" href="#declared_sources" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional source references explicitly supplied by the client.</li>
+<li>Can complement sources extracted from content.</li>
+</ul>
+<h4 id="request_id"><code>request_id</code><a class="headerlink" href="#request_id" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional client-generated identifier for traceability.</li>
+</ul>
+<h4 id="client_context"><code>client_context</code><a class="headerlink" href="#client_context" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional client metadata for debugging or downstream correlation.</li>
+<li>Should not drive evaluation semantics directly in V1 unless explicitly modeled
+  as profile selection input.</li>
+</ul>
+<h2 id="example-request-semantics">Example Request Semantics<a class="headerlink" href="#example-request-semantics" title="Permanent link">&para;</a></h2>
+<p>The request represents one editorial unit to evaluate.</p>
+<p>A single request should not contain:</p>
+<ul>
+<li>multiple unrelated articles</li>
+<li>a batch of documents</li>
+<li>correction instructions</li>
+<li>user preference feedback</li>
+</ul>
+<p>Those belong to future workflows, not the V1 evaluation contract.</p>
+<h2 id="response-contract">Response Contract<a class="headerlink" href="#response-contract" title="Permanent link">&para;</a></h2>
+<h3 id="conceptual-response-shape">Conceptual Response Shape<a class="headerlink" href="#conceptual-response-shape" title="Permanent link">&para;</a></h3>
+<p>The response should contain these logical sections:</p>
+<ul>
+<li>request trace metadata</li>
+<li>overall evaluation outcome</li>
+<li>per-dimension results</li>
+<li>findings</li>
+<li>rule profile metadata</li>
+</ul>
+<h3 id="top-level-fields">Top-Level Fields<a class="headerlink" href="#top-level-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>evaluation_id</code></li>
+<li><code>status</code></li>
+<li><code>score</code></li>
+<li><code>summary</code></li>
+<li><code>dimension_results</code></li>
+<li><code>blocking_issues</code></li>
+<li><code>metadata</code></li>
+</ul>
+<h3 id="field-roles_1">Field Roles<a class="headerlink" href="#field-roles_1" title="Permanent link">&para;</a></h3>
+<h4 id="evaluation_id"><code>evaluation_id</code><a class="headerlink" href="#evaluation_id" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Server-generated identifier for the evaluation run.</li>
+</ul>
+<h4 id="status"><code>status</code><a class="headerlink" href="#status" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Top-level decision for the evaluated content.</li>
+</ul>
+<p>Recommended V1 statuses:</p>
+<ul>
+<li><code>pass</code></li>
+<li><code>warn</code></li>
+<li><code>fail</code></li>
+<li><code>error</code></li>
+</ul>
+<p>Guidance:</p>
+<ul>
+<li><code>fail</code> means the content was evaluated and did not meet required rules.</li>
+<li><code>error</code> means the service could not complete evaluation reliably.</li>
+</ul>
+<h4 id="score"><code>score</code><a class="headerlink" href="#score" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Numeric aggregate signal for the evaluated content.</li>
+<li>Should remain separate from the top-level decision.</li>
+</ul>
+<h4 id="summary"><code>summary</code><a class="headerlink" href="#summary" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Human-readable short summary of the main outcome.</li>
+<li>Should remain concise and explainable.</li>
+</ul>
+<h4 id="dimension_results"><code>dimension_results</code><a class="headerlink" href="#dimension_results" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Collection of per-dimension results.</li>
+<li>One result per enabled mini-judge.</li>
+</ul>
+<h4 id="blocking_issues"><code>blocking_issues</code><a class="headerlink" href="#blocking_issues" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Subset of findings that triggered automatic top-level failure.</li>
+</ul>
+<h4 id="metadata"><code>metadata</code><a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Carries traceable evaluation metadata, such as:</li>
+<li>API version</li>
+<li>rule profile</li>
+<li>rule profile version</li>
+<li>evaluation timestamp</li>
+<li>optional request correlation identifiers</li>
+</ul>
+<h2 id="current-placeholder-response">Current Placeholder Response<a class="headerlink" href="#current-placeholder-response" title="Permanent link">&para;</a></h2>
+<p>At the current implementation stage, <code>POST /api/v1/evaluations</code> returns a
+placeholder acceptance response instead of a full evaluation result.</p>
+<p>Its current logical fields are:</p>
+<ul>
+<li><code>status</code></li>
+<li><code>message</code></li>
+<li><code>received_profile</code></li>
+<li><code>request_id</code></li>
+<li><code>next_step</code></li>
+</ul>
+<p>This is intentionally temporary. It exists to stabilize the integration between
+the FastAPI transport layer and the Streamlit UI before the real evaluation
+pipeline is wired.</p>
+<p>Recommended interpretation:</p>
+<ul>
+<li><code>status="accepted"</code> means the payload shape was accepted by the API</li>
+<li>it does not yet mean the content has been evaluated</li>
+</ul>
+<h2 id="per-dimension-result-contract">Per-Dimension Result Contract<a class="headerlink" href="#per-dimension-result-contract" title="Permanent link">&para;</a></h2>
+<p>Each element in <code>dimension_results</code> should describe one evaluation dimension.</p>
+<h3 id="required-logical-fields">Required Logical Fields<a class="headerlink" href="#required-logical-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>dimension</code></li>
+<li><code>status</code></li>
+<li><code>score</code></li>
+<li><code>findings</code></li>
+<li><code>applied_rules</code></li>
+</ul>
+<h3 id="recommended-statuses">Recommended Statuses<a class="headerlink" href="#recommended-statuses" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pass</code></li>
+<li><code>warn</code></li>
+<li><code>fail</code></li>
+<li><code>not_applicable</code></li>
+<li><code>unknown</code></li>
+</ul>
+<h3 id="meaning">Meaning<a class="headerlink" href="#meaning" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>pass</code>: dimension satisfied applicable rules</li>
+<li><code>warn</code>: dimension has issues but no blocker-level failure</li>
+<li><code>fail</code>: dimension violated significant or blocking rules</li>
+<li><code>not_applicable</code>: dimension is irrelevant for this request</li>
+<li><code>unknown</code>: dimension could not be fully evaluated reliably</li>
+</ul>
+<h2 id="finding-contract">Finding Contract<a class="headerlink" href="#finding-contract" title="Permanent link">&para;</a></h2>
+<p>Each finding should be structured and explainable.</p>
+<h3 id="required-logical-fields_1">Required Logical Fields<a class="headerlink" href="#required-logical-fields_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rule_id</code></li>
+<li><code>severity</code></li>
+<li><code>message</code></li>
+<li><code>evidence</code></li>
+</ul>
+<h3 id="optional-logical-fields">Optional Logical Fields<a class="headerlink" href="#optional-logical-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>criticality</code></li>
+<li><code>location</code></li>
+<li><code>suggested_action</code></li>
+</ul>
+<h3 id="field-roles_2">Field Roles<a class="headerlink" href="#field-roles_2" title="Permanent link">&para;</a></h3>
+<h4 id="rule_id"><code>rule_id</code><a class="headerlink" href="#rule_id" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Stable identifier of the rule that produced the finding.</li>
+</ul>
+<h4 id="severity"><code>severity</code><a class="headerlink" href="#severity" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Indicates the importance of the issue inside the dimension result.</li>
+</ul>
+<h4 id="message"><code>message</code><a class="headerlink" href="#message" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Human-readable explanation of what was detected.</li>
+</ul>
+<h4 id="evidence"><code>evidence</code><a class="headerlink" href="#evidence" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Minimal supporting detail that makes the finding auditable.</li>
+<li>For example:</li>
+<li>missing heading structure</li>
+<li>word count under threshold</li>
+<li>missing target keyword</li>
+<li>outdated time reference</li>
+<li>missing source URL</li>
+</ul>
+<h4 id="criticality"><code>criticality</code><a class="headerlink" href="#criticality" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Indicates whether the rule is blocking, major, or minor from the policy point
+  of view.</li>
+</ul>
+<h4 id="location"><code>location</code><a class="headerlink" href="#location" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Optional pointer to where the issue was detected in the content.</li>
+</ul>
+<h4 id="suggested_action"><code>suggested_action</code><a class="headerlink" href="#suggested_action" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Reserved for future expansion.</li>
+<li>In V1, this field may be omitted entirely because correction is outside scope.</li>
+</ul>
+<h2 id="error-contract">Error Contract<a class="headerlink" href="#error-contract" title="Permanent link">&para;</a></h2>
+<p>Errors should distinguish invalid requests from service failures.</p>
+<h3 id="validation-errors">Validation Errors<a class="headerlink" href="#validation-errors" title="Permanent link">&para;</a></h3>
+<p>Use when the request shape or mandatory fields are invalid.</p>
+<p>Recommended contents:</p>
+<ul>
+<li>stable error code</li>
+<li>short message</li>
+<li>optional field-level details</li>
+</ul>
+<h3 id="evaluation-errors">Evaluation Errors<a class="headerlink" href="#evaluation-errors" title="Permanent link">&para;</a></h3>
+<p>Use when the system cannot evaluate reliably because of internal or dependency
+issues.</p>
+<p>Recommended contents:</p>
+<ul>
+<li>stable error code</li>
+<li>short message</li>
+<li>correlation identifier</li>
+</ul>
+<p>Do not expose internal stack traces or implementation details in the public
+contract.</p>
+<h2 id="health-contract">Health Contract<a class="headerlink" href="#health-contract" title="Permanent link">&para;</a></h2>
+<p>The health endpoint currently returns a minimal service payload with:</p>
+<ul>
+<li><code>status</code></li>
+<li><code>service</code></li>
+<li><code>version</code></li>
+</ul>
+<p>This endpoint is intended for:</p>
+<ul>
+<li>local verification</li>
+<li>UI connectivity checks</li>
+<li>future operational monitoring</li>
+</ul>
+<h2 id="contract-design-rules">Contract Design Rules<a class="headerlink" href="#contract-design-rules" title="Permanent link">&para;</a></h2>
+<h3 id="1-keep-response-semantics-stable">1. Keep Response Semantics Stable<a class="headerlink" href="#1-keep-response-semantics-stable" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Avoid renaming top-level fields casually.</li>
+<li>Prefer additive changes over breaking changes.</li>
+</ul>
+<h3 id="2-always-return-explainable-results">2. Always Return Explainable Results<a class="headerlink" href="#2-always-return-explainable-results" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A result without rule references is not sufficient.</li>
+<li>Every non-pass outcome should be traceable.</li>
+</ul>
+<h3 id="3-keep-request-minimal">3. Keep Request Minimal<a class="headerlink" href="#3-keep-request-minimal" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Only ask clients for fields the evaluator genuinely needs.</li>
+<li>Do not overload the request with future concerns.</li>
+</ul>
+<h3 id="4-separate-policy-from-transport">4. Separate Policy from Transport<a class="headerlink" href="#4-separate-policy-from-transport" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The API contract should stay stable even if rule thresholds evolve.</li>
+<li>Policy evolution belongs to rule profiles, not to transport redesign.</li>
+</ul>
+<h2 id="v1-contract-boundaries">V1 Contract Boundaries<a class="headerlink" href="#v1-contract-boundaries" title="Permanent link">&para;</a></h2>
+<p>What belongs in V1:</p>
+<ul>
+<li>one evaluation per request</li>
+<li>synchronous processing</li>
+<li>deterministic result structure</li>
+<li>per-dimension reporting</li>
+<li>explicit rule findings</li>
+</ul>
+<p>What should come later:</p>
+<ul>
+<li>correction payloads</li>
+<li>suggested rewrites</li>
+<li>semantic analysis traces</li>
+<li>batch identifiers and asynchronous job states</li>
+<li>confidence scores from learned systems</li>
+</ul>
+<h2 id="relation-to-the-contracts-directory">Relation to the <code>contracts/</code> Directory<a class="headerlink" href="#relation-to-the-contracts-directory" title="Permanent link">&para;</a></h2>
+<p>The <code>docs/</code> contract document explains semantics for humans.</p>
+<p>The <code>contracts/</code> directory should hold versioned contract artifacts for the
+repository, such as:</p>
+<ul>
+<li>request references</li>
+<li>response references</li>
+<li>shared field definitions</li>
+<li>examples</li>
+</ul>
+<p>That separation keeps:</p>
+<ul>
+<li><code>docs/</code> readable for developers and stakeholders</li>
+<li><code>contracts/</code> organized for contract assets and future machine-readable schemas</li>
+</ul>
+<h2 id="summary_1">Summary<a class="headerlink" href="#summary_1" title="Permanent link">&para;</a></h2>
+<p>The V1 API contract should remain:</p>
+<ul>
+<li>explicit</li>
+<li>versioned</li>
+<li>minimal</li>
+<li>explainable</li>
+<li>stable under future rule evolution</li>
+</ul>
+<p>That gives the project a clean foundation before adding richer semantics or more
+advanced evaluation modes.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

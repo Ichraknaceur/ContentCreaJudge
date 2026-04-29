@@ -1,0 +1,2543 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../CADRAGE_EQUIPE/">
+      
+      
+        <link rel="next" href="../ERROR_HANDLING/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Architecture - ContentCreaJudge</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ContentCreaJudge" class="md-header__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ContentCreaJudge
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ContentCreaJudge" class="md-nav__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ContentCreaJudge
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CADRAGE_EQUIPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cadrage Équipe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-implemented-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Implemented Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-transport-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API / Transport Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error-Handling Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-application-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Application Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-profile-resolver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule Profile Resolver
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judge-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Builder
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        api
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        judges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapterssources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        adapters.sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        observability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ui
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-to-End Data Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="End-to-End Data Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-implemented-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Implemented Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-request-intake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Request Intake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-rule-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Rule Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-judge-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Judge Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-response-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Response Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-domain-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Domain Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Domain Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluationrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EvaluationRequest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessedcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PreprocessedContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judgeresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JudgeResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluationresponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EvaluationResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mini-judge-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mini-Judge Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mini-Judge Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Goals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judge-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-works-well-in-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Works Well in V1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestration-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestration Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aggregation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criticality-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criticality Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring Guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modularity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modularity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separation-of-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separation of Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explainability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-vs-future-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 vs Future Evolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V1 vs Future Evolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Later
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-non-goals-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Non-Goals for V1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ERROR_HANDLING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RULES_CONFIGURATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Des Règles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_CONTRACT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-implemented-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Implemented Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-transport-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API / Transport Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error-Handling Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-application-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Application Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-profile-resolver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule Profile Resolver
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preprocessing Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judge-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-builder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Builder
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Package Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Breakdown
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        api
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        judges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapterssources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        adapters.sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        observability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ui
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-to-End Data Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="End-to-End Data Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-implemented-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Implemented Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-request-intake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Request Intake
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-rule-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Rule Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Preprocessing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-judge-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Judge Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-response-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Response Construction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-domain-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Domain Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Domain Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluationrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EvaluationRequest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessedcontent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PreprocessedContent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judgeresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JudgeResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluationresponse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EvaluationResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mini-judge-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mini-Judge Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mini-Judge Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Goals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#judge-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-works-well-in-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Works Well in V1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#orchestration-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestration Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aggregation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregation Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aggregation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criticality-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criticality Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scoring Guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modularity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modularity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separation-of-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separation of Concerns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explainability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-vs-future-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1 vs Future Evolution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="V1 vs Future Evolution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Later
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-non-goals-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Non-Goals for V1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>ContentCreaEvaluator is a Python backend service that evaluates editorial
+content against structural and formal rules. V1 is intentionally rule-based and
+deterministic. It does not rewrite content, infer author intent, or use machine
+learning.</p>
+<p>The architecture should stay simple enough for a small team to maintain, while
+leaving clear extension points for future semantic analysis and recommendation
+layers.</p>
+<h2 id="v1-scope">V1 Scope<a class="headerlink" href="#v1-scope" title="Permanent link">&para;</a></h2>
+<p>The system evaluates the following dimensions:</p>
+<ul>
+<li>Structure</li>
+<li>Length</li>
+<li>Typography</li>
+<li>Evergreen compliance</li>
+<li>CTA compliance</li>
+<li>Sources validation</li>
+<li>Basic SEO keyword presence</li>
+</ul>
+<h2 id="high-level-architecture">High-Level Architecture<a class="headerlink" href="#high-level-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Client
+  |
+  +--&gt; Streamlit UI
+  |       |
+  |       v
+  |   FastAPI Endpoints
+  |
+  v
+API / Transport Layer
+  |
+  v
+Evaluation Application Service
+  |
+  +--&gt; Rule Profile Resolver
+  |
+  +--&gt; Preprocessing Pipeline
+  |       |
+  |       v
+  |   PreprocessedContent
+  |
+  +--&gt; Judge Orchestrator
+          |
+          +--&gt; Structure Judge
+          +--&gt; Length Judge
+          +--&gt; Typography Judge
+          +--&gt; Evergreen Judge
+          +--&gt; CTA Judge
+          +--&gt; Sources Judge
+          +--&gt; SEO Keyword Judge
+  |
+  v
+Aggregation Layer
+  |
+  v
+Response Builder
+  |
+  v
+EvaluationResponse
+</code></pre></div>
+<h2 id="current-implemented-foundation">Current Implemented Foundation<a class="headerlink" href="#current-implemented-foundation" title="Permanent link">&para;</a></h2>
+<p>The repository currently includes the following working foundation pieces:</p>
+<ul>
+<li>FastAPI application bootstrap</li>
+<li>root discovery endpoint: <code>GET /</code></li>
+<li>health endpoint: <code>GET /health</code></li>
+<li>evaluation intake placeholder: <code>POST /api/v1/evaluations</code></li>
+<li>Streamlit UI for local demos and manual request submission</li>
+</ul>
+<p>These are scaffolding elements, not the full evaluator yet. The preprocessing,
+judge execution, and aggregation layers are still architectural targets rather
+than fully implemented workflow stages.</p>
+<h2 id="main-components">Main Components<a class="headerlink" href="#main-components" title="Permanent link">&para;</a></h2>
+<h3 id="api-transport-layer">API / Transport Layer<a class="headerlink" href="#api-transport-layer" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: expose the service to external clients.</li>
+<li>Handles:</li>
+<li>request validation at transport level</li>
+<li>input format normalization</li>
+<li>error mapping</li>
+<li>response serialization</li>
+<li>Does not contain business evaluation logic.</li>
+</ul>
+<h3 id="error-handling-architecture">Error-Handling Architecture<a class="headerlink" href="#error-handling-architecture" title="Permanent link">&para;</a></h3>
+<p>The project uses a layered error-handling model:</p>
+<ul>
+<li>business and judge layers raise typed application exceptions</li>
+<li>the API layer translates them into stable HTTP responses</li>
+<li>clients consume one normalized error envelope</li>
+</ul>
+<p>Current implementation anchors:</p>
+<ul>
+<li>shared exception hierarchy in <code>src/contentcreajudge/core/errors.py</code></li>
+<li>shared error payload model in <code>src/contentcreajudge/core/error_models.py</code></li>
+<li>centralized HTTP mapping in <code>src/contentcreajudge/api/error_handlers.py</code></li>
+</ul>
+<p>This separation exists to avoid mixing domain logic with transport concerns.</p>
+<p>Example:</p>
+<ul>
+<li>unsupported judge input -&gt; typed domain exception -&gt; <code>422</code></li>
+<li>broken server configuration -&gt; configuration exception -&gt; <code>500</code></li>
+<li>unexpected runtime crash -&gt; generic handler -&gt; <code>500</code></li>
+</ul>
+<p>For the detailed internal doctrine, see <a href="../ERROR_HANDLING/">Error Handling</a>.</p>
+<h3 id="evaluation-application-service">Evaluation Application Service<a class="headerlink" href="#evaluation-application-service" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: orchestrate the full evaluation workflow.</li>
+<li>Acts as the entry point for the evaluation use case.</li>
+<li>Coordinates preprocessing, judge execution, aggregation, and response
+  construction.</li>
+</ul>
+<h3 id="rule-profile-resolver">Rule Profile Resolver<a class="headerlink" href="#rule-profile-resolver" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: load the applicable rule profile for a request.</li>
+<li>Defines:</li>
+<li>enabled judges</li>
+<li>thresholds</li>
+<li>weights</li>
+<li>criticality levels</li>
+<li>Keeps rule policy separate from judge mechanics.</li>
+</ul>
+<h3 id="preprocessing-pipeline">Preprocessing Pipeline<a class="headerlink" href="#preprocessing-pipeline" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: convert raw content into reusable derived facts.</li>
+<li>Avoids duplicated parsing logic inside judges.</li>
+<li>Produces a shared <code>PreprocessedContent</code> object.</li>
+</ul>
+<h3 id="judge-orchestrator">Judge Orchestrator<a class="headerlink" href="#judge-orchestrator" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: execute all enabled mini-judges in a consistent way.</li>
+<li>Ensures each judge receives:</li>
+<li>the same canonical preprocessed content</li>
+<li>the rule subset relevant to that dimension</li>
+<li>Collects judge outputs without embedding aggregation rules.</li>
+</ul>
+<h3 id="aggregation-layer">Aggregation Layer<a class="headerlink" href="#aggregation-layer" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: combine all judge outputs into a single decision.</li>
+<li>Applies rule criticality and weighting.</li>
+<li>Produces the overall score, status, and summary findings.</li>
+</ul>
+<h3 id="response-builder">Response Builder<a class="headerlink" href="#response-builder" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility: produce a stable, explainable API response.</li>
+<li>Translates internal results into a client-facing contract.</li>
+</ul>
+<h2 id="proposed-package-structure">Proposed Package Structure<a class="headerlink" href="#proposed-package-structure" title="Permanent link">&para;</a></h2>
+<p>The project package can remain rooted under <code>src/contentcreajudge/</code>, with the
+service name exposed externally as ContentCreaEvaluator.</p>
+<div class="highlight"><pre><span></span><code>src/contentcreajudge/
+  api/
+  application/
+  domain/
+  rules/
+  preprocessing/
+  ui/
+  judges/
+    structure/
+    length/
+    typography/
+    evergreen/
+    cta/
+    sources/
+    seo/
+  aggregation/
+  adapters/
+    sources/
+  observability/
+</code></pre></div>
+<h2 id="module-breakdown">Module Breakdown<a class="headerlink" href="#module-breakdown" title="Permanent link">&para;</a></h2>
+<h3 id="api"><code>api</code><a class="headerlink" href="#api" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>accept requests</li>
+<li>validate external payloads</li>
+<li>map domain outcomes to API responses</li>
+<li>Inputs:</li>
+<li>raw HTTP or service request payload</li>
+<li>Outputs:</li>
+<li><code>EvaluationRequest</code> into the application layer</li>
+<li>serialized <code>EvaluationResponse</code> back to the caller</li>
+</ul>
+<p>Current concrete endpoints:</p>
+<ul>
+<li><code>GET /</code></li>
+<li><code>GET /health</code></li>
+<li><code>POST /api/v1/evaluations</code></li>
+</ul>
+<h3 id="application"><code>application</code><a class="headerlink" href="#application" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>orchestrate the end-to-end evaluation use case</li>
+<li>coordinate all domain services</li>
+<li>Inputs:</li>
+<li>validated <code>EvaluationRequest</code></li>
+<li>Outputs:</li>
+<li>completed evaluation result ready for response building</li>
+</ul>
+<h3 id="domain"><code>domain</code><a class="headerlink" href="#domain" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>hold the core business vocabulary</li>
+<li>define statuses, severities, dimensions, rule criticality, and evaluation
+    semantics</li>
+<li>Inputs:</li>
+<li>validated content and rule definitions</li>
+<li>Outputs:</li>
+<li>canonical concepts shared by all layers</li>
+</ul>
+<h3 id="rules"><code>rules</code><a class="headerlink" href="#rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>define rule profiles and evaluation policy</li>
+<li>keep thresholds and weights configurable</li>
+<li>Inputs:</li>
+<li>profile identifier, content type, channel, locale, or other request metadata</li>
+<li>Outputs:</li>
+<li>rule sets and aggregation policy for one evaluation run</li>
+</ul>
+<h3 id="preprocessing"><code>preprocessing</code><a class="headerlink" href="#preprocessing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>normalize text</li>
+<li>extract structure and reusable facts</li>
+<li>prepare canonical evidence for judges</li>
+<li>Inputs:</li>
+<li>raw content plus request metadata</li>
+<li>Outputs:</li>
+<li><code>PreprocessedContent</code></li>
+</ul>
+<h3 id="judges"><code>judges</code><a class="headerlink" href="#judges" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>evaluate a single dimension each</li>
+<li>return focused, explainable results</li>
+<li>Inputs:</li>
+<li><code>PreprocessedContent</code></li>
+<li>dimension-specific rules</li>
+<li>Outputs:</li>
+<li><code>JudgeResult</code></li>
+</ul>
+<h3 id="aggregation"><code>aggregation</code><a class="headerlink" href="#aggregation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>combine judge outputs into a global result</li>
+<li>enforce blocker rules and weighting</li>
+<li>Inputs:</li>
+<li>all <code>JudgeResult</code> objects</li>
+<li>aggregation policy from <code>rules</code></li>
+<li>Outputs:</li>
+<li>overall score, status, summary, and prioritized findings</li>
+</ul>
+<h3 id="adapterssources"><code>adapters.sources</code><a class="headerlink" href="#adapterssources" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>isolate source validation interactions from core business logic</li>
+<li>perform URL, domain, or metadata checks as needed</li>
+<li>Inputs:</li>
+<li>extracted sources or source references</li>
+<li>Outputs:</li>
+<li>normalized source-validation facts for the sources judge</li>
+</ul>
+<h3 id="observability"><code>observability</code><a class="headerlink" href="#observability" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>logging</li>
+<li>metrics</li>
+<li>auditability</li>
+<li>trace correlation</li>
+<li>Inputs:</li>
+<li>events emitted during request processing</li>
+<li>Outputs:</li>
+<li>operational signals for monitoring and debugging</li>
+</ul>
+<h3 id="ui"><code>ui</code><a class="headerlink" href="#ui" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Responsibility:</li>
+<li>provide a demo and review surface for the backend</li>
+<li>submit evaluation payloads manually</li>
+<li>display backend status and responses</li>
+<li>Inputs:</li>
+<li>backend base URL</li>
+<li>user-entered evaluation payloads</li>
+<li>Outputs:</li>
+<li>client-facing progress view</li>
+<li>backend request and response visualization</li>
+</ul>
+<h2 id="end-to-end-data-flow">End-to-End Data Flow<a class="headerlink" href="#end-to-end-data-flow" title="Permanent link">&para;</a></h2>
+<h3 id="current-implemented-flow">Current Implemented Flow<a class="headerlink" href="#current-implemented-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>User -&gt; Streamlit UI -&gt; FastAPI endpoint -&gt; Placeholder response -&gt; UI console
+</code></pre></div>
+<p>This flow is already available for demos and manual testing.</p>
+<h3 id="step-1-request-intake">Step 1: Request Intake<a class="headerlink" href="#step-1-request-intake" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The client submits content and evaluation metadata.</li>
+<li>The transport layer validates the request shape and required fields.</li>
+<li>The system builds an internal <code>EvaluationRequest</code>.</li>
+</ul>
+<h3 id="step-2-rule-resolution">Step 2: Rule Resolution<a class="headerlink" href="#step-2-rule-resolution" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The application layer resolves the active rule profile.</li>
+<li>The profile determines:</li>
+<li>which judges run</li>
+<li>which rules apply</li>
+<li>how results are weighted</li>
+<li>which failures are blocking</li>
+</ul>
+<h3 id="step-3-preprocessing">Step 3: Preprocessing<a class="headerlink" href="#step-3-preprocessing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The raw content is normalized into a canonical representation.</li>
+<li>Structural signals are extracted once, for example:</li>
+<li>title</li>
+<li>headings</li>
+<li>paragraphs</li>
+<li>links</li>
+<li>source references</li>
+<li>CTA markers</li>
+<li>keyword presence</li>
+<li>word and character counts</li>
+<li>The output becomes <code>PreprocessedContent</code>.</li>
+</ul>
+<h3 id="step-4-judge-execution">Step 4: Judge Execution<a class="headerlink" href="#step-4-judge-execution" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The orchestrator selects the enabled mini-judges.</li>
+<li>Each judge evaluates one dimension independently.</li>
+<li>Each judge returns a <code>JudgeResult</code> with:</li>
+<li>status</li>
+<li>score</li>
+<li>finding list</li>
+<li>rule references</li>
+<li>evidence</li>
+</ul>
+<h3 id="step-5-aggregation">Step 5: Aggregation<a class="headerlink" href="#step-5-aggregation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The aggregator combines all <code>JudgeResult</code> objects.</li>
+<li>Blocking failures are applied first.</li>
+<li>If no blocker fails, the global score is calculated from judge weights.</li>
+<li>The aggregator also creates the top-level summary and prioritized issues.</li>
+</ul>
+<h3 id="step-6-response-construction">Step 6: Response Construction<a class="headerlink" href="#step-6-response-construction" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The response builder assembles the final <code>EvaluationResponse</code>.</li>
+<li>The client receives:</li>
+<li>overall decision</li>
+<li>aggregate score</li>
+<li>dimension-by-dimension results</li>
+<li>explainable findings</li>
+<li>relevant metadata</li>
+</ul>
+<h2 id="core-domain-objects">Core Domain Objects<a class="headerlink" href="#core-domain-objects" title="Permanent link">&para;</a></h2>
+<h3 id="evaluationrequest"><code>EvaluationRequest</code><a class="headerlink" href="#evaluationrequest" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Role: canonical input for one evaluation run.</li>
+<li>Contains:</li>
+<li>content to evaluate</li>
+<li>metadata such as content type or channel</li>
+<li>keyword list</li>
+<li>source references</li>
+<li>selected rule profile</li>
+<li>evaluation options</li>
+</ul>
+<h3 id="preprocessedcontent"><code>PreprocessedContent</code><a class="headerlink" href="#preprocessedcontent" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Role: shared fact base derived from raw input.</li>
+<li>Contains normalized and extracted signals used by all judges.</li>
+<li>Prevents repeated parsing and encourages consistency across dimensions.</li>
+</ul>
+<h3 id="judgeresult"><code>JudgeResult</code><a class="headerlink" href="#judgeresult" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Role: output of one mini-judge.</li>
+<li>Should capture:</li>
+<li>evaluated dimension</li>
+<li>pass or fail style status</li>
+<li>dimension score</li>
+<li>findings</li>
+<li>evidence</li>
+<li>rule identifiers</li>
+<li>severity or criticality impact</li>
+</ul>
+<h3 id="evaluationresponse"><code>EvaluationResponse</code><a class="headerlink" href="#evaluationresponse" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Role: final client-facing evaluation result.</li>
+<li>Should contain:</li>
+<li>overall decision</li>
+<li>aggregate score</li>
+<li>per-dimension results</li>
+<li>summary findings</li>
+<li>traceable metadata such as profile or rule version</li>
+</ul>
+<h2 id="mini-judge-architecture">Mini-Judge Architecture<a class="headerlink" href="#mini-judge-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="design-goals">Design Goals<a class="headerlink" href="#design-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li>One judge per evaluation dimension.</li>
+<li>Shared input contract across all judges.</li>
+<li>Independent execution and isolated reasoning.</li>
+<li>Clear extension point for new dimensions.</li>
+</ul>
+<h3 id="judge-contract">Judge Contract<a class="headerlink" href="#judge-contract" title="Permanent link">&para;</a></h3>
+<p>Each judge should conceptually:</p>
+<ul>
+<li>receive <code>PreprocessedContent</code></li>
+<li>receive the rules relevant to its dimension</li>
+<li>evaluate only its assigned concern</li>
+<li>emit one <code>JudgeResult</code></li>
+</ul>
+<h3 id="why-this-works-well-in-v1">Why This Works Well in V1<a class="headerlink" href="#why-this-works-well-in-v1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Simple mental model for developers</li>
+<li>Easy to test each dimension in isolation</li>
+<li>Easy to disable or replace one judge without affecting others</li>
+<li>Supports future parallel execution if needed</li>
+</ul>
+<h3 id="orchestration-strategy">Orchestration Strategy<a class="headerlink" href="#orchestration-strategy" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use a registry of enabled judges rather than hard-coding logic in one large
+  evaluator.</li>
+<li>Let the orchestrator:</li>
+<li>discover the enabled judges for the profile</li>
+<li>execute them in a predictable order</li>
+<li>collect outputs uniformly</li>
+<li>Keep the orchestrator procedural and lightweight.</li>
+</ul>
+<h2 id="aggregation-strategy">Aggregation Strategy<a class="headerlink" href="#aggregation-strategy" title="Permanent link">&para;</a></h2>
+<p>Aggregation should produce both a decision and an explanation.</p>
+<h3 id="recommended-approach">Recommended Approach<a class="headerlink" href="#recommended-approach" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Evaluate all enabled judges.</li>
+<li>Check for blocking rule failures first.</li>
+<li>If any blocking rule fails, overall status becomes <code>fail</code>.</li>
+<li>If no blocker fails, compute the overall score from judge weights.</li>
+<li>Preserve all per-dimension details even when the top-level result is already
+  failed.</li>
+</ul>
+<h3 id="criticality-model">Criticality Model<a class="headerlink" href="#criticality-model" title="Permanent link">&para;</a></h3>
+<p>Use simple V1 levels:</p>
+<ul>
+<li><code>blocking</code>: failure means automatic top-level failure</li>
+<li><code>major</code>: strongly impacts score and summary priority</li>
+<li><code>minor</code>: affects score and reporting, but not top-level viability alone</li>
+</ul>
+<h3 id="scoring-guidance">Scoring Guidance<a class="headerlink" href="#scoring-guidance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Keep scoring readable rather than mathematically sophisticated.</li>
+<li>Weight at the judge level in V1, not at many nested sublevels.</li>
+<li>Exclude <code>not_applicable</code> dimensions from the weighted denominator.</li>
+<li>Represent <code>unknown</code> separately so temporary adapter issues do not masquerade as
+  compliant results.</li>
+</ul>
+<h2 id="architectural-principles">Architectural Principles<a class="headerlink" href="#architectural-principles" title="Permanent link">&para;</a></h2>
+<h3 id="modularity">Modularity<a class="headerlink" href="#modularity" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Each module owns one concern.</li>
+<li>Each judge owns one dimension.</li>
+<li>Adapters isolate infrastructure-specific behavior.</li>
+</ul>
+<h3 id="separation-of-concerns">Separation of Concerns<a class="headerlink" href="#separation-of-concerns" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Transport handles requests and responses.</li>
+<li>Application coordinates workflow.</li>
+<li>Domain defines semantics.</li>
+<li>Judges evaluate rules.</li>
+<li>Aggregation decides the final outcome.</li>
+</ul>
+<h3 id="extensibility">Extensibility<a class="headerlink" href="#extensibility" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add a new judge by registering it and defining its rule set.</li>
+<li>Add a new profile without changing evaluation flow.</li>
+<li>Swap infrastructure adapters without modifying domain logic.</li>
+</ul>
+<h3 id="testability">Testability<a class="headerlink" href="#testability" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Preprocessing can be tested independently from judges.</li>
+<li>Each judge can be tested against fixed <code>PreprocessedContent</code>.</li>
+<li>Aggregation can be tested with synthetic <code>JudgeResult</code> inputs.</li>
+<li>End-to-end tests can validate the request-to-response workflow.</li>
+</ul>
+<h3 id="explainability">Explainability<a class="headerlink" href="#explainability" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Every finding should link back to a rule identifier.</li>
+<li>Every failure should include enough evidence to be actionable.</li>
+<li>The response should preserve both high-level and per-dimension detail.</li>
+</ul>
+<h2 id="v1-vs-future-evolution">V1 vs Future Evolution<a class="headerlink" href="#v1-vs-future-evolution" title="Permanent link">&para;</a></h2>
+<h3 id="v1">V1<a class="headerlink" href="#v1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>synchronous evaluation API</li>
+<li>deterministic rule-based evaluation only</li>
+<li>one shared preprocessing stage</li>
+<li>modular mini-judge architecture</li>
+<li>weighted aggregation with blocker support</li>
+<li>explainable response payload</li>
+<li>basic source validation adapter</li>
+<li>Streamlit UI for review and client-facing demonstrations</li>
+</ul>
+<h3 id="later">Later<a class="headerlink" href="#later" title="Permanent link">&para;</a></h3>
+<ul>
+<li>semantic quality evaluation</li>
+<li>deeper causal explanations</li>
+<li>correction or rewrite suggestions</li>
+<li>confidence modeling</li>
+<li>ML-assisted scoring or ranking</li>
+<li>preference learning</li>
+<li>asynchronous batch processing</li>
+<li>richer analytics and rule governance tools</li>
+</ul>
+<h2 id="recommended-non-goals-for-v1">Recommended Non-Goals for V1<a class="headerlink" href="#recommended-non-goals-for-v1" title="Permanent link">&para;</a></h2>
+<p>To avoid over-engineering, V1 should not include:</p>
+<ul>
+<li>distributed judge execution</li>
+<li>event-driven pipelines</li>
+<li>rule authoring UI</li>
+<li>database persistence for historical analytics</li>
+<li>workflow engines</li>
+<li>ML model serving infrastructure</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>The recommended architecture is a small, service-oriented backend with:</p>
+<ul>
+<li>a thin API layer</li>
+<li>one central evaluation application service</li>
+<li>a shared preprocessing pipeline</li>
+<li>modular mini-judges by dimension</li>
+<li>a separate aggregation layer</li>
+<li>explicit rule profiles and criticality</li>
+</ul>
+<p>This keeps the system maintainable today and easy to extend tomorrow.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

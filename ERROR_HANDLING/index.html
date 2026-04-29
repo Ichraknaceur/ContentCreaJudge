@@ -1,0 +1,1359 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ARCHITECTURE/">
+      
+      
+        <link rel="next" href="../RULES_CONFIGURATION/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Error Handling - ContentCreaJudge</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#error-handling" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ContentCreaJudge" class="md-header__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ContentCreaJudge
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Error Handling
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ContentCreaJudge" class="md-nav__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ContentCreaJudge
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CADRAGE_EQUIPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cadrage Équipe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-read-by-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Read By Role
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-architecture-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Architecture Exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-design-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Design Principle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#judge-specific-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge-Specific Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-api-error-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard API Error Envelope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard API Error Envelope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#field-meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Meaning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-should-not-happen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Should Not Happen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-development-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Development Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concrete-example-typography-locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example: Typography Locale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-role-for-the-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Role for the Team
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extension Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RULES_CONFIGURATION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Des Règles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_CONTRACT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-read-by-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Read By Role
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-architecture-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Architecture Exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-design-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Main Design Principle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#judge-specific-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge-Specific Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-api-error-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard API Error Envelope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard API Error Envelope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#field-meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Meaning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-should-not-happen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Should Not Happen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-development-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Development Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concrete-example-typography-locale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Example: Typography Locale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-role-for-the-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Role for the Team
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extension Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h1>
+<div class="admonition abstract">
+<p class="admonition-title">Internal Doctrine</p>
+<p>Error handling in ContentCreaJudge is designed as a team contract:
+business code explains what failed, the API decides how to expose it, and
+the UI consumes one stable error format.</p>
+</div>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This document defines the internal error-handling architecture used by
+ContentCreaJudge.</p>
+<p>Its goal is to keep error management:</p>
+<ul>
+<li>explicit for the backend team</li>
+<li>stable for API consumers</li>
+<li>reusable across judges</li>
+<li>easy to extend without mixing business logic and HTTP concerns</li>
+</ul>
+<p>This page is an internal implementation guide. It is not a product-facing error
+catalog.</p>
+<h2 id="quick-read-by-role">Quick Read By Role<a class="headerlink" href="#quick-read-by-role" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Backend Developer</label><label for="__tabbed_1_2">Judge Author</label><label for="__tabbed_1_3">UI Developer</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Focus on:</p>
+<ul>
+<li>typed exceptions in business layers</li>
+<li>centralized HTTP mapping in <code>api/error_handlers.py</code></li>
+<li>stable <code>error.code</code> values</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>Focus on:</p>
+<ul>
+<li>defining judge-specific exceptions only when they carry business meaning</li>
+<li>avoiding raw <code>ValueError</code> for known domain cases</li>
+<li>keeping transport logic out of resolvers and judges</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p>Focus on:</p>
+<ul>
+<li>reading the normalized <code>error.message</code></li>
+<li>relying on <code>error.code</code> for stable branching logic</li>
+<li>avoiding endpoint-specific assumptions about error shapes</li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="why-this-architecture-exists">Why This Architecture Exists<a class="headerlink" href="#why-this-architecture-exists" title="Permanent link">&para;</a></h2>
+<p>The project must distinguish clearly between:</p>
+<ul>
+<li>a content evaluation result</li>
+<li>an invalid request</li>
+<li>a judge configuration problem</li>
+<li>an unexpected runtime failure</li>
+</ul>
+<p>Those are different situations and should not produce the same technical
+behavior.</p>
+<p>For example:</p>
+<ul>
+<li>unsupported typography locale -&gt; client error</li>
+<li>malformed payload -&gt; transport validation error</li>
+<li>broken YAML configuration -&gt; server-side configuration error</li>
+<li>uncaught runtime crash -&gt; internal server error</li>
+</ul>
+<p>Without a shared architecture, these cases quickly degrade into ad hoc
+<code>ValueError</code>, <code>HTTPException</code>, and inconsistent response payloads.</p>
+<h2 id="main-design-principle">Main Design Principle<a class="headerlink" href="#main-design-principle" title="Permanent link">&para;</a></h2>
+<p>Error handling is split into two distinct responsibilities:</p>
+<ol>
+<li>Business layers raise application-specific exceptions.</li>
+<li>The API layer translates those exceptions into normalized HTTP responses.</li>
+</ol>
+<p>This separation is intentional.</p>
+<p>The business layers should know what went wrong.
+The API layer should know how to expose it.</p>
+<div class="admonition tip">
+<p class="admonition-title">One-sentence rule</p>
+<p>If the error has business meaning, raise a typed application exception. If
+it has HTTP meaning, map it in the API layer.</p>
+</div>
+<h2 id="layer-responsibilities">Layer Responsibilities<a class="headerlink" href="#layer-responsibilities" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><strong><code>core</code></strong>
+    ---
+    Shared exception hierarchy and the standard API error envelope.</p>
+<p>Current files:</p>
+<ul>
+<li><code>src/contentcreajudge/core/errors.py</code></li>
+<li><code>src/contentcreajudge/core/error_models.py</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Judge Modules</strong>
+    ---
+    Judge-specific exceptions kept close to the domain they describe.</p>
+<p>Example:</p>
+<ul>
+<li><code>src/contentcreajudge/judges/typography/exceptions.py</code></li>
+</ul>
+</li>
+<li>
+<p><strong><code>api</code></strong>
+    ---
+    The only layer responsible for HTTP error mapping and normalized error responses.</p>
+<p>Current file:</p>
+<ul>
+<li><code>src/contentcreajudge/api/error_handlers.py</code></li>
+</ul>
+</li>
+</ul>
+</div>
+<details class="info">
+<summary>Detailed responsibilities</summary>
+<p><strong><code>core</code></strong></p>
+<ul>
+<li>define the base exception hierarchy</li>
+<li>define stable error codes</li>
+<li>define the common JSON response envelope</li>
+</ul>
+<p><strong>Judge modules</strong></p>
+<ul>
+<li>express judge-specific failure modes</li>
+<li>keep domain meaning close to the judge</li>
+<li>avoid generic <code>ValueError</code> or ambiguous exceptions</li>
+</ul>
+<p><strong><code>api</code></strong></p>
+<ul>
+<li>convert application exceptions into HTTP responses</li>
+<li>normalize FastAPI and Pydantic validation errors</li>
+<li>return a stable error payload</li>
+<li>avoid leaking raw runtime exceptions to clients</li>
+</ul>
+</details>
+<h2 id="exception-hierarchy">Exception Hierarchy<a class="headerlink" href="#exception-hierarchy" title="Permanent link">&para;</a></h2>
+<p>The base hierarchy is intentionally small.</p>
+<p>Current shared classes:</p>
+<ul>
+<li><code>ContentCreaJudgeError</code></li>
+<li><code>DomainError</code></li>
+<li><code>DomainValidationError</code></li>
+<li><code>RuleResolutionError</code></li>
+<li><code>ConfigurationError</code></li>
+<li><code>InfrastructureError</code></li>
+</ul>
+<p>Guiding rule:</p>
+<ul>
+<li>use a shared base class for application-specific exceptions</li>
+<li>use specialized subclasses only when they add real business meaning</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Shared Base</label><label for="__tabbed_2_2">Judge Specialization Example</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li><code>ContentCreaJudgeError</code></li>
+<li><code>DomainError</code></li>
+<li><code>DomainValidationError</code></li>
+<li><code>RuleResolutionError</code></li>
+<li><code>ConfigurationError</code></li>
+<li><code>InfrastructureError</code></li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><code>MissingTypographyContextError</code></li>
+<li><code>UnsupportedTypographyLocaleError</code></li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="judge-specific-exceptions">Judge-Specific Exceptions<a class="headerlink" href="#judge-specific-exceptions" title="Permanent link">&para;</a></h2>
+<p>Judge-specific exceptions are encouraged when the error is meaningful for that
+dimension.</p>
+<p>Typography currently uses:</p>
+<ul>
+<li><code>MissingTypographyContextError</code></li>
+<li><code>UnsupportedTypographyLocaleError</code></li>
+</ul>
+<p>This pattern should be reused for other judges when needed:</p>
+<ul>
+<li><code>length/exceptions.py</code></li>
+<li><code>structure/exceptions.py</code></li>
+<li><code>seo/exceptions.py</code></li>
+</ul>
+<p>Do not create a judge-specific exception file unless the judge actually needs a
+distinct error vocabulary.</p>
+<h2 id="standard-api-error-envelope">Standard API Error Envelope<a class="headerlink" href="#standard-api-error-envelope" title="Permanent link">&para;</a></h2>
+<p>The API returns errors using one stable structure:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unsupported_typography_locale&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Unsupported locale for typography evaluation: en-US&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;locale&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;supported_locales&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;fr-FR&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This payload exists to make the frontend and tests predictable.</p>
+<h3 id="field-meaning">Field Meaning<a class="headerlink" href="#field-meaning" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>error.code</code>: stable machine-readable identifier</li>
+<li><code>error.message</code>: human-readable explanation</li>
+<li><code>error.details</code>: optional structured context</li>
+<li><code>request_id</code>: optional correlation field for future tracing</li>
+</ul>
+<details class="example">
+<summary>How the UI should read this payload</summary>
+<p>In the UI, the preferred display order is:</p>
+<ol>
+<li><code>error.message</code></li>
+<li>fallback generic message if absent</li>
+<li>optional technical details in a collapsible raw exchange panel</li>
+</ol>
+</details>
+<h2 id="mapping-strategy">Mapping Strategy<a class="headerlink" href="#mapping-strategy" title="Permanent link">&para;</a></h2>
+<p>Current mapping rules:</p>
+<ul>
+<li><code>DomainValidationError</code> -&gt; <code>422</code></li>
+<li><code>RuleResolutionError</code> -&gt; <code>422</code></li>
+<li>FastAPI <code>RequestValidationError</code> -&gt; <code>422</code></li>
+<li><code>ConfigurationError</code> -&gt; <code>500</code></li>
+<li><code>InfrastructureError</code> -&gt; <code>500</code></li>
+<li>unexpected <code>Exception</code> -&gt; <code>500</code></li>
+</ul>
+<p>Principle:</p>
+<ul>
+<li>client-caused invalid input -&gt; <code>4xx</code></li>
+<li>server-side setup/runtime failure -&gt; <code>5xx</code></li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Client-Oriented Failures</label><label for="__tabbed_3_2">Server-Oriented Failures</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li><code>DomainValidationError</code> -&gt; <code>422</code></li>
+<li><code>RuleResolutionError</code> -&gt; <code>422</code></li>
+<li><code>RequestValidationError</code> -&gt; <code>422</code></li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><code>ConfigurationError</code> -&gt; <code>500</code></li>
+<li><code>InfrastructureError</code> -&gt; <code>500</code></li>
+<li>unexpected <code>Exception</code> -&gt; <code>500</code></li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="what-should-not-happen">What Should Not Happen<a class="headerlink" href="#what-should-not-happen" title="Permanent link">&para;</a></h2>
+<p>The following patterns should be avoided:</p>
+<ul>
+<li>raising <code>HTTPException</code> inside judge or resolver logic</li>
+<li>raising raw <code>ValueError</code> for domain-specific cases</li>
+<li>building one-off error JSON directly in endpoint handlers</li>
+<li>returning inconsistent payload shapes across endpoints</li>
+</ul>
+<p>These patterns make the codebase harder to reason about and harder to keep
+consistent.</p>
+<div class="admonition warning">
+<p class="admonition-title">Avoid these shortcuts</p>
+<p>The fastest local fix is often the worst architectural move:</p>
+<ul>
+<li><code>raise HTTPException(...)</code> inside a judge</li>
+<li><code>raise ValueError(...)</code> for a recurring business case</li>
+<li>manual JSON error response built directly in one endpoint</li>
+<li>endpoint-specific response shape that the UI cannot reuse</li>
+</ul>
+</div>
+<h2 id="recommended-development-rules">Recommended Development Rules<a class="headerlink" href="#recommended-development-rules" title="Permanent link">&para;</a></h2>
+<p>When implementing new logic:</p>
+<ol>
+<li>If the problem is business-meaningful, raise a typed application exception.</li>
+<li>If the problem is specific to one judge, define it near that judge.</li>
+<li>If the problem is transport-related, let FastAPI validation handle it or map
+   it in the API layer.</li>
+<li>If the problem is unexpected, let the global handler return a safe <code>500</code>
+   envelope.</li>
+</ol>
+<h2 id="error-lifecycle">Error Lifecycle<a class="headerlink" href="#error-lifecycle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Request
+  -&gt;
+Transport validation
+  -&gt;
+Application / resolver / judge
+  -&gt;
+Typed application exception
+  -&gt;
+API error handler
+  -&gt;
+Stable JSON error payload
+  -&gt;
+UI message + raw exchange
+</code></pre></div>
+<h2 id="concrete-example-typography-locale">Concrete Example: Typography Locale<a class="headerlink" href="#concrete-example-typography-locale" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Before</label><label for="__tabbed_4_2">After</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li>the resolver raised <code>ValueError</code></li>
+<li>the API returned a generic <code>500</code></li>
+<li>the UI had to infer failure from a vague message</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li>the resolver raises <code>UnsupportedTypographyLocaleError</code></li>
+<li>the API maps it to <code>422</code></li>
+<li>the response includes a stable <code>error.code</code></li>
+<li>the UI can display the backend message directly</li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="internal-role-for-the-team">Internal Role for the Team<a class="headerlink" href="#internal-role-for-the-team" title="Permanent link">&para;</a></h2>
+<p>This architecture is not only technical plumbing. It is also a collaboration
+contract.</p>
+<p>It gives the team a shared rule:</p>
+<ul>
+<li>backend business code raises typed exceptions</li>
+<li>API code translates them</li>
+<li>UI code reads stable error payloads</li>
+</ul>
+<p>That alignment reduces ambiguity when several developers work on different
+judges in parallel.</p>
+<div class="admonition note">
+<p class="admonition-title">Why this matters for teamwork</p>
+<p>A shared doctrine prevents each judge author from inventing a different
+error style. That is especially important when several mini-judges evolve
+in parallel.</p>
+</div>
+<h2 id="extension-guidelines">Extension Guidelines<a class="headerlink" href="#extension-guidelines" title="Permanent link">&para;</a></h2>
+<p>When adding a new judge:</p>
+<ol>
+<li>Decide whether the judge needs its own exception file.</li>
+<li>Reuse shared base exceptions whenever possible.</li>
+<li>Add at least one contract test for the expected API error path.</li>
+<li>Keep the API error envelope unchanged unless there is a deliberate
+   cross-project decision.</li>
+</ol>
+<p>When changing the shared error contract:</p>
+<ol>
+<li>update <code>core/error_models.py</code></li>
+<li>update <code>api/error_handlers.py</code></li>
+<li>update the affected tests</li>
+<li>update this documentation page</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1993 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ERROR_HANDLING/">
+      
+      
+        <link rel="next" href="../API_CONTRACT/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Configuration Des Règles - ContentCreaJudge</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration-des-regles" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ContentCreaJudge" class="md-header__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ContentCreaJudge
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration Des Règles
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ContentCreaJudge" class="md-nav__button md-logo" aria-label="ContentCreaJudge" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ContentCreaJudge
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CADRAGE_EQUIPE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cadrage Équipe
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ERROR_HANDLING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Des Règles
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Des Règles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectif-du-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectif du document
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-utiliser-des-fichiers-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi utiliser des fichiers YAML
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arborescence-recommandee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arborescence recommandée
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue d'ensemble
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprendre-simplement-un-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprendre simplement un profile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#difference-simple-entre-profile-et-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Différence simple entre profile et judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-mentale-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image mentale simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-tres-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple très simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mini-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mini schéma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-de-comparaison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple de comparaison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-les-profils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Les profils
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemples-de-profils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemples de profils
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-de-structure-yaml-pour-un-profil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple de structure YAML pour un profil
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-lire-cet-exemple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment lire cet exemple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quun-profil-ne-doit-pas-contenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'un profil ne doit pas contenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-les-fichiers-par-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Les fichiers par judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-lengthyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : length.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-structureyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : structure.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-seoyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : seo.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-lire-ces-exemples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment lire ces exemples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-les-fichiers-partages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Les fichiers partagés
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-statusesyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : statuses.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-severitiesyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : severities.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-criticalityyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : criticality.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-cest-utile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi c'est utile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-difference-entre-profil-et-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Différence entre profil et judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resume-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Résumé simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-concret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple concret
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conventions-recommandees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conventions recommandées
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nommage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ce-quil-ne-faut-pas-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ce qu'il ne faut pas faire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mauvaise-approche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mauvaise approche
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonne-approche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonne approche
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-recommandation-dequipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Recommandation d'équipe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ce-quon-peut-figer-maintenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Ce qu'on peut figer maintenant
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API_CONTRACT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPER_GUIDE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SECURITY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#objectif-du-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objectif du document
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-utiliser-des-fichiers-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi utiliser des fichiers YAML
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arborescence-recommandee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arborescence recommandée
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vue-densemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue d'ensemble
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprendre-simplement-un-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprendre simplement un profile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#difference-simple-entre-profile-et-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Différence simple entre profile et judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-mentale-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image mentale simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-tres-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple très simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mini-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mini schéma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-de-comparaison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple de comparaison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-les-profils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Les profils
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemples-de-profils" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemples de profils
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-de-structure-yaml-pour-un-profil" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple de structure YAML pour un profil
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-lire-cet-exemple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment lire cet exemple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quun-profil-ne-doit-pas-contenir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qu'un profil ne doit pas contenir
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-les-fichiers-par-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Les fichiers par judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-lengthyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : length.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-structureyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : structure.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-seoyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : seo.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comment-lire-ces-exemples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comment lire ces exemples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-les-fichiers-partages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Les fichiers partagés
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#role_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rôle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-statusesyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : statuses.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-severitiesyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : severities.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-criticalityyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple : criticality.yaml
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pourquoi-cest-utile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi c'est utile
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-difference-entre-profil-et-judge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Différence entre profil et judge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resume-simple" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Résumé simple
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemple-concret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exemple concret
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-conventions-recommandees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Conventions recommandées
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nommage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nommage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-ce-quil-ne-faut-pas-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Ce qu'il ne faut pas faire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mauvaise-approche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mauvaise approche
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonne-approche" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonne approche
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-recommandation-dequipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Recommandation d'équipe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ce-quon-peut-figer-maintenant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Ce qu'on peut figer maintenant
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="configuration-des-regles">Configuration Des Règles<a class="headerlink" href="#configuration-des-regles" title="Permanent link">&para;</a></h1>
+<h2 id="objectif-du-document">Objectif du document<a class="headerlink" href="#objectif-du-document" title="Permanent link">&para;</a></h2>
+<p>Ce document explique comment organiser la configuration des règles dans le
+projet ContentCreaEvaluator.</p>
+<p>L'objectif est de rendre la structure claire pour l'équipe dès maintenant, même
+si les règles métier détaillées ne sont pas encore toutes figées.</p>
+<p>Ce document couvre :</p>
+<ul>
+<li>la logique de séparation des fichiers YAML</li>
+<li>les profils</li>
+<li>les fichiers de règles par mini-judge</li>
+<li>les fichiers partagés</li>
+<li>des exemples concrets de structure YAML</li>
+</ul>
+<p>Ce document ne fige pas encore :</p>
+<ul>
+<li>les seuils métier définitifs</li>
+<li>les messages finaux côté produit</li>
+<li>les inputs et outputs détaillés de chaque mini-judge</li>
+</ul>
+<h2 id="pourquoi-utiliser-des-fichiers-yaml">Pourquoi utiliser des fichiers YAML<a class="headerlink" href="#pourquoi-utiliser-des-fichiers-yaml" title="Permanent link">&para;</a></h2>
+<p>Les règles sont de bonnes candidates pour de la configuration YAML parce que :</p>
+<ul>
+<li>elles restent lisibles par l'équipe</li>
+<li>elles sont faciles à versionner dans Git</li>
+<li>elles séparent le paramétrage de l'implémentation</li>
+<li>elles sont plus simples à relire en atelier produit ou métier</li>
+</ul>
+<p>Le principe important est :</p>
+<ul>
+<li>YAML décrit</li>
+<li>le code exécute</li>
+</ul>
+<p>Le YAML ne doit pas devenir un mini moteur métier caché.</p>
+<h2 id="arborescence-recommandee">Arborescence recommandée<a class="headerlink" href="#arborescence-recommandee" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>src/contentcreajudge/rules/
+  profiles/
+    default.yaml
+    blog.yaml
+    landing_page.yaml
+  judges/
+    structure.yaml
+    length.yaml
+    typography.yaml
+    evergreen.yaml
+    cta.yaml
+    sources.yaml
+    seo.yaml
+  shared/
+    statuses.yaml
+    severities.yaml
+    criticality.yaml
+</code></pre></div>
+<h2 id="vue-densemble">Vue d'ensemble<a class="headerlink" href="#vue-densemble" title="Permanent link">&para;</a></h2>
+<p>La séparation recommandée est la suivante :</p>
+<ul>
+<li><code>profiles/</code></li>
+<li>définit quels judges sont actifs, avec quels poids et quelle criticité</li>
+<li><code>judges/</code></li>
+<li>définit les paramètres d'un judge donné</li>
+<li><code>shared/</code></li>
+<li>définit le vocabulaire commun de configuration</li>
+</ul>
+<h2 id="comprendre-simplement-un-profile">Comprendre simplement un <code>profile</code><a class="headerlink" href="#comprendre-simplement-un-profile" title="Permanent link">&para;</a></h2>
+<p>Un <code>profile</code>, c'est le contexte global d'évaluation.</p>
+<p>Il répond à la question :</p>
+<ul>
+<li>dans quel cadre on évalue ce contenu ?</li>
+</ul>
+<p>Exemples de contexte :</p>
+<ul>
+<li>article de blog</li>
+<li>landing page</li>
+<li>newsletter</li>
+<li>profil par défaut</li>
+</ul>
+<p>Le <code>profile</code> ne décrit pas comment un mini-judge fonctionne en détail.
+Il décrit plutôt comment plusieurs mini-judges doivent être utilisés ensemble.</p>
+<p>En pratique, un <code>profile</code> permet de dire :</p>
+<ul>
+<li>quels mini-judges sont activés</li>
+<li>lesquels sont plus importants que d'autres</li>
+<li>lesquels peuvent être bloquants</li>
+<li>quels paramètres par défaut s'appliquent au contexte</li>
+</ul>
+<h2 id="difference-simple-entre-profile-et-judge">Différence simple entre <code>profile</code> et <code>judge</code><a class="headerlink" href="#difference-simple-entre-profile-et-judge" title="Permanent link">&para;</a></h2>
+<ul>
+<li>un <code>judge</code> décrit comment contrôler une dimension</li>
+<li>un <code>profile</code> décrit dans quel cadre on utilise les judges</li>
+</ul>
+<h2 id="image-mentale-simple">Image mentale simple<a class="headerlink" href="#image-mentale-simple" title="Permanent link">&para;</a></h2>
+<ul>
+<li>les <code>judges</code> sont les instruments</li>
+<li>le <code>profile</code> est la manière d'organiser l'orchestre</li>
+</ul>
+<h2 id="exemple-tres-simple">Exemple très simple<a class="headerlink" href="#exemple-tres-simple" title="Permanent link">&para;</a></h2>
+<p>Le judge <code>length</code> décrit par exemple :</p>
+<ul>
+<li>qu'il existe une règle de longueur minimale</li>
+<li>qu'il existe une règle de longueur maximale</li>
+<li>quels paramètres de configuration il utilise</li>
+</ul>
+<p>Le profile <code>blog</code> décrit par exemple :</p>
+<ul>
+<li>qu'on active <code>length</code></li>
+<li>qu'on active <code>seo</code></li>
+<li>qu'on active <code>sources</code></li>
+<li>que <code>sources</code> peut être bloquant</li>
+<li>que <code>length</code> a un certain poids dans l'évaluation globale</li>
+</ul>
+<p>Donc :</p>
+<ul>
+<li>le <code>judge</code> dit comment vérifier</li>
+<li>le <code>profile</code> dit quand et comment l'utiliser dans l'ensemble</li>
+</ul>
+<h2 id="mini-schema">Mini schéma<a class="headerlink" href="#mini-schema" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Judge = logique d&#39;une dimension
+Profile = combinaison et importance des dimensions
+</code></pre></div>
+<h2 id="exemple-de-comparaison">Exemple de comparaison<a class="headerlink" href="#exemple-de-comparaison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Judge &quot;length&quot;
+  -&gt; vérifie la longueur d&#39;un contenu
+
+Profile &quot;blog&quot;
+  -&gt; utilise length + structure + seo + sources
+
+Profile &quot;landing_page&quot;
+  -&gt; utilise structure + cta + seo
+</code></pre></div>
+<p>Le même mini-judge peut donc être utilisé dans plusieurs profils différents.</p>
+<h2 id="1-les-profils">1. Les profils<a class="headerlink" href="#1-les-profils" title="Permanent link">&para;</a></h2>
+<h2 id="role">Rôle<a class="headerlink" href="#role" title="Permanent link">&para;</a></h2>
+<p>Un profil décrit la manière dont une évaluation doit être assemblée.</p>
+<p>Un profil ne décrit pas toute la logique d'un judge. Il dit plutôt :</p>
+<ul>
+<li>quels judges sont actifs</li>
+<li>quel est leur poids relatif</li>
+<li>quelle est leur criticité</li>
+<li>quels paramètres de contexte s'appliquent</li>
+</ul>
+<h2 id="exemples-de-profils">Exemples de profils<a class="headerlink" href="#exemples-de-profils" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>default</code></li>
+<li><code>blog</code></li>
+<li><code>landing_page</code></li>
+<li><code>newsletter</code></li>
+</ul>
+<h2 id="exemple-de-structure-yaml-pour-un-profil">Exemple de structure YAML pour un profil<a class="headerlink" href="#exemple-de-structure-yaml-pour-un-profil" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">profile_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Profil</span><span class="nv"> </span><span class="s">par</span><span class="nv"> </span><span class="s">défaut&quot;</span>
+
+<span class="nt">enabled_judges</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">structure</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">length</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">typography</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evergreen</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cta</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sources</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seo</span>
+
+<span class="nt">weights</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">structure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.20</span>
+<span class="w">  </span><span class="nt">length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<span class="w">  </span><span class="nt">typography</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10</span>
+<span class="w">  </span><span class="nt">evergreen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<span class="w">  </span><span class="nt">cta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10</span>
+<span class="w">  </span><span class="nt">sources</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+<span class="w">  </span><span class="nt">seo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.15</span>
+
+<span class="nt">criticality</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">structure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="nt">length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="nt">typography</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+<span class="w">  </span><span class="nt">evergreen</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="nt">cta</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="nt">sources</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocking</span>
+<span class="w">  </span><span class="nt">seo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+
+<span class="nt">defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">locale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en-US</span>
+<span class="w">  </span><span class="nt">content_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">article</span>
+</code></pre></div>
+<h2 id="comment-lire-cet-exemple">Comment lire cet exemple<a class="headerlink" href="#comment-lire-cet-exemple" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>enabled_judges</code></li>
+<li>liste les dimensions actives pour ce profil</li>
+<li><code>weights</code></li>
+<li>prépare la future agrégation</li>
+<li><code>criticality</code></li>
+<li>indique l'importance relative des dimensions</li>
+<li><code>defaults</code></li>
+<li>fixe un contexte commun si le client ne le fournit pas</li>
+</ul>
+<h2 id="ce-quun-profil-ne-doit-pas-contenir">Ce qu'un profil ne doit pas contenir<a class="headerlink" href="#ce-quun-profil-ne-doit-pas-contenir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>la logique détaillée du judge</li>
+<li>des calculs complexes</li>
+<li>des expressions métier exécutables</li>
+</ul>
+<h2 id="2-les-fichiers-par-judge">2. Les fichiers par judge<a class="headerlink" href="#2-les-fichiers-par-judge" title="Permanent link">&para;</a></h2>
+<h2 id="role_1">Rôle<a class="headerlink" href="#role_1" title="Permanent link">&para;</a></h2>
+<p>Un fichier judge décrit la configuration d'une dimension particulière.</p>
+<p>Il contient en général :</p>
+<ul>
+<li>un identifiant</li>
+<li>une version</li>
+<li>une description</li>
+<li>des paramètres de configuration</li>
+<li>des règles nommées</li>
+<li>des messages configurables</li>
+</ul>
+<h2 id="exemple-lengthyaml">Exemple : <code>length.yaml</code><a class="headerlink" href="#exemple-lengthyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">judge_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">length</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Length</span><span class="nv"> </span><span class="s">judge&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Vérifie</span><span class="nv"> </span><span class="s">la</span><span class="nv"> </span><span class="s">longueur</span><span class="nv"> </span><span class="s">globale</span><span class="nv"> </span><span class="s">d&#39;un</span><span class="nv"> </span><span class="s">contenu.&quot;</span>
+
+<span class="nt">thresholds</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">min_words</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">  </span><span class="nt">max_words</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1200</span>
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">length.min_words</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">    </span><span class="nt">threshold_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">min_words</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">length.max_words</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">    </span><span class="nt">threshold_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max_words</span>
+
+<span class="nt">messages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pass</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;La</span><span class="nv"> </span><span class="s">longueur</span><span class="nv"> </span><span class="s">du</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">est</span><span class="nv"> </span><span class="s">dans</span><span class="nv"> </span><span class="s">la</span><span class="nv"> </span><span class="s">plage</span><span class="nv"> </span><span class="s">attendue.&quot;</span>
+<span class="w">  </span><span class="nt">too_short</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Le</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">est</span><span class="nv"> </span><span class="s">trop</span><span class="nv"> </span><span class="s">court.&quot;</span>
+<span class="w">  </span><span class="nt">too_long</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Le</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">est</span><span class="nv"> </span><span class="s">trop</span><span class="nv"> </span><span class="s">long.&quot;</span>
+</code></pre></div>
+<h2 id="exemple-structureyaml">Exemple : <code>structure.yaml</code><a class="headerlink" href="#exemple-structureyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">judge_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">structure</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Structure</span><span class="nv"> </span><span class="s">judge&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Vérifie</span><span class="nv"> </span><span class="s">la</span><span class="nv"> </span><span class="s">structure</span><span class="nv"> </span><span class="s">générale</span><span class="nv"> </span><span class="s">du</span><span class="nv"> </span><span class="s">contenu.&quot;</span>
+
+<span class="nt">requirements</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">title_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">intro_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_heading_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">structure.title_present</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">structure.intro_present</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">structure.min_headings</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+
+<span class="nt">messages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">missing_title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Le</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">doit</span><span class="nv"> </span><span class="s">inclure</span><span class="nv"> </span><span class="s">un</span><span class="nv"> </span><span class="s">titre.&quot;</span>
+<span class="w">  </span><span class="nt">missing_intro</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Le</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">doit</span><span class="nv"> </span><span class="s">inclure</span><span class="nv"> </span><span class="s">une</span><span class="nv"> </span><span class="s">introduction.&quot;</span>
+<span class="w">  </span><span class="nt">insufficient_headings</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Le</span><span class="nv"> </span><span class="s">contenu</span><span class="nv"> </span><span class="s">ne</span><span class="nv"> </span><span class="s">contient</span><span class="nv"> </span><span class="s">pas</span><span class="nv"> </span><span class="s">assez</span><span class="nv"> </span><span class="s">d&#39;intertitres.&quot;</span>
+</code></pre></div>
+<h2 id="exemple-seoyaml">Exemple : <code>seo.yaml</code><a class="headerlink" href="#exemple-seoyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">judge_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seo</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SEO</span><span class="nv"> </span><span class="s">judge&quot;</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Vérifie</span><span class="nv"> </span><span class="s">la</span><span class="nv"> </span><span class="s">présence</span><span class="nv"> </span><span class="s">de</span><span class="nv"> </span><span class="s">mots-clés</span><span class="nv"> </span><span class="s">et</span><span class="nv"> </span><span class="s">quelques</span><span class="nv"> </span><span class="s">contraintes</span><span class="nv"> </span><span class="s">SEO</span><span class="nv"> </span><span class="s">de</span><span class="nv"> </span><span class="s">base.&quot;</span>
+
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keyword_match_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contains</span>
+<span class="w">  </span><span class="nt">require_all_keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">case_sensitive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seo.keyword_presence</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+
+<span class="nt">messages</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pass</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Les</span><span class="nv"> </span><span class="s">mots-clés</span><span class="nv"> </span><span class="s">requis</span><span class="nv"> </span><span class="s">sont</span><span class="nv"> </span><span class="s">présents.&quot;</span>
+<span class="w">  </span><span class="nt">missing_keywords</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Certains</span><span class="nv"> </span><span class="s">mots-clés</span><span class="nv"> </span><span class="s">attendus</span><span class="nv"> </span><span class="s">sont</span><span class="nv"> </span><span class="s">absents.&quot;</span>
+</code></pre></div>
+<h2 id="comment-lire-ces-exemples">Comment lire ces exemples<a class="headerlink" href="#comment-lire-ces-exemples" title="Permanent link">&para;</a></h2>
+<p>Les exemples montrent une structure stable, pas des valeurs définitives.</p>
+<p>Ce qu'il faut retenir :</p>
+<ul>
+<li>chaque fichier judge est autonome</li>
+<li>chaque règle a un <code>rule_id</code></li>
+<li>les paramètres restent lisibles</li>
+<li>les messages restent séparés des calculs</li>
+</ul>
+<h2 id="3-les-fichiers-partages">3. Les fichiers partagés<a class="headerlink" href="#3-les-fichiers-partages" title="Permanent link">&para;</a></h2>
+<h2 id="role_2">Rôle<a class="headerlink" href="#role_2" title="Permanent link">&para;</a></h2>
+<p>Les fichiers partagés évitent de répéter la même sémantique partout.</p>
+<p>Ils servent à centraliser :</p>
+<ul>
+<li>les statuts</li>
+<li>les niveaux de sévérité</li>
+<li>la criticité</li>
+</ul>
+<h2 id="exemple-statusesyaml">Exemple : <code>statuses.yaml</code><a class="headerlink" href="#exemple-statusesyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">statuses</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pass</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fail</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not_applicable</span>
+</code></pre></div>
+<h2 id="exemple-severitiesyaml">Exemple : <code>severities.yaml</code><a class="headerlink" href="#exemple-severitiesyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">severities</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+</code></pre></div>
+<h2 id="exemple-criticalityyaml">Exemple : <code>criticality.yaml</code><a class="headerlink" href="#exemple-criticalityyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">criticality_levels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocking</span>
+</code></pre></div>
+<h2 id="pourquoi-cest-utile">Pourquoi c'est utile<a class="headerlink" href="#pourquoi-cest-utile" title="Permanent link">&para;</a></h2>
+<ul>
+<li>cohérence entre profils et judges</li>
+<li>validation plus simple</li>
+<li>vocabulaire stable à travers tout le projet</li>
+</ul>
+<h2 id="4-difference-entre-profil-et-judge">4. Différence entre profil et judge<a class="headerlink" href="#4-difference-entre-profil-et-judge" title="Permanent link">&para;</a></h2>
+<p>La confusion la plus fréquente est ici :</p>
+<ul>
+<li>un profil ne remplace pas un judge</li>
+<li>un judge ne remplace pas un profil</li>
+</ul>
+<h2 id="resume-simple">Résumé simple<a class="headerlink" href="#resume-simple" title="Permanent link">&para;</a></h2>
+<ul>
+<li>le profil décide du cadre global</li>
+<li>le judge décrit les paramètres de sa propre dimension</li>
+</ul>
+<h2 id="exemple-concret">Exemple concret<a class="headerlink" href="#exemple-concret" title="Permanent link">&para;</a></h2>
+<p>Le profil <code>blog</code> peut dire :</p>
+<ul>
+<li>active <code>length</code></li>
+<li>donne à <code>length</code> un poids de <code>0.15</code></li>
+<li>considère <code>length</code> comme <code>major</code></li>
+</ul>
+<p>Le fichier <code>length.yaml</code> dit :</p>
+<ul>
+<li>le judge <code>length</code> existe</li>
+<li>il a une version</li>
+<li>il utilise <code>min_words</code></li>
+<li>il utilise <code>max_words</code></li>
+<li>il expose ses règles nommées</li>
+</ul>
+<h2 id="5-conventions-recommandees">5. Conventions recommandées<a class="headerlink" href="#5-conventions-recommandees" title="Permanent link">&para;</a></h2>
+<h2 id="nommage">Nommage<a class="headerlink" href="#nommage" title="Permanent link">&para;</a></h2>
+<ul>
+<li>utiliser des ids stables</li>
+<li>utiliser des noms courts et prévisibles</li>
+<li>éviter les espaces dans les identifiants</li>
+</ul>
+<p>Exemples :</p>
+<ul>
+<li><code>profile_id: blog</code></li>
+<li><code>judge_id: length</code></li>
+<li><code>rule_id: length.min_words</code></li>
+</ul>
+<h2 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">&para;</a></h2>
+<p>Chaque fichier doit porter sa version.</p>
+<p>Exemple :</p>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+</code></pre></div>
+<p>Cela prépare :</p>
+<ul>
+<li>la traçabilité</li>
+<li>les évolutions futures</li>
+<li>les comparaisons de règles dans le temps</li>
+</ul>
+<h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
+<p>Les YAML doivent être validés côté backend au chargement.</p>
+<p>Il faut vérifier au minimum :</p>
+<ul>
+<li>présence des champs obligatoires</li>
+<li>cohérence des ids</li>
+<li>poids valides</li>
+<li>références de judges valides dans les profils</li>
+<li>criticité autorisée</li>
+</ul>
+<h2 id="6-ce-quil-ne-faut-pas-faire">6. Ce qu'il ne faut pas faire<a class="headerlink" href="#6-ce-quil-ne-faut-pas-faire" title="Permanent link">&para;</a></h2>
+<p>Pour garder une architecture saine, il faut éviter :</p>
+<ul>
+<li>mettre du calcul dans les YAML</li>
+<li>multiplier les structures différentes selon les judges sans raison</li>
+<li>dupliquer les mêmes niveaux de sévérité dans plusieurs fichiers</li>
+<li>laisser des ids instables ou ambigus</li>
+</ul>
+<h2 id="mauvaise-approche">Mauvaise approche<a class="headerlink" href="#mauvaise-approche" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">rule_logic</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;if</span><span class="nv"> </span><span class="s">word_count</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">300</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">title_present</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">pass&quot;</span>
+</code></pre></div>
+<p>Ce type de logique ne doit pas vivre dans les fichiers de config.</p>
+<h2 id="bonne-approche">Bonne approche<a class="headerlink" href="#bonne-approche" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">thresholds</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">min_words</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">length.min_words</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>Le YAML décrit le paramétrage. Le code décide comment l'utiliser.</p>
+<h2 id="7-recommandation-dequipe">7. Recommandation d'équipe<a class="headerlink" href="#7-recommandation-dequipe" title="Permanent link">&para;</a></h2>
+<p>Pour que ce soit clair pour tout le monde, je recommande ce découpage :</p>
+<ul>
+<li>un développeur ou binôme définit la convention de chargement des YAML</li>
+<li>un développeur ou binôme prépare les profils</li>
+<li>les développeurs backend branchent ensuite les mini-judges sur cette structure</li>
+<li>la UI consomme les résultats mais ne dépend jamais directement des YAML</li>
+</ul>
+<h2 id="8-ce-quon-peut-figer-maintenant">8. Ce qu'on peut figer maintenant<a class="headerlink" href="#8-ce-quon-peut-figer-maintenant" title="Permanent link">&para;</a></h2>
+<p>On peut figer dès aujourd'hui :</p>
+<ul>
+<li>l'arborescence <code>profiles / judges / shared</code></li>
+<li>la présence d'un <code>version</code></li>
+<li>la présence d'ids stables</li>
+<li>la distinction profil vs judge</li>
+<li>l'usage de YAML comme couche de configuration</li>
+</ul>
+<p>On n'a pas besoin de figer maintenant :</p>
+<ul>
+<li>toutes les clés finales de chaque judge</li>
+<li>tous les seuils exacts</li>
+<li>tous les messages finaux</li>
+</ul>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Le but n'est pas encore d'avoir les bonnes règles métier partout. Le but est
+d'avoir une structure de configuration simple, cohérente et partageable.</p>
+<p>Si l'équipe suit cette organisation :</p>
+<ul>
+<li>les fichiers resteront lisibles</li>
+<li>les règles seront versionnables</li>
+<li>les mini-judges pourront évoluer indépendamment</li>
+<li>l'architecture restera claire même quand le nombre de règles augmentera</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
