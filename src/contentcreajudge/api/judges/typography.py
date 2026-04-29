@@ -13,6 +13,8 @@ router = APIRouter(prefix="/api/v1/judges/typography", tags=["judges", "typograp
 
 
 class TypographyJudgeContext(BaseModel):
+    """Evaluation context for the typography judge."""
+
     locale: str
 
 

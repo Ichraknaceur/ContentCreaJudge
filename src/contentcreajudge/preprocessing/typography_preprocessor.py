@@ -8,11 +8,14 @@ import re
 
 def preprocess_typography_content(content: str) -> dict[str, object]:
     """Prepare the content for typography evaluation."""
-
     html_tag_marker = "__HTML_TAG__"
     content_with_tag_markers = re.sub(r"<[^>]+>", html_tag_marker, content)
+    repeated_marker_pattern = (
+        rf"[ \t]*{re.escape(html_tag_marker)}"
+        rf"(?:[ \t]*{re.escape(html_tag_marker)})*[ \t]*"
+    )
     text_without_html = re.sub(
-        rf"[ \t]*{re.escape(html_tag_marker)}(?:[ \t]*{re.escape(html_tag_marker)})*[ \t]*",
+        repeated_marker_pattern,
         " ",
         content_with_tag_markers,
     )
@@ -25,12 +28,8 @@ def preprocess_typography_content(content: str) -> dict[str, object]:
 
     decoded_text_no_newlines = decoded_text.replace("\n", " ").replace("\r", " ")
 
-    br_tag_count = len(
-        re.findall(r"<br\s*/?>", content, flags=re.IGNORECASE)
-    )
-    anchor_tag_count = len(
-        re.findall(r"<a\b", content, flags=re.IGNORECASE)
-    )
+    br_tag_count = len(re.findall(r"<br\s*/?>", content, flags=re.IGNORECASE))
+    anchor_tag_count = len(re.findall(r"<a\b", content, flags=re.IGNORECASE))
 
     return {
         "original_content": content,

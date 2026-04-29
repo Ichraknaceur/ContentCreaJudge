@@ -7,7 +7,6 @@ def aggregate_typography_result(
     judge_result: dict[str, object],
 ) -> dict[str, object]:
     """Summary of the overall result of the typography judge."""
-
     judge_status = str(judge_result["status"])
     judge_score = int(judge_result["score"])
     findings = list(judge_result.get("findings", []))

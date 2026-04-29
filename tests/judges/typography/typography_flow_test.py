@@ -5,7 +5,7 @@ from contentcreajudge.application.judge_flow.typography_flow import (
 
 def test_execute_typography_flow_pass() -> None:
     payload = {
-        "content": "<p>Bonjour\u00A0! Texte propre.</p>",
+        "content": "<p>Bonjour\u00a0! Texte propre.</p>",
         "profile": "default",
         "context": {
             "locale": "fr-FR",
@@ -61,7 +61,7 @@ def test_execute_typography_flow_fail() -> None:
 
 def test_execute_typography_flow_keeps_profile_and_context() -> None:
     payload = {
-        "content": "<p>Bonjour\u00A0! Texte propre.</p>",
+        "content": "<p>Bonjour\u00a0! Texte propre.</p>",
         "profile": "editorial",
         "context": {
             "locale": "fr-FR",
