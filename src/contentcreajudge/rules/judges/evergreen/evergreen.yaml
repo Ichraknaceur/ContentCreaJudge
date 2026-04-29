@@ -1,0 +1,175 @@
+judge_id: evergreen
+version: 1
+label: "Evergreen judge"
+description: "Evaluate temporal references and evergreen compliance."
+
+evergreen_rules:
+  input_source:
+    use_evergreen_from_input: true
+    input_field: "topic.evergreen"
+
+  activation:
+    always_detect_temporal_references: true
+    enforce_only_if_evergreen_true: true
+    downgrade_to_warning_when_evergreen_false: true
+    allow_temporal_references_if_provided_in_inputs: true
+
+  forbidden_temporal_references:
+    forbid_dates_if_not_provided: true
+    forbid_years_if_not_provided: true
+    forbid_months_if_not_provided: true
+    forbid_relative_dates: true
+    forbid_news_references: true
+    forbid_version_references_if_not_provided: true
+    forbid_current_trend_references: true
+
+  temporal_expression_categories:
+    absolute_dates:
+      detect_years: true
+      detect_full_dates: true
+      detect_month_year: true
+
+    relative_dates:
+      fr:
+        - "aujourd'hui"
+        - "cette année"
+        - "ce mois-ci"
+        - "cette semaine"
+        - "récemment"
+        - "actuellement"
+        - "désormais"
+        - "à l'heure actuelle"
+        - "ces derniers mois"
+        - "la semaine dernière"
+        - "l'année dernière"
+      en:
+        - "today"
+        - "this year"
+        - "this month"
+        - "this week"
+        - "recently"
+        - "currently"
+        - "nowadays"
+        - "at the moment"
+        - "in recent months"
+        - "last week"
+        - "last year"
+
+    news_references:
+      fr:
+        - "actualité"
+        - "dernière annonce"
+        - "nouvelle réglementation"
+        - "réforme récente"
+        - "tendance actuelle"
+      en:
+        - "news"
+        - "latest announcement"
+        - "new regulation"
+        - "recent reform"
+        - "current trend"
+
+    version_references:
+      fr:
+        - "dernière version"
+        - "nouvelle version"
+        - "version actuelle"
+        - "mise à jour récente"
+      en:
+        - "latest version"
+        - "new version"
+        - "current version"
+        - "recent update"
+
+  context_detection:
+    detect_source_context: true
+    detect_input_context: true
+    detect_historical_context: true
+
+    source_context_markers:
+      fr:
+        - "selon"
+        - "étude"
+        - "rapport"
+        - "baromètre"
+        - "source"
+        - "publication"
+        - "observatoire"
+      en:
+        - "according to"
+        - "study"
+        - "report"
+        - "source"
+        - "publication"
+        - "survey"
+
+    historical_context_markers:
+      fr:
+        - "depuis"
+        - "historiquement"
+        - "dans les années"
+        - "au cours de"
+      en:
+        - "since"
+        - "historically"
+        - "in the"
+        - "over the years"
+
+  exceptions:
+    allow_source_publication_year: true
+    allow_dates_inside_valid_source_context: true
+    allow_historical_context_if_required_by_brief: true
+    allow_dates_explicitly_present_in_inputs: true
+    allow_dates_if_content_is_not_evergreen: true
+
+  rewrite_policy:
+    prefer_timeless_formulation: true
+    replace_relative_time_with_neutral_expression: true
+    remove_unnecessary_temporal_reference: true
+
+  post_creation_checks:
+    check_temporal_references: true
+    check_no_unprovided_dates_when_evergreen_true: true
+    check_no_relative_temporal_expressions_when_evergreen_true: true
+    check_no_unprovided_version_references_when_evergreen_true: true
+    check_no_unnecessary_news_references_when_evergreen_true: true
+    report_temporal_references_as_warning_when_evergreen_false: true
+
+  rules:
+    - rule_id: evergreen.unprovided_dates
+      enabled: true
+      severity_if_evergreen_true: major
+      severity_if_evergreen_false: minor
+
+    - rule_id: evergreen.relative_temporal_references
+      enabled: true
+      severity_if_evergreen_true: major
+      severity_if_evergreen_false: minor
+
+    - rule_id: evergreen.news_references
+      enabled: true
+      severity_if_evergreen_true: major
+      severity_if_evergreen_false: minor
+
+    - rule_id: evergreen.version_references
+      enabled: true
+      severity_if_evergreen_true: major
+      severity_if_evergreen_false: minor
+
+    - rule_id: evergreen.current_trend_references
+      enabled: true
+      severity_if_evergreen_true: minor
+      severity_if_evergreen_false: minor
+
+    - rule_id: evergreen.input_exception
+      enabled: true
+      severity: minor
+
+  messages:
+    pass: "The content does not contain problematic temporal references."
+    unprovided_dates: "The content contains dates that were not provided in the inputs."
+    relative_temporal_references: "The content contains relative temporal expressions that may make it quickly outdated."
+    news_references: "The content contains news-related references that may reduce evergreen quality."
+    version_references: "The content contains version references that were not provided in the inputs."
+    current_trend_references: "The content contains current-trend wording that may become outdated."
+    input_exception: "Temporal references are allowed only when they are explicitly provided in the inputs, required by the brief, or supported by a valid source context."

@@ -13,7 +13,7 @@ def test_preprocess_typography_content_success() -> None:
     assert result["br_tag_count"] == 2
     assert result["anchor_tag_count"] == 1
     assert "Bonjour" in str(result["decoded_text"])
-    assert "\u00A0" in str(result["decoded_text"])
+    assert "\u00a0" in str(result["decoded_text"])
     assert "Bonjour" in str(result["normalized_text"])
 
 

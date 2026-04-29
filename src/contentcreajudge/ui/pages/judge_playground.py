@@ -19,10 +19,12 @@ WORKSPACE_MODULES = {
     "seo": "contentcreajudge.ui.components.judges.seo_workspace",
     "sources": "contentcreajudge.ui.components.judges.sources_workspace",
     "cta": "contentcreajudge.ui.components.judges.cta_workspace",
+    "evergreen": "contentcreajudge.ui.components.judges.evergreen_workspace",
 }
 
+
 def get_workspace_renderer_config(selected_key: str) -> dict[str, object] | None:
-    """Dynamically load the selected mini-judge workspace and return its rendering functions"""
+    """Load the selected mini-judge workspace rendering functions."""
     module_path = WORKSPACE_MODULES.get(selected_key)
     if module_path is None:
         return None
@@ -48,8 +50,9 @@ def get_workspace_renderer_config(selected_key: str) -> dict[str, object] | None
         "result": result_renderer,
     }
 
+
 def render_default_workspace() -> None:
-    """Display a default workspace for mini-judges that are not implemented yet"""
+    """Display a default workspace for mini-judges not implemented yet."""
     st.markdown(
         '<div class="section-label">Planned interaction</div>',
         unsafe_allow_html=True,
@@ -76,6 +79,7 @@ def render_default_workspace() -> None:
         "next.",
     )
 
+
 def render_judge_playground() -> None:
     """Render the judge-by-judge demo workspace."""
     st.markdown(
@@ -101,11 +105,13 @@ def render_judge_playground() -> None:
 
     if "selected_judge_key" not in st.session_state:
         st.session_state["selected_judge_key"] = items[0].key
-        
+
     selected_key = st.selectbox(
         "Mini-judge",
         options=[item.key for item in items],
-        index=[item.key for item in items].index(st.session_state["selected_judge_key"]),
+        index=[item.key for item in items].index(
+            st.session_state["selected_judge_key"],
+        ),
         format_func=lambda key: get_judge_by_key(key).title,
     )
 

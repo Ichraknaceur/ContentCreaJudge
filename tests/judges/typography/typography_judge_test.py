@@ -9,7 +9,6 @@ from contentcreajudge.judges.typography.typography_judge import (
     find_trailing_spaces,
     run_typography_judge,
 )
-
 from contentcreajudge.preprocessing.typography_preprocessor import (
     preprocess_typography_content,
 )
@@ -58,7 +57,7 @@ def test_find_french_nbsp_issues_detects_missing_nbsp() -> None:
 
 
 def test_find_french_nbsp_issues_passes_with_nbsp() -> None:
-    text = "Bonjour\u00A0! Prix\u00A0: 50\u00A0%"
+    text = "Bonjour\u00a0! Prix\u00a0: 50\u00a0%"
     result = find_french_nbsp_issues(text)
     assert result == []
 
@@ -74,13 +73,15 @@ def test_find_repeated_line_breaks() -> None:
     result = find_repeated_line_breaks(content)
     assert len(result) == 1
 
+
 def test_find_attached_links_ignores_links_inside_list_items() -> None:
     content = '<ul><li><a href="https://example.com">Source</a></li></ul>'
     result = find_attached_links(content)
     assert result == []
 
+
 def test_run_typography_judge_pass() -> None:
-    content = "<p>Bonjour\u00A0!</p><p>Texte propre.</p>"
+    content = "<p>Bonjour\u00a0!</p><p>Texte propre.</p>"
     preprocessed = preprocess_typography_content(content)
     rules = resolve_typography_rules({"locale": "fr-FR"})
 

@@ -6,11 +6,10 @@ import yaml
 
 
 def resolve_typography_rules(context: dict[str, object]) -> dict[str, object]:
-    """Resolve the typography rules defined in the YAML based on the evaluation context."""
-
+    """Resolve typography rules from YAML for the evaluation context."""
     config_path = Path(__file__).with_name("typography.yaml")
 
-    with open(config_path, "r", encoding="utf-8") as file:
+    with config_path.open(encoding="utf-8") as file:
         config = yaml.safe_load(file)
 
     judge_id = config["judge_id"]
