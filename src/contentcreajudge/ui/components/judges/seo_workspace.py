@@ -1,11 +1,31 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Protocol
 
 import requests
 import streamlit as st
 
+class UploadedTextFile(Protocol):
+    """Readable uploaded file interface used by Streamlit."""
 
+    def read(self) -> bytes:
+        """Read uploaded file bytes."""
+
+
+def _read_uploaded_text_file(uploaded_file: UploadedTextFile | None) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
+
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
+    
 def _parse_keywords(raw_value: str) -> list[str]:
     """Parse a textarea value into a clean keyword list."""
     keywords: list[str] = []
@@ -151,13 +171,31 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:
 
 def render_seo_form(selected_item: Any) -> None:
     """Render the SEO judge form."""
+    del selected_item
+
     st.markdown("### SEO test input")
 
+    if "seo_content_input" not in st.session_state:
+        st.session_state["seo_content_input"] = ""
+
     with st.form("seo_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="seo_content_file_uploader",
+        )
+
+        content_value = st.session_state["seo_content_input"]
+        if uploaded_content_file is not None:
+            content_value = _read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
             placeholder="Paste the content to evaluate here...",
+            value=content_value,
         )
 
         content_type = st.selectbox(
@@ -212,6 +250,8 @@ def render_seo_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run SEO Judge")
+
+    st.session_state["seo_content_input"] = content
 
     if not submitted:
         return

@@ -1,10 +1,30 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Protocol
 
 import requests
 import streamlit as st
 
+class UploadedTextFile(Protocol):
+    """Readable uploaded file interface used by Streamlit."""
+
+    def read(self) -> bytes:
+        """Read uploaded file bytes."""
+
+
+def _read_uploaded_text_file(uploaded_file: UploadedTextFile | None) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
+
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
 
 def _render_exchange_summary(exchange: dict[str, object]) -> None:
     """Render the API response for the Sources judge."""
@@ -123,14 +143,31 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:
 
 def render_sources_form(selected_item: Any) -> None:
     """Render the Sources judge form."""
+    del selected_item
 
     st.markdown("### Sources test input")
 
+    if "sources_content_input" not in st.session_state:
+        st.session_state["sources_content_input"] = ""
+
     with st.form("sources_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="sources_content_file_uploader",
+        )
+
+        content_value = st.session_state["sources_content_input"]
+        if uploaded_content_file is not None:
+            content_value = _read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
             placeholder="Paste HTML content with sources here...",
+            value=content_value,
         )
 
         expected_length = st.selectbox(
@@ -167,6 +204,8 @@ def render_sources_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run Sources Judge")
+
+    st.session_state["sources_content_input"] = content
 
     if not submitted:
         return

@@ -1,10 +1,30 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Protocol
 
 import requests
 import streamlit as st
 
+class UploadedTextFile(Protocol):
+    """Readable uploaded file interface used by Streamlit."""
+
+    def read(self) -> bytes:
+        """Read uploaded file bytes."""
+
+
+def _read_uploaded_text_file(uploaded_file: UploadedTextFile | None) -> str:
+    """Read an uploaded text-based file and return its UTF-8 content."""
+    if uploaded_file is None:
+        return ""
+
+    file_bytes = uploaded_file.read()
+    if not file_bytes:
+        return ""
+
+    try:
+        return file_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return file_bytes.decode("utf-8", errors="replace")
 
 def _render_exchange_summary(exchange: dict[str, object]) -> None:
     """Render the CTA API response in a readable way."""
@@ -124,10 +144,26 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:
 
 def render_cta_form(selected_item: Any) -> None:
     """Render the CTA judge form."""
+    del selected_item
 
     st.markdown("### CTA test input")
 
+    if "cta_content_input" not in st.session_state:
+        st.session_state["cta_content_input"] = ""
+
     with st.form("cta_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="cta_content_file_uploader",
+        )
+
+        content_value = st.session_state["cta_content_input"]
+        if uploaded_content_file is not None:
+            content_value = _read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
@@ -135,12 +171,54 @@ def render_cta_form(selected_item: Any) -> None:
                 '<p>Intro</p>\n'
                 '<p class="cta"><strong>Read more</strong></p>'
             ),
+            value=content_value,
         )
 
-        expected_cta = st.text_input(
+        cta_options = [
+            # Awareness
+            "En savoir plus",
+            "Lire la suite",
+            "Découvrir",
+            "Explorer",
+            "Consulter",
+            "Learn more",
+            "Read more",
+            "Discover",
+            "Explore",
+            "View more",
+
+            # Consideration
+            "Comparer",
+            "Télécharger",
+            "Nous contacter",
+            "Soumettre un formulaire",
+            "Demander une démo",
+            "Compare",
+            "Download",
+            "Contact us",
+            "Submit a form",
+            "Request a demo",
+
+            # Decision
+            "Souscrire",
+            "S'inscrire",
+            "S'enregistrer",
+            "Réserver",
+            "Commencer",
+            "Subscribe",
+            "Sign up",
+            "Register",
+            "Book",
+            "Get started",
+
+            # Option vide (important)
+            "— Aucun CTA —"
+        ]
+
+        expected_cta = st.selectbox(
             "Expected CTA",
-            value="Read more",
-            placeholder="Read more",
+            options=cta_options,
+            index=6,  # "Read more" par défaut
         )
 
         funnel_stage = st.selectbox(
@@ -178,6 +256,8 @@ def render_cta_form(selected_item: Any) -> None:
         )
 
         submitted = st.form_submit_button("Run CTA Judge")
+
+    st.session_state["cta_content_input"] = content
 
     if not submitted:
         return
