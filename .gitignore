@@ -9,3 +9,6 @@ __pycache__/
 *.egg-info/
 coverage.xml
 htmlcov/
+site/
+.pre-commit-cache/
+.uv-cache/

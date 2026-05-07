@@ -251,6 +251,45 @@ The important distinction is:
 
 Those are not the same problem and should not share the same status.
 
+## Error-Handling Architecture
+
+The project now uses a shared exception-handling architecture.
+
+Core rule:
+
+- business code raises typed application exceptions
+- the API layer maps them to HTTP responses
+
+Current building blocks:
+
+- `core/errors.py`: shared exception hierarchy
+- `core/error_models.py`: standard API error envelope
+- `api/error_handlers.py`: centralized FastAPI exception handlers
+- `judges/<judge>/exceptions.py`: judge-specific business exceptions when needed
+
+### Practical Rule of Thumb
+
+- if the issue is transport validation, let FastAPI/Pydantic handle it
+- if the issue is domain-meaningful, raise an application exception
+- if the issue belongs to one judge only, define it near that judge
+- if the issue is unexpected, let the global handler produce a safe `500`
+
+### What Contributors Should Avoid
+
+- `raise HTTPException(...)` inside judges or resolvers
+- raw `ValueError` for known domain cases
+- endpoint-specific ad hoc error payloads
+
+### Why This Matters
+
+This keeps three contracts clean:
+
+- backend layers stay focused on business meaning
+- the API stays consistent across endpoints
+- the UI can read one stable error format
+
+See [Error Handling](ERROR_HANDLING.md) for the full doctrine and examples.
+
 ## Observability Expectations
 
 Even in V1, keep operational visibility in mind.

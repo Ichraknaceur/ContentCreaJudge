@@ -23,6 +23,9 @@ dependencies = [
 [tool.uv]
 add-bounds = "minor"
 package = true
+constraint-dependencies = [
+    "gitpython>=3.1.49",
+]
 
 [dependency-groups]
 dev = [
