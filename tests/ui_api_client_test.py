@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from http.server import BaseHTTPRequestHandler
-from http.server import ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Thread
 
 from contentcreajudge.ui.services.api_client import request_json
@@ -12,14 +11,14 @@ from contentcreajudge.ui.services.api_client import request_json
 class _PlainTextHandler(BaseHTTPRequestHandler):
     """Serve a plain text response to exercise non-JSON backend handling."""
 
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self) -> None:
         """Return a plain text payload."""
         self.send_response(200)
         self.send_header("Content-Type", "text/plain; charset=utf-8")
         self.end_headers()
         self.wfile.write(b"service warming up")
 
-    def log_message(self, format: str, *args: object) -> None:
+    def log_message(self, format: str, *args: object) -> None:  # noqa: A002
         """Silence request logs during tests."""
 
 

@@ -130,6 +130,9 @@ src/contentcreajudge/
 - Pas de dépendance UI dans `domain/`
 - Pas d'agrégation dans les mini-judges
 - Pas de logique métier dans les fichiers de configuration
+- Pas d'`HTTPException` dans les resolvers ou judges
+- Pas de `ValueError` générique pour un cas métier récurrent si une exception
+  typée existe
 
 ## Architecture backend
 
@@ -143,6 +146,23 @@ Responsabilités :
 - valider les payloads transport
 - normaliser les réponses
 - gérer les erreurs HTTP
+
+Principe important pour l'équipe :
+
+- les couches métier décrivent l'erreur
+- la couche API décide comment l'exposer en HTTP
+
+Autrement dit :
+
+- les resolvers, preprocessors et judges lèvent des exceptions applicatives
+- `api/` centralise leur traduction en réponses JSON stables
+
+Cette règle évite que chaque développeur invente son propre style de gestion
+d'erreur.
+
+Référence détaillée :
+
+- [Error Handling](ERROR_HANDLING.md)
 
 Endpoints déjà présents :
 

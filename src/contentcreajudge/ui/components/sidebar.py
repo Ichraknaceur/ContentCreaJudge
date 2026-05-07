@@ -1,16 +1,12 @@
 """Sidebar component for the Streamlit UI."""
 
 from __future__ import annotations
+
 from pathlib import Path
 
 import streamlit as st
 
-LOGO_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "assets"
-    / "logo fond bleu 64x64.jpg"
-)
-
+LOGO_PATH = Path(__file__).resolve().parents[1] / "assets" / "logo fond bleu 64x64.jpg"
 
 
 def render_sidebar(default_api_url: str) -> str:

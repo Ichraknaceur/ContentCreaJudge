@@ -18,7 +18,6 @@ from contentcreajudge.rules.judges.typography.typography_resolver import (
 
 def execute_typography_flow(payload: dict[str, object]) -> dict[str, object]:
     """Execute the steps of the typography judge flow."""
-
     content = str(payload.get("content", ""))
     profile = str(payload.get("profile", "default"))
     request_id = payload.get("request_id")
