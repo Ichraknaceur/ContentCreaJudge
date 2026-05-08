@@ -83,7 +83,7 @@ rules:
 
   - rule_id: seo.keyword_distribution
     enabled: true
-    severity: major
+    severity: minor
 
   - rule_id: seo.secondary_keywords
     enabled: true
@@ -120,3 +120,4 @@ messages:
   readability_priority: "Keyword insertion negatively impacts readability."
   over_optimization: "Keyword over-optimization detected."
   formatting_constraints: "Keywords must not be emphasized with HTML tags."
+  semantic_unavailable: "L’analyse sémantique SEO n’a pas pu être exécutée. Les contrôles lexicaux ont été appliqués."

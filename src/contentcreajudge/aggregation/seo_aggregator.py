@@ -7,8 +7,8 @@ from typing import Any
 
 def aggregate_seo_result(judge_result: dict[str, Any]) -> dict[str, Any]:
     """Summarize the overall result of the SEO judge."""
-    judge_status = str(judge_result["status"])
-    judge_score = int(judge_result["score"])
+    judge_status = str(judge_result.get("status", "unknown"))
+    judge_score = int(judge_result.get("score", 0))
     findings = list(judge_result.get("findings", []))
 
     if judge_status == "pass":
@@ -24,7 +24,9 @@ def aggregate_seo_result(judge_result: dict[str, Any]) -> dict[str, Any]:
         return {
             "status": "warn",
             "score": judge_score,
-            "summary": "Global evaluation completed with warnings for the SEO dimension.",
+            "summary": (
+                "Global evaluation completed with warnings for the SEO dimension."
+            ),
             "dimension_results": [judge_result],
             "blocking_issues": [],
         }

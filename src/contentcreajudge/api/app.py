@@ -8,8 +8,8 @@ from fastapi import FastAPI
 from contentcreajudge.api.error_handlers import register_error_handlers
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
-from contentcreajudge.api.judges.typography import router as typography_judge_router
 from contentcreajudge.api.judges.seo import router as seo_judge_router
+from contentcreajudge.api.judges.typography import router as typography_judge_router
 from contentcreajudge.api.root import router as root_router
 
 

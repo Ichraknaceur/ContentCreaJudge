@@ -11,6 +11,8 @@ router = APIRouter(prefix="/api/v1/judges/seo", tags=["judges", "seo"])
 
 
 class SeoJudgeContext(BaseModel):
+    """Context required to resolve and run the SEO judge."""
+
     content_type: str
     expected_length: str
     funnel_stage: str

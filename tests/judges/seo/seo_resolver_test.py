@@ -60,9 +60,13 @@ def test_resolve_seo_rules_with_medium_length() -> None:
         ]
         is True
     )
-    assert result["readability_priority_rules"]["coherence_over_forced_insertion"] is True
+    assert (
+        result["readability_priority_rules"]["coherence_over_forced_insertion"] is True
+    )
     assert result["over_optimization_rules"]["max_identical_long_tail_occurrences"] == 2
-    assert result["formatting_constraints_rules"]["forbid_emphasis_tags_on_keywords"] == [
+    assert result["formatting_constraints_rules"][
+        "forbid_emphasis_tags_on_keywords"
+    ] == [
         "em",
         "strong",
     ]
@@ -90,7 +94,9 @@ def test_resolve_seo_rules_applies_awareness_simple_exception() -> None:
         "min_main": 3,
     }
     assert result["long_tail_keyword_rules"]["allow_long_tail_keywords"] is False
-    assert result["long_tail_keyword_rules"]["awareness_simple_exception_applied"] is True
+    assert (
+        result["long_tail_keyword_rules"]["awareness_simple_exception_applied"] is True
+    )
 
 
 def test_resolve_seo_rules_with_long_length_keeps_long_tail_keywords() -> None:
