@@ -7,8 +7,7 @@ import re
 
 
 def preprocess_length_content(content: str) -> dict[str, object]:
-    """Prepare the content for length evaluation"""
-
+    """Prepare the content for length evaluation."""
     text_without_html = re.sub(r"<[^>]+>", " ", content)
     decoded_text = html.unescape(text_without_html)
     normalized_text = re.sub(r"\s+", " ", decoded_text).strip()

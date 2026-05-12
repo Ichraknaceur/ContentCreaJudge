@@ -11,6 +11,7 @@ requires-python = ">= 3.14"
 dependencies = [
     "fastapi>=0.120.0,<0.121.0",
     "pillow>=12.1.1,<13.0.0",
+    "requests>=2.32.0,<3.0.0",
     "starlette>=0.49.1,<0.50.0",
     "streamlit>=1.54.0,<1.55.0",
     "uvicorn>=0.37.0,<0.38.0",
@@ -19,6 +20,9 @@ dependencies = [
 [tool.uv]
 add-bounds = "minor"
 package = true
+constraint-dependencies = [
+    "gitpython>=3.1.49",
+]
 
 [dependency-groups]
 dev = [
@@ -29,7 +33,7 @@ dev = [
     "mkdocs-material>=9.7.6,<9.8.0",
     "mkdocstrings-python>=2.0.3,<2.1.0",
     "pre-commit>=4.5.1,<4.6.0",
-    "pytest>=9.0.2,<9.1.0",
+    "pytest>=9.0.3,<9.1.0",
     "pytest-cov>=7.1.0,<7.2.0",
     "pytest-mock>=3.15.1,<3.16.0",
     "ruff>=0.15.8,<0.15.9",
@@ -41,6 +45,14 @@ output-format = "concise"
 target-version = "py314"
 line-length = 88
 indent-width = 4
+exclude = [
+  ".git",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".uv-cache",
+  ".venv",
+  "htmlcov",
+]
 
 lint.pydocstyle.convention = "google"
 lint.flake8-bandit.check-typed-exception = true
@@ -52,6 +64,7 @@ lint.ignore = [
   "D100", # pydocstyle
   "EM", # flake8-errmsg
   "INP001", # implicit-namespace-package
+  "COM812", # may conflict with ruff format
   "TRY003", # raise-vanilla-args
   "TRY401", # verbose-log-message
 ]

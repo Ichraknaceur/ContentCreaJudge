@@ -12,7 +12,13 @@
 [![Makefile](https://img.shields.io/badge/Makefile-427819?logo=gnu)](https://www.gnu.org/software/make/manual/make.html)
 [![MkDocs](https://img.shields.io/badge/MkDocs-526CFE?logo=markdown)](https://www.mkdocs.org/)
 
-## Overview
+!!! abstract "Project Snapshot"
+    ContentCreaJudge is a rule-based editorial evaluation engine with a FastAPI
+    backend and a Streamlit demo UI. The current foundation is designed to let
+    the team implement mini-judges independently while keeping one stable API
+    contract.
+
+## Why This Project Exists
 
 AI-assisted engine for evaluating and improving editorial content quality and compliance.
 
@@ -23,6 +29,28 @@ Current V1 foundation already includes:
 - `GET /health`
 - `POST /api/v1/evaluations`
 - Streamlit UI client aligned with the ContentCrea visual theme
+
+## At A Glance
+
+<div class="grid cards" markdown>
+
+-   __Backend__
+    ---
+    FastAPI service exposing health, discovery, evaluations, and judge routes.
+
+-   __UI__
+    ---
+    Streamlit workspace for demos, manual testing, and isolated judge checks.
+
+-   __Rules__
+    ---
+    YAML-driven rule definitions kept separate from judge execution logic.
+
+-   __Team Docs__
+    ---
+    Architecture, cadrage, API contract, and error-handling doctrine in one place.
+
+</div>
 
 ## Setup and installation
 
@@ -39,27 +67,27 @@ make init
 
 ## Usage
 
-### Run the backend API
+=== "Backend API"
 
-```sh
-make run
-```
+    ```sh
+    make run
+    ```
 
-The API is exposed locally at:
+    The API is exposed locally at:
 
-- `http://127.0.0.1:8000/`
-- `http://127.0.0.1:8000/health`
-- `http://127.0.0.1:8000/api/v1/evaluations`
+    - `http://127.0.0.1:8000/`
+    - `http://127.0.0.1:8000/health`
+    - `http://127.0.0.1:8000/api/v1/evaluations`
 
-### Run the Streamlit UI
+=== "Streamlit UI"
 
-```sh
-make run-ui
-```
+    ```sh
+    make run-ui
+    ```
 
-The UI is exposed locally at:
+    The UI is exposed locally at:
 
-- `http://127.0.0.1:8501`
+    - `http://127.0.0.1:8501`
 
 ### Current UI Scope
 
@@ -71,6 +99,10 @@ The Streamlit UI currently provides:
 - response console
 - delivery view for client demos
 
+!!! note "Recommended local workflow"
+    Start the backend first with `make run`, then start the UI with
+    `make run-ui`. The judge playground depends on the API being available.
+
 ## Development
 
 ### Architecture and Internal Guides
@@ -78,11 +110,45 @@ The Streamlit UI currently provides:
 The project documentation now includes dedicated references for system design and
 internal development practices:
 
-- [Cadrage Équipe](CADRAGE_EQUIPE.md)
-- [Architecture](ARCHITECTURE.md)
-- [Configuration Des Règles](RULES_CONFIGURATION.md)
-- [API Contract](API_CONTRACT.md)
-- [Developer Guide](DEVELOPER_GUIDE.md)
+<div class="grid cards" markdown>
+
+-   __Cadrage Équipe__
+    ---
+    Team operating principles, layer responsibilities, and collaboration rules.
+
+    [Open the guide](CADRAGE_EQUIPE.md)
+
+-   __Architecture__
+    ---
+    System boundaries, execution flow, package roles, and backend structure.
+
+    [Open the guide](ARCHITECTURE.md)
+
+-   __Error Handling__
+    ---
+    Internal doctrine for exceptions, HTTP mapping, and stable error payloads.
+
+    [Open the guide](ERROR_HANDLING.md)
+
+-   __Configuration Des Règles__
+    ---
+    How YAML rules are structured and how judges consume them.
+
+    [Open the guide](RULES_CONFIGURATION.md)
+
+-   __API Contract__
+    ---
+    Request and response shapes that clients are expected to rely on.
+
+    [Open the guide](API_CONTRACT.md)
+
+-   __Developer Guide__
+    ---
+    Practical implementation rules for contributors extending the service.
+
+    [Open the guide](DEVELOPER_GUIDE.md)
+
+</div>
 
 ### Code Formatting and Linting
 
@@ -116,6 +182,26 @@ Streamlit UI -> FastAPI API -> Evaluation endpoint scaffold
 
 For the full design, module boundaries, and internal guidelines, see the
 architecture and developer guide pages linked above.
+
+## Reading Paths
+
+=== "I want to understand the system"
+
+    1. Read [Architecture](ARCHITECTURE.md)
+    2. Read [API Contract](API_CONTRACT.md)
+    3. Read [Error Handling](ERROR_HANDLING.md)
+
+=== "I want to contribute code"
+
+    1. Read [Cadrage Équipe](CADRAGE_EQUIPE.md)
+    2. Read [Developer Guide](DEVELOPER_GUIDE.md)
+    3. Run `make lint` and `make test`
+
+=== "I want to work on judges"
+
+    1. Read [Configuration Des Règles](RULES_CONFIGURATION.md)
+    2. Read [Error Handling](ERROR_HANDLING.md)
+    3. Inspect the existing typography flow as the reference pattern
 
 ## Contributing
 

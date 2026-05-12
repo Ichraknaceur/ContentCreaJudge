@@ -11,13 +11,15 @@ router = APIRouter(prefix="/api/v1/judges/length", tags=["judges", "length"])
 
 
 class LengthJudgeContext(BaseModel):
+    """Context values required by the length judge."""
+
     content_type: str
     expected_length: str
     locale: str | None = None
 
 
 class LengthJudgeRequestPayload(BaseModel):
-    """Request body for running the length judge"""
+    """Request body for running the length judge."""
 
     content: str
     profile: str = "default"
@@ -29,5 +31,5 @@ class LengthJudgeRequestPayload(BaseModel):
 
 @router.post("/evaluate", status_code=status.HTTP_200_OK)
 def evaluate_length_judge(payload: LengthJudgeRequestPayload) -> dict[str, object]:
-    """Execute the length flow"""
+    """Execute the length flow."""
     return execute_length_flow(payload.model_dump())

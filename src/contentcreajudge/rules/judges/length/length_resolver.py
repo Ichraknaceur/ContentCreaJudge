@@ -2,21 +2,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
+from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 
 def resolve_length_rules(context: dict[str, object]) -> dict[str, object]:
-    """Resolve the length rules defined in the YAML based on the evaluation context"""
-
+    """Resolve the length rules defined in the YAML based on the evaluation context."""
     config_path = Path(__file__).with_name("length.yaml")
 
-    # Lecture du YAML
-    with open(config_path, "r", encoding="utf-8") as file:
-        config = yaml.safe_load(file)
+    config = load_yaml_config(config_path)
 
-    rules = config["length_rules"]
-    
-    # Lecture des infos envoyées par l'UI
+    rules = config.get("length_rules") or {}
+
     content_type = context.get("content_type")
     expected_length = context.get("expected_length")
 
@@ -25,28 +21,33 @@ def resolve_length_rules(context: dict[str, object]) -> dict[str, object]:
 
     if not expected_length:
         raise ValueError("Missing context.expected_length for length evaluation.")
+    ranges_by_content_type = rules.get("ranges_by_content_type") or {}
 
-   
-    ranges = rules["ranges_by_content_type"]
-
-    if content_type not in ranges:
+    if content_type not in ranges_by_content_type:
         raise ValueError(f"Unknown content_type: {content_type}")
 
-    if expected_length not in ranges[content_type]:
+    ranges_for_content_type = ranges_by_content_type.get(content_type) or {}
+
+    if expected_length not in ranges_for_content_type:
         raise ValueError(f"Unknown expected_length: {expected_length}")
 
-    selected_range = ranges[content_type][expected_length]
+    selected_range = ranges_for_content_type.get(expected_length) or {}
 
-    # Envoi de la règle définie pour ce contexte d'évaluation
     return {
-        "judge_id": "length",
-        "is_blocking_rule": rules["is_blocking_rule"],
-        "measurement_unit": rules["measurement_unit"],
-        "count_scope": rules["count_scope"],
-        "exclude_html_tags": rules["exclude_html_tags"],
-        "tolerance_pct": rules["tolerance_pct"],
-        "min_words": selected_range["min_words"],
-        "max_words": selected_range["max_words"],
+        "judge_id": config.get("judge_id", "length"),
+        "version": config.get("version", 1),
+        "label": config.get("label", "Length judge"),
+        "description": config.get(
+            "description",
+            "Evaluate content length compliance.",
+        ),
+        "is_blocking_rule": rules.get("is_blocking_rule", True),
+        "measurement_unit": rules.get("measurement_unit", "words"),
+        "count_scope": rules.get("count_scope", "body_text_only"),
+        "exclude_html_tags": rules.get("exclude_html_tags", True),
+        "tolerance_pct": rules.get("tolerance_pct", 10),
+        "min_words": selected_range.get("min_words", 0),
+        "max_words": selected_range.get("max_words"),
         "content_type": content_type,
         "expected_length": expected_length,
     }

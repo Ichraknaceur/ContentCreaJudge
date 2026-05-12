@@ -1,7 +1,14 @@
 .DEFAULT_GOAL := help
 
-# Check if uv is installed (Windows)
-UV_COMMAND := $(shell where.exe uv 2>NUL)
+ifeq ($(OS),Windows_NT)
+UV_COMMAND := $(shell where uv 2>NUL)
+COPY_ENV_COMMAND = if not exist .env copy .env.example .env
+else
+UV_COMMAND := $(shell command -v uv 2> /dev/null)
+COPY_ENV_COMMAND = cp .env.example .env || true
+endif
+
+RUFF_TARGETS := src tests pyproject.toml
 
 .PHONY: help
 help: ## Display this help message
@@ -35,12 +42,12 @@ init: check-uv pyproject.toml .pre-commit-config.yaml install ## Initialize proj
 
 .PHONY: format
 format: check-uv ## Format code
-	-uv run -- ruff format
-	uv run -- ruff check --fix
+	uv run -- ruff format $(RUFF_TARGETS)
+	uv run -- ruff check --fix $(RUFF_TARGETS)
 
 .PHONY: lint
 lint: check-uv ## Run linting checks
-	uv run -- ruff check
+	uv run -- ruff check $(RUFF_TARGETS)
 
 .PHONY: typecheck
 typecheck: check-uv ## Run type checking with ty
