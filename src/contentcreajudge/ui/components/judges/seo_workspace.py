@@ -6,11 +6,9 @@ import requests
 import streamlit as st
 
 from contentcreajudge.ui.components.judges.shared import (
-    extract_api_error_message,
     read_uploaded_text_file,
+    render_exchange_summary,
     render_findings_section,
-    render_rule_resolution_section,
-    render_status_banner,
 )
 
 if TYPE_CHECKING:
@@ -108,47 +106,14 @@ def _render_judge_result_section(judge_result: dict[str, object]) -> None:
     render_findings_section(judge_result.get("findings", []))
 
 
-def _render_exchange_summary(exchange: dict[str, object]) -> None:
-    """Render the SEO API response in a readable way."""
-    response_status = exchange.get("response_status")
-    response_body = exchange.get("response_body") or {}
-    error = exchange.get("error")
-    api_error_message = extract_api_error_message(response_body)
-
-    render_status_banner(
-        response_status,
-        error,
-        api_error_message,
-        "SEO judge executed successfully.",
+def _render_seo_exchange_summary(exchange: dict[str, object]) -> None:
+    """Render the SEO API response."""
+    render_exchange_summary(
+        exchange,
+        success_message="SEO judge executed successfully.",
+        render_preprocessing=_render_preprocessing_section,
+        render_judge_result=_render_judge_result_section,
     )
-
-    if not isinstance(response_body, dict):
-        st.warning("Response body is not a JSON object.")
-        with st.expander("Show raw API exchange"):
-            st.json(exchange)
-        return
-
-    rule_resolution = response_body.get("rule_resolution")
-    preprocessing = response_body.get("preprocessing")
-    judge_result = response_body.get("judge_result")
-    response_message = response_body.get("message")
-
-    if response_message:
-        st.caption(str(response_message))
-
-    st.markdown("#### Pipeline steps")
-
-    if isinstance(rule_resolution, dict):
-        render_rule_resolution_section(rule_resolution)
-
-    if isinstance(preprocessing, dict):
-        _render_preprocessing_section(preprocessing)
-
-    if isinstance(judge_result, dict):
-        _render_judge_result_section(judge_result)
-
-    with st.expander("Show raw API exchange"):
-        st.json(exchange)
 
 
 def render_seo_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG001
@@ -275,7 +240,7 @@ def render_seo_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
     if not should_run:
         last_exchange = st.session_state.get("last_seo_exchange")
         if last_exchange:
-            _render_exchange_summary(last_exchange)
+            _render_seo_exchange_summary(last_exchange)
         return
 
     content = payload.get("content", "")
@@ -304,7 +269,7 @@ def render_seo_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
             "error": f"API request failed: {exc}",
         }
         st.session_state["last_seo_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_seo_exchange_summary(exchange)
         st.session_state["seo_run_requested"] = False
         return
 
@@ -318,7 +283,7 @@ def render_seo_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
             "error": "The API returned a non-JSON response.",
         }
         st.session_state["last_seo_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_seo_exchange_summary(exchange)
         st.session_state["seo_run_requested"] = False
         return
 
@@ -329,6 +294,6 @@ def render_seo_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
         "error": None if response.ok else "The SEO judge request failed.",
     }
     st.session_state["last_seo_exchange"] = exchange
-    _render_exchange_summary(exchange)
+    _render_seo_exchange_summary(exchange)
 
     st.session_state["seo_run_requested"] = False

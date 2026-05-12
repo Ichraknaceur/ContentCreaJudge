@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
+from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 ALLOWED_LENGTHS = {"SIMPLE", "MEDIUM", "LONG"}
 ALLOWED_FUNNEL_STAGES = {"AWARENESS", "CONSIDERATION", "DECISION"}
@@ -105,10 +105,9 @@ def resolve_seo_rules(context: dict[str, Any]) -> dict[str, Any]:
     """Resolve the SEO rules defined in YAML based on the evaluation context."""
     config_path = Path(__file__).with_name("seo.yaml")
 
-    with config_path.open("r", encoding="utf-8") as file:
-        config = yaml.safe_load(file)
+    config = load_yaml_config(config_path)
 
-    seo_rules = config["seo_rules"]
+    seo_rules = config.get("seo_rules") or {}
 
     content_type = context.get("content_type")
     expected_length = context.get("expected_length")
