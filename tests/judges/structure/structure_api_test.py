@@ -6,6 +6,7 @@ client = TestClient(app)
 
 
 def test_evaluate_structure_judge_api_passes_with_valid_payload() -> None:
+    """Return a passing response for a valid structure payload."""
     payload = {
         "content": """
         <p>Introduction générée.</p>
@@ -42,6 +43,7 @@ def test_evaluate_structure_judge_api_passes_with_valid_payload() -> None:
 
 
 def test_evaluate_structure_judge_api_rejects_invalid_payload() -> None:
+    """Reject a structure payload without an expected outline."""
     payload = {
         "content": "<p>Intro</p><h2>Section A</h2>",
         "profile": "default",

@@ -2,8 +2,16 @@ from contentcreajudge.preprocessing.structure_preprocessor import (
     preprocess_structure_content,
 )
 
+INTERNAL_COMMENT_PATTERNS = [
+    "Response angle",
+    "Note",
+    "Instruction",
+    "Indication",
+]
+
 
 def test_preprocess_structure_content_extracts_headings() -> None:
+    """Extract headings and basic structure signals."""
     expected_outline_html = """
     <p>Introduction attendue.</p>
     <h2>Section A</h2>
@@ -14,7 +22,7 @@ def test_preprocess_structure_content_extracts_headings() -> None:
     """
 
     generated_html = """
-    <p>Introduction générée.</p>
+    <p>Introduction generee.</p>
     <h2>Section A</h2>
     <p>Contenu.</p>
     <h3>Sous-section A.1</h3>
@@ -26,7 +34,7 @@ def test_preprocess_structure_content_extracts_headings() -> None:
     result = preprocess_structure_content(
         expected_outline_html=expected_outline_html,
         generated_html=generated_html,
-        internal_comment_patterns=["Angle de réponse", "Note", "Instruction", "Indication"],
+        internal_comment_patterns=INTERNAL_COMMENT_PATTERNS,
     )
 
     assert result["expected"]["heading_count"] == 3
@@ -37,20 +45,21 @@ def test_preprocess_structure_content_extracts_headings() -> None:
 
 
 def test_preprocess_structure_content_detects_forbidden_elements() -> None:
+    """Detect forbidden tags and inline styles."""
     expected_outline_html = "<p>Intro</p><h2>Section</h2>"
 
     generated_html = """
     <h1>Titre interdit</h1>
     <p style="color:red;">Intro</p>
     <h2>Section</h2>
-    <span>Décoration</span>
+    <span>Decoration</span>
     <script>alert('x')</script>
     """
 
     result = preprocess_structure_content(
         expected_outline_html=expected_outline_html,
         generated_html=generated_html,
-        internal_comment_patterns=["Angle de réponse", "Note", "Instruction", "Indication"],
+        internal_comment_patterns=INTERNAL_COMMENT_PATTERNS,
     )
 
     assert result["generated"]["has_h1"] is True
@@ -60,6 +69,7 @@ def test_preprocess_structure_content_detects_forbidden_elements() -> None:
 
 
 def test_preprocess_structure_content_detects_internal_comments() -> None:
+    """Detect exposed internal outline comments."""
     expected_outline_html = "<p>Intro</p><h2>Section</h2>"
 
     generated_html = """
@@ -71,7 +81,7 @@ def test_preprocess_structure_content_detects_internal_comments() -> None:
     result = preprocess_structure_content(
         expected_outline_html=expected_outline_html,
         generated_html=generated_html,
-        internal_comment_patterns=["Angle de réponse", "Note", "Instruction", "Indication"],
+        internal_comment_patterns=INTERNAL_COMMENT_PATTERNS,
     )
 
     assert result["generated"]["has_internal_outline_comments_exposed"] is True

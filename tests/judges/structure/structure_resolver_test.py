@@ -1,9 +1,12 @@
+import pytest
+
 from contentcreajudge.rules.judges.structure.structure_resolver import (
     resolve_structure_rules,
 )
 
 
 def test_resolve_structure_rules_success() -> None:
+    """Resolve structure rules with expected outline context."""
     context = {
         "expected_outline_html": "<p>Intro</p><h2>Section 1</h2>",
         "locale": "fr-FR",
@@ -20,14 +23,13 @@ def test_resolve_structure_rules_success() -> None:
 
 
 def test_resolve_structure_rules_missing_expected_outline_html() -> None:
+    """Raise an error when the expected outline is missing."""
     context = {
         "locale": "fr-FR",
     }
 
-    try:
+    with pytest.raises(
+        ValueError,
+        match=r"Missing context\.expected_outline_html for structure evaluation\.",
+    ):
         resolve_structure_rules(context)
-        assert False, "Expected ValueError was not raised"
-    except ValueError as exc:
-        assert str(exc) == (
-            "Missing context.expected_outline_html for structure evaluation."
-        )

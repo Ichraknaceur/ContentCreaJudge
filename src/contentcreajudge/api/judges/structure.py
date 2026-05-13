@@ -5,13 +5,16 @@ from __future__ import annotations
 from fastapi import APIRouter, status
 from pydantic import BaseModel, ConfigDict
 
-from contentcreajudge.application.judge_flow.structure_flow import execute_structure_flow
-
+from contentcreajudge.application.judge_flow.structure_flow import (
+    execute_structure_flow,
+)
 
 router = APIRouter(prefix="/api/v1/judges/structure", tags=["judges", "structure"])
 
 
 class StructureJudgeContext(BaseModel):
+    """Context required to evaluate structure compliance."""
+
     expected_outline_html: str
     locale: str | None = None
 

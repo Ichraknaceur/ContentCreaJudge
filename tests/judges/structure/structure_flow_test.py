@@ -4,6 +4,7 @@ from contentcreajudge.application.judge_flow.structure_flow import (
 
 
 def test_execute_structure_flow_passes_with_valid_structure() -> None:
+    """Return a passing flow result for valid structure content."""
     payload = {
         "content": """
         <p>Introduction générée.</p>
@@ -38,8 +39,9 @@ def test_execute_structure_flow_passes_with_valid_structure() -> None:
     assert result["aggregation"]["status"] == "pass"
     assert result["aggregation"]["score"] == 100
 
- 
+
 def test_execute_structure_flow_fails_with_invalid_structure() -> None:
+    """Return a failing flow result for invalid structure content."""
     payload = {
         "content": """
         <h1>Titre interdit</h1>

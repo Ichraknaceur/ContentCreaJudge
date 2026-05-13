@@ -12,11 +12,27 @@ def _build_rules(expected_outline_html: str) -> dict[str, object]:
         {
             "expected_outline_html": expected_outline_html,
             "locale": "fr-FR",
-        }
+        },
     )
 
-# QStructure Validation
+
+def _preprocess(
+    expected_outline_html: str,
+    generated_html: str,
+    rules: dict[str, object],
+) -> dict[str, object]:
+    structure_rules = rules["structure_rules"]
+    return preprocess_structure_content(
+        expected_outline_html=expected_outline_html,
+        generated_html=generated_html,
+        internal_comment_patterns=structure_rules["internal_outline_comments"][
+            "patterns"
+        ],
+    )
+
+
 def test_run_structure_judge_passes_when_structure_is_valid() -> None:
+    """Pass when generated headings match the expected structure."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -28,7 +44,7 @@ def test_run_structure_judge_passes_when_structure_is_valid() -> None:
     """
 
     generated_html = """
-    <p>Intro générée</p>
+    <p>Intro generee</p>
     <h2>Section A</h2>
     <p>Contenu</p>
     <h3>Sous-section A.1</h3>
@@ -38,11 +54,7 @@ def test_run_structure_judge_passes_when_structure_is_valid() -> None:
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 
@@ -50,8 +62,9 @@ def test_run_structure_judge_passes_when_structure_is_valid() -> None:
     assert result["status"] == "pass"
     assert result["score"] == 100
 
-# Heading Order 
+
 def test_run_structure_judge_detects_heading_order_issue() -> None:
+    """Fail when generated headings are reordered."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -67,11 +80,7 @@ def test_run_structure_judge_detects_heading_order_issue() -> None:
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 
@@ -81,8 +90,9 @@ def test_run_structure_judge_detects_heading_order_issue() -> None:
         for finding in result["findings"]
     )
 
-# Heading Level
+
 def test_run_structure_judge_detects_heading_level_issue() -> None:
+    """Fail when generated heading levels differ."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -96,11 +106,7 @@ def test_run_structure_judge_detects_heading_level_issue() -> None:
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 
@@ -110,8 +116,9 @@ def test_run_structure_judge_detects_heading_level_issue() -> None:
         for finding in result["findings"]
     )
 
-# H1 and style detection
+
 def test_run_structure_judge_detects_h1_script_span_and_inline_style() -> None:
+    """Fail when forbidden body markup is present."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -121,16 +128,12 @@ def test_run_structure_judge_detects_h1_script_span_and_inline_style() -> None:
     <h1>Titre interdit</h1>
     <p style="color:red;">Intro</p>
     <h2>Section A</h2>
-    <span>Décoration</span>
+    <span>Decoration</span>
     <script>alert('x')</script>
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 
@@ -142,8 +145,9 @@ def test_run_structure_judge_detects_h1_script_span_and_inline_style() -> None:
     assert "structure.no_decorative_spans" in rule_ids
     assert "structure.no_inline_styles_except_tables" in rule_ids
 
-# Internal Comment Detection
+
 def test_run_structure_judge_detects_internal_comment_exposure() -> None:
+    """Fail when internal outline comments are exposed."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -152,15 +156,11 @@ def test_run_structure_judge_detects_internal_comment_exposure() -> None:
     generated_html = """
     <p>Intro</p>
     <h2>Section A</h2>
-    <p>Instruction : ce texte ne doit pas apparaître.</p>
+    <p>Instruction : ce texte ne doit pas apparaitre.</p>
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 
@@ -170,8 +170,9 @@ def test_run_structure_judge_detects_internal_comment_exposure() -> None:
         for finding in result["findings"]
     )
 
-# Tolerated added sections: Learn more 
+
 def test_run_structure_judge_allows_optional_trailing_complementary_reading() -> None:
+    """Allow one configured optional trailing section."""
     expected_outline_html = """
     <p>Intro</p>
     <h2>Section A</h2>
@@ -181,7 +182,7 @@ def test_run_structure_judge_allows_optional_trailing_complementary_reading() ->
     """
 
     generated_html = """
-    <p>Intro générée</p>
+    <p>Intro generee</p>
     <h2>Section A</h2>
     <p>Contenu</p>
     <h3>Sous-section A.1</h3>
@@ -195,11 +196,7 @@ def test_run_structure_judge_allows_optional_trailing_complementary_reading() ->
     """
 
     rules = _build_rules(expected_outline_html)
-    preprocessed = preprocess_structure_content(
-        expected_outline_html=expected_outline_html,
-        generated_html=generated_html,
-        internal_comment_patterns=rules["structure_rules"]["internal_outline_comments"]["patterns"],
-    )
+    preprocessed = _preprocess(expected_outline_html, generated_html, rules)
 
     result = run_structure_judge(preprocessed, rules)
 

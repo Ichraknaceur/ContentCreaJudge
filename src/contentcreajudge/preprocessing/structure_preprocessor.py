@@ -12,8 +12,7 @@ from bs4 import BeautifulSoup, Tag
 def _normalize_text(value: str) -> str:
     """Normalize extracted text for stable structural comparisons."""
     decoded = html.unescape(value)
-    normalized = re.sub(r"\s+", " ", decoded).strip()
-    return normalized
+    return re.sub(r"\s+", " ", decoded).strip()
 
 
 def _extract_headings(soup: BeautifulSoup) -> list[dict[str, str]]:
@@ -28,7 +27,7 @@ def _extract_headings(soup: BeautifulSoup) -> list[dict[str, str]]:
             {
                 "level": element.name,
                 "text": _normalize_text(element.get_text(" ", strip=True)),
-            }
+            },
         )
 
     return headings
@@ -93,6 +92,7 @@ def preprocess_structure_content(
         text=generated_text,
         patterns=internal_comment_patterns,
     )
+    has_internal_comments = len(detected_internal_comments) > 0
 
     return {
         "expected": {
@@ -111,10 +111,10 @@ def preprocess_structure_content(
             "has_script": generated_soup.find("script") is not None,
             "has_span": generated_soup.find("span") is not None,
             "has_inline_style_outside_tables": _has_inline_style_outside_tables(
-                generated_soup
+                generated_soup,
             ),
             "detected_internal_comment_patterns": detected_internal_comments,
-            "has_internal_outline_comments_exposed": len(detected_internal_comments) > 0,
+            "has_internal_outline_comments_exposed": has_internal_comments,
             "normalized_text": generated_text,
         },
     }
