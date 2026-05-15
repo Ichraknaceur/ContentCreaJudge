@@ -81,7 +81,7 @@ def render_length_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG0
             value=content_value,
         )
 
-        expected_format = st.selectbox(
+        expected_length = st.selectbox(
             "Expected format",
             options=["SIMPLE", "MEDIUM", "LONG"],
             index=1,
@@ -121,7 +121,7 @@ def render_length_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG0
         "profile": "default",
         "context": {
             "content_type": content_type,
-            "expected_length": expected_format,
+            "expected_length": expected_length,
             "locale": locale.strip() or None,
         },
     }

@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from contentcreajudge.judges.length.exceptions import (
+    MissingLengthContextError,
+    UnsupportedLengthValueError,
+)
 from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 
@@ -17,19 +21,28 @@ def resolve_length_rules(context: dict[str, object]) -> dict[str, object]:
     expected_length = context.get("expected_length")
 
     if not content_type:
-        raise ValueError("Missing context.content_type for length evaluation.")
+        raise MissingLengthContextError("content_type")
 
     if not expected_length:
-        raise ValueError("Missing context.expected_length for length evaluation.")
+        raise MissingLengthContextError("expected_length")
+
     ranges_by_content_type = rules.get("ranges_by_content_type") or {}
 
     if content_type not in ranges_by_content_type:
-        raise ValueError(f"Unknown content_type: {content_type}")
+        raise UnsupportedLengthValueError(
+            "content_type",
+            str(content_type),
+            list(ranges_by_content_type.keys()),
+        )
 
     ranges_for_content_type = ranges_by_content_type.get(content_type) or {}
 
     if expected_length not in ranges_for_content_type:
-        raise ValueError(f"Unknown expected_length: {expected_length}")
+        raise UnsupportedLengthValueError(
+            "expected_length",
+            str(expected_length),
+            list(ranges_for_content_type.keys()),
+        )
 
     selected_range = ranges_for_content_type.get(expected_length) or {}
 
@@ -50,4 +63,5 @@ def resolve_length_rules(context: dict[str, object]) -> dict[str, object]:
         "max_words": selected_range.get("max_words"),
         "content_type": content_type,
         "expected_length": expected_length,
+        "messages": config.get("messages", {}),
     }

@@ -56,7 +56,11 @@ _DEFAULT_SCORING = {
     "pass_threshold": SEO_PASS_SCORE_THRESHOLD,
     "warn_threshold": SEO_WARN_SCORE_THRESHOLD,
     "global_weights": {
-        "with_overoptimization": {"lexical": 0.55, "semantic": 0.30, "overoptimization": 0.15},
+        "with_overoptimization": {
+            "lexical": 0.55,
+            "semantic": 0.30,
+            "overoptimization": 0.15,
+        },
         "without_overoptimization": {"lexical": 0.65, "semantic": 0.35},
     },
 }
@@ -1089,14 +1093,20 @@ def _compute_global_seo_score(
     weights = scoring.get("global_weights", _DEFAULT_SCORING["global_weights"])
 
     if semantic_state["overoptimization"]["overoptimization_applicable"]:
-        w = weights.get("with_overoptimization", _DEFAULT_SCORING["global_weights"]["with_overoptimization"])
+        w = weights.get(
+            "with_overoptimization",
+            _DEFAULT_SCORING["global_weights"]["with_overoptimization"],
+        )
         return round(
             (w["lexical"] * lexical_score)
             + (w["semantic"] * semantic_score)
             + (w["overoptimization"] * overoptimization_score),
         )
 
-    w = weights.get("without_overoptimization", _DEFAULT_SCORING["global_weights"]["without_overoptimization"])
+    w = weights.get(
+        "without_overoptimization",
+        _DEFAULT_SCORING["global_weights"]["without_overoptimization"],
+    )
     return round((w["lexical"] * lexical_score) + (w["semantic"] * semantic_score))
 
 
@@ -1120,8 +1130,7 @@ def _compute_seo_status(
     warn_threshold = scoring.get("warn_threshold", SEO_WARN_SCORE_THRESHOLD)
 
     evaluable_findings = [
-        f for f in findings
-        if f.get("rule_id") not in _SEMANTIC_AVAILABILITY_RULE_IDS
+        f for f in findings if f.get("rule_id") not in _SEMANTIC_AVAILABILITY_RULE_IDS
     ]
 
     if global_score >= pass_threshold and not evaluable_findings:

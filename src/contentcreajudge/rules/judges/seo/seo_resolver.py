@@ -30,7 +30,9 @@ def _validate_seo_context(context_values: dict[str, object]) -> None:
 
     if expected_length not in ALLOWED_LENGTHS:
         raise UnsupportedSeoValueError(
-            "expected_length", str(expected_length), sorted(ALLOWED_LENGTHS),
+            "expected_length",
+            str(expected_length),
+            sorted(ALLOWED_LENGTHS),
         )
 
     if not funnel_stage:
@@ -38,7 +40,9 @@ def _validate_seo_context(context_values: dict[str, object]) -> None:
 
     if funnel_stage not in ALLOWED_FUNNEL_STAGES:
         raise UnsupportedSeoValueError(
-            "funnel_stage", str(funnel_stage), sorted(ALLOWED_FUNNEL_STAGES),
+            "funnel_stage",
+            str(funnel_stage),
+            sorted(ALLOWED_FUNNEL_STAGES),
         )
 
     if not main_keyword:

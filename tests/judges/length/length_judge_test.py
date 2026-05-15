@@ -19,7 +19,15 @@ def test_run_length_judge_passes_when_word_count_is_inside_expected_range() -> N
     assert result["dimension"] == "length"
     assert result["status"] == "pass"
     assert result["score"] == 100
-    assert result["applied_rule"] == BASE_RULES
+    assert result["applied_rule"] == {
+        "content_type": None,
+        "expected_length": None,
+        "min_words": 1000,
+        "max_words": 2000,
+        "tolerance_pct": 10.0,
+        "tolerated_min": 900,
+        "tolerated_max": 2200,
+    }
     assert result["findings"][0]["rule_id"] == "length.valid"
     assert result["findings"][0]["severity"] == "info"
 

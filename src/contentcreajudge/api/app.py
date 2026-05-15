@@ -1,12 +1,17 @@
 """FastAPI application factory for the ContentCreaJudge service."""
 
+from __future__ import annotations
+
 import logging
 from contextlib import asynccontextmanager
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as get_version
-from typing import AsyncGenerator
+from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 from contentcreajudge.api.error_handlers import register_error_handlers
 from contentcreajudge.api.evaluations import router as evaluations_router
@@ -29,7 +34,7 @@ def _resolve_package_version() -> str:
 
 
 @asynccontextmanager
-async def _lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
+async def _lifespan(_application: FastAPI) -> AsyncGenerator[None]:
     logger.info("Warming up SEO semantic model...")
     warmup_semantic_model()
     logger.info("SEO semantic model ready.")

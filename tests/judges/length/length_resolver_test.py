@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import pytest
 
+from contentcreajudge.judges.length.exceptions import (
+    MissingLengthContextError,
+    UnsupportedLengthValueError,
+)
 from contentcreajudge.rules.judges.length.length_resolver import resolve_length_rules
 
 BASE_CONFIG = {
@@ -68,6 +72,7 @@ def test_resolve_length_rules_returns_selected_article_medium_rules(
         "max_words": 1999,
         "content_type": "articles",
         "expected_length": "MEDIUM",
+        "messages": {},
     }
 
 
@@ -115,8 +120,8 @@ def test_resolve_length_rules_raises_when_content_type_is_missing(
     _mock_yaml(monkeypatch, BASE_CONFIG)
 
     with pytest.raises(
-        ValueError,
-        match=r"Missing context\.content_type for length evaluation\.",
+        MissingLengthContextError,
+        match="Missing length context field: content_type",
     ):
         resolve_length_rules({"expected_length": "MEDIUM"})
 
@@ -128,8 +133,8 @@ def test_resolve_length_rules_raises_when_expected_length_is_missing(
     _mock_yaml(monkeypatch, BASE_CONFIG)
 
     with pytest.raises(
-        ValueError,
-        match=r"Missing context\.expected_length for length evaluation\.",
+        MissingLengthContextError,
+        match="Missing length context field: expected_length",
     ):
         resolve_length_rules({"content_type": "articles"})
 
@@ -140,7 +145,10 @@ def test_resolve_length_rules_raises_when_content_type_is_unknown(
     """Raise when the content type is not configured."""
     _mock_yaml(monkeypatch, BASE_CONFIG)
 
-    with pytest.raises(ValueError, match="Unknown content_type: unknown"):
+    with pytest.raises(
+        UnsupportedLengthValueError,
+        match="Unsupported value for content_type: unknown",
+    ):
         resolve_length_rules(
             {
                 "content_type": "unknown",
@@ -155,7 +163,10 @@ def test_resolve_length_rules_raises_when_expected_length_is_unknown(
     """Raise when the expected length is not configured."""
     _mock_yaml(monkeypatch, BASE_CONFIG)
 
-    with pytest.raises(ValueError, match="Unknown expected_length: XXL"):
+    with pytest.raises(
+        UnsupportedLengthValueError,
+        match="Unsupported value for expected_length: XXL",
+    ):
         resolve_length_rules(
             {
                 "content_type": "articles",
@@ -170,7 +181,10 @@ def test_resolve_length_rules_handles_empty_yaml_as_empty_config(
     """Treat an empty YAML config as an empty dictionary."""
     _mock_yaml(monkeypatch, None)
 
-    with pytest.raises(ValueError, match="Unknown content_type: articles"):
+    with pytest.raises(
+        UnsupportedLengthValueError,
+        match="Unsupported value for content_type: articles",
+    ):
         resolve_length_rules(
             {
                 "content_type": "articles",

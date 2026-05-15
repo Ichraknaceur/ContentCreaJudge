@@ -55,3 +55,8 @@ length_rules:
       SIMPLE: {min_words: 0, max_words: 999}
       MEDIUM: {min_words: 1000, max_words: 1500}
       LONG: {min_words: 1501, max_words: null}
+
+messages:
+  too_short: "Word count is below the tolerated expected range."
+  too_long: "Word count is above the tolerated expected range."
+  valid: "Word count is within the tolerated expected range."

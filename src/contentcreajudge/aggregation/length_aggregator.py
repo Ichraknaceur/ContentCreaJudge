@@ -4,7 +4,7 @@ from __future__ import annotations
 
 
 def aggregate_length_result(judge_result: dict[str, object]) -> dict[str, object]:
-    """Summary of the overall result of judge length."""
+    """Aggregate the result of the length judge."""
     judge_status = str(judge_result.get("status", "unknown"))
     judge_score = int(judge_result.get("score", 0))
 

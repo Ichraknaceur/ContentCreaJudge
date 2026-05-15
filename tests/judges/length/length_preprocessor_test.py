@@ -59,3 +59,17 @@ def test_preprocess_length_content_returns_empty_for_html_only() -> None:
     assert result["normalized_text"] == ""
     assert result["word_count"] == 0
     assert result["is_empty"] is True
+
+
+def test_preprocess_length_content_excludes_script_and_style_content() -> None:
+    """Exclude script and style block content from the word count."""
+    content = (
+        "<style>body { color: red; font-size: 14px; }</style>"
+        "<p>Bonjour le monde</p>"
+        "<script>console.log('tracking pixel loaded');</script>"
+    )
+
+    result = preprocess_length_content(content)
+
+    assert result["normalized_text"] == "Bonjour le monde"
+    assert result["word_count"] == 3

@@ -8,7 +8,13 @@ import re
 
 def preprocess_length_content(content: str) -> dict[str, object]:
     """Prepare the content for length evaluation."""
-    text_without_html = re.sub(r"<[^>]+>", " ", content)
+    text_without_noise = re.sub(
+        r"<(script|style)[^>]*>.*?</(script|style)>",
+        " ",
+        content,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    text_without_html = re.sub(r"<[^>]+>", " ", text_without_noise)
     decoded_text = html.unescape(text_without_html)
     normalized_text = re.sub(r"\s+", " ", decoded_text).strip()
     word_count = len(normalized_text.split()) if normalized_text else 0
