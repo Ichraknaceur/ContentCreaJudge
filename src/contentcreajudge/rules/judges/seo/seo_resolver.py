@@ -3,6 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from contentcreajudge.judges.seo.exceptions import (
+    MissingSeoContextError,
+    UnsupportedSeoValueError,
+)
 from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 ALLOWED_LENGTHS = {"SIMPLE", "MEDIUM", "LONG"}
@@ -19,28 +23,32 @@ def _validate_seo_context(context_values: dict[str, object]) -> None:
     long_tail_keywords = context_values["long_tail_keywords"]
 
     if not content_type:
-        raise ValueError("Missing context.content_type for SEO evaluation.")
+        raise MissingSeoContextError("content_type")
 
     if not expected_length:
-        raise ValueError("Missing context.expected_length for SEO evaluation.")
+        raise MissingSeoContextError("expected_length")
 
     if expected_length not in ALLOWED_LENGTHS:
-        raise ValueError(f"Unknown expected_length: {expected_length}")
+        raise UnsupportedSeoValueError(
+            "expected_length", str(expected_length), sorted(ALLOWED_LENGTHS),
+        )
 
     if not funnel_stage:
-        raise ValueError("Missing context.funnel_stage for SEO evaluation.")
+        raise MissingSeoContextError("funnel_stage")
 
     if funnel_stage not in ALLOWED_FUNNEL_STAGES:
-        raise ValueError(f"Unknown funnel_stage: {funnel_stage}")
+        raise UnsupportedSeoValueError(
+            "funnel_stage", str(funnel_stage), sorted(ALLOWED_FUNNEL_STAGES),
+        )
 
     if not main_keyword:
-        raise ValueError("Missing context.main_keyword for SEO evaluation.")
+        raise MissingSeoContextError("main_keyword")
 
     if not isinstance(secondary_keywords, list):
-        raise ValueError("context.secondary_keywords must be a list.")  # noqa: TRY004
+        raise MissingSeoContextError("secondary_keywords")
 
     if not isinstance(long_tail_keywords, list):
-        raise ValueError("context.long_tail_keywords must be a list.")  # noqa: TRY004
+        raise MissingSeoContextError("long_tail_keywords")
 
 
 def _allow_long_tail_keywords(
@@ -183,4 +191,5 @@ def resolve_seo_rules(context: dict[str, Any]) -> dict[str, Any]:
         "formatting_constraints_rules": seo_rules["formatting_constraints"],
         "rules": config["rules"],
         "messages": config["messages"],
+        "scoring": config.get("scoring", {}),
     }

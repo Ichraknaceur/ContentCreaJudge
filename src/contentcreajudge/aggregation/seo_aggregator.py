@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
 
-
-def aggregate_seo_result(judge_result: dict[str, Any]) -> dict[str, Any]:
+def aggregate_seo_result(judge_result: dict[str, object]) -> dict[str, object]:
     """Summarize the overall result of the SEO judge."""
     judge_status = str(judge_result.get("status", "unknown"))
     judge_score = int(judge_result.get("score", 0))

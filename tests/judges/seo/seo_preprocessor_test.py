@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contentcreajudge.core.errors import ConfigurationError
 from contentcreajudge.preprocessing.seo_preprocessor import (
     _build_semantic_body_text,
     _build_semantic_chunks,
@@ -354,10 +355,10 @@ def test_build_semantic_chunks_rejects_invalid_chunk_size() -> None:
             chunk_size=0,
             overlap=0,
         )
-    except ValueError as exc:
+    except ConfigurationError as exc:
         assert str(exc) == "chunk_size must be greater than 0."
     else:
-        raise AssertionError("Expected ValueError")
+        raise AssertionError("Expected ConfigurationError")
 
 
 def test_build_semantic_chunks_rejects_negative_overlap() -> None:
@@ -367,10 +368,10 @@ def test_build_semantic_chunks_rejects_negative_overlap() -> None:
             chunk_size=8,
             overlap=-1,
         )
-    except ValueError as exc:
+    except ConfigurationError as exc:
         assert str(exc) == "overlap must be greater than or equal to 0."
     else:
-        raise AssertionError("Expected ValueError")
+        raise AssertionError("Expected ConfigurationError")
 
 
 def test_build_semantic_chunks_rejects_overlap_equal_to_chunk_size() -> None:
@@ -380,10 +381,10 @@ def test_build_semantic_chunks_rejects_overlap_equal_to_chunk_size() -> None:
             chunk_size=8,
             overlap=8,
         )
-    except ValueError as exc:
+    except ConfigurationError as exc:
         assert str(exc) == "overlap must be smaller than chunk_size."
     else:
-        raise AssertionError("Expected ValueError")
+        raise AssertionError("Expected ConfigurationError")
 
 
 def test_preprocess_seo_content_builds_new_semantic_inputs_with_chunks() -> None:

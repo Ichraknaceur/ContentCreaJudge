@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import pytest
 
+from contentcreajudge.judges.seo.exceptions import (
+    MissingSeoContextError,
+    UnsupportedSeoValueError,
+)
 from contentcreajudge.rules.judges.seo.seo_resolver import resolve_seo_rules
 
 
@@ -126,30 +130,54 @@ def test_resolve_seo_rules_with_long_length_keeps_long_tail_keywords() -> None:
 
 
 @pytest.mark.parametrize(
-    ("context_overrides", "message"),
+    ("context_overrides", "exc_type", "message"),
     [
-        ({"content_type": None}, "Missing context.content_type for SEO evaluation."),
+        (
+            {"content_type": None},
+            MissingSeoContextError,
+            "Missing SEO context field: content_type",
+        ),
         (
             {"expected_length": None},
-            "Missing context.expected_length for SEO evaluation.",
+            MissingSeoContextError,
+            "Missing SEO context field: expected_length",
         ),
-        ({"expected_length": "SHORT"}, "Unknown expected_length: SHORT"),
-        ({"funnel_stage": None}, "Missing context.funnel_stage for SEO evaluation."),
-        ({"funnel_stage": "RETENTION"}, "Unknown funnel_stage: RETENTION"),
-        ({"main_keyword": None}, "Missing context.main_keyword for SEO evaluation."),
+        (
+            {"expected_length": "SHORT"},
+            UnsupportedSeoValueError,
+            "Unsupported value for expected_length: SHORT",
+        ),
+        (
+            {"funnel_stage": None},
+            MissingSeoContextError,
+            "Missing SEO context field: funnel_stage",
+        ),
+        (
+            {"funnel_stage": "RETENTION"},
+            UnsupportedSeoValueError,
+            "Unsupported value for funnel_stage: RETENTION",
+        ),
+        (
+            {"main_keyword": None},
+            MissingSeoContextError,
+            "Missing SEO context field: main_keyword",
+        ),
         (
             {"secondary_keywords": "not-a-list"},
-            "context.secondary_keywords must be a list.",
+            MissingSeoContextError,
+            "Missing SEO context field: secondary_keywords",
         ),
         (
             {"long_tail_keywords": "not-a-list"},
-            "context.long_tail_keywords must be a list.",
+            MissingSeoContextError,
+            "Missing SEO context field: long_tail_keywords",
         ),
     ],
 )
 def test_resolve_seo_rules_validation_errors(
     context_overrides: dict[str, object],
+    exc_type: type,
     message: str,
 ) -> None:
-    with pytest.raises(ValueError, match=f"^{message}$"):
+    with pytest.raises(exc_type, match=message):
         resolve_seo_rules(make_context(**context_overrides))

@@ -109,6 +109,18 @@ rules:
     enabled: true
     severity: minor
 
+scoring:
+  pass_threshold: 85
+  warn_threshold: 60
+  global_weights:
+    with_overoptimization:
+      lexical: 0.55
+      semantic: 0.30
+      overoptimization: 0.15
+    without_overoptimization:
+      lexical: 0.65
+      semantic: 0.35
+
 messages:
   main_keyword_presence: "The main keyword is missing."
   main_keyword_locations: "The main keyword is not present in all required locations."

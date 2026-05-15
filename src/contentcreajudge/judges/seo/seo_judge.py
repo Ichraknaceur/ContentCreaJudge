@@ -8,6 +8,8 @@ from typing import Any, Protocol
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import util as st_util
 
+from contentcreajudge.core.settings import settings
+
 
 class _SimilarityValue(Protocol):
     """Tensor-like scalar similarity value."""
@@ -25,8 +27,8 @@ class _SimilarityVector(Protocol):
         ...
 
 
-SEMANTIC_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-SEMANTIC_TOP_K = 3
+SEMANTIC_MODEL_NAME = settings.seo_embedding_model
+SEMANTIC_TOP_K = settings.seo_semantic_top_k
 SEMANTIC_TOP_WEIGHTS = [0.60, 0.25, 0.15]
 SEMANTIC_COMPENSATION_THRESHOLD = 70
 SEMANTIC_COMPENSATION_STRONG_THRESHOLD = 75
@@ -49,6 +51,15 @@ LOCAL_REPETITION_HIGH_COUNT = 3
 
 SEO_PASS_SCORE_THRESHOLD = 85
 SEO_WARN_SCORE_THRESHOLD = 60
+
+_DEFAULT_SCORING = {
+    "pass_threshold": SEO_PASS_SCORE_THRESHOLD,
+    "warn_threshold": SEO_WARN_SCORE_THRESHOLD,
+    "global_weights": {
+        "with_overoptimization": {"lexical": 0.55, "semantic": 0.30, "overoptimization": 0.15},
+        "without_overoptimization": {"lexical": 0.65, "semantic": 0.35},
+    },
+}
 
 
 def _build_finding(
@@ -88,9 +99,30 @@ def _get_semantic_model() -> SentenceTransformer | None:
         return None
 
 
+def warmup_semantic_model() -> None:
+    """Pre-load the semantic model at startup to avoid a slow first request."""
+    _get_semantic_model()
+
+
+_CONCLUSION_TITLES = {
+    "conclusion",
+    "en conclusion",
+    "pour conclure",
+    "en guise de conclusion",
+    "pour finir",
+    "en resume",
+    "en résumé",
+    "pour resumer",
+    "pour résumer",
+    "to conclude",
+    "in conclusion",
+    "final thoughts",
+}
+
+
 def _is_conclusion_title(title: str) -> bool:
     """Return whether a section title is a conclusion heading."""
-    return title.strip().lower() == "conclusion"
+    return title.strip().lower() in _CONCLUSION_TITLES
 
 
 # **********Semantic**********#
@@ -688,6 +720,7 @@ def _build_seo_context(
         "main_keyword_rules": judge_rules["main_keyword_rules"],
         "occurrence_rules": judge_rules["keyword_occurrence_rules"],
         "distribution_rules": judge_rules["keyword_distribution_rules"],
+        "long_tail_keyword_rules": judge_rules.get("long_tail_keyword_rules", {}),
         "total_occurrences": total_occurrences,
         "has_main_keyword_occurrence": total_occurrences > 0,
         "main_keyword_exact_missing": main_keyword_occurrences["body"] == 0,
@@ -1009,6 +1042,82 @@ def _evaluate_formatting_constraints(
     return 10
 
 
+def _evaluate_secondary_keywords(
+    context: dict[str, Any],
+    findings: list[dict[str, Any]],
+) -> int:
+    """Evaluate secondary keyword presence in the content."""
+    secondary_occurrences = context["lexical_signals"]["secondary_keyword_occurrences"]
+    if not secondary_occurrences:
+        return 0
+
+    present = sum(1 for count in secondary_occurrences.values() if count > 0)
+    total = len(secondary_occurrences)
+
+    if present == 0:
+        findings.append(
+            _build_finding(
+                rule_id="seo.secondary_keywords",
+                severity=_get_rule_severity(context["rules"], "seo.secondary_keywords"),
+                message=context["messages"]["secondary_keywords"],
+                evidence={
+                    "secondary_keywords_provided": total,
+                    "secondary_keywords_present": 0,
+                },
+            ),
+        )
+        return 10
+
+    if present < total:
+        findings.append(
+            _build_finding(
+                rule_id="seo.secondary_keywords",
+                severity="minor",
+                message=context["messages"]["secondary_keywords"],
+                evidence={
+                    "secondary_keywords_provided": total,
+                    "secondary_keywords_present": present,
+                },
+            ),
+        )
+        return 5
+
+    return 0
+
+
+def _evaluate_long_tail_constraints(
+    context: dict[str, Any],
+    findings: list[dict[str, Any]],
+) -> int:
+    """Evaluate long-tail keyword presence when they are applicable."""
+    long_tail_keyword_rules = context.get("long_tail_keyword_rules", {})
+    if not long_tail_keyword_rules.get("allow_long_tail_keywords", True):
+        return 0
+
+    long_tail_occurrences = context["lexical_signals"]["long_tail_keyword_occurrences"]
+    if not long_tail_occurrences:
+        return 0
+
+    present = sum(1 for count in long_tail_occurrences.values() if count > 0)
+    total = len(long_tail_occurrences)
+
+    if present == 0:
+        findings.append(
+            _build_finding(
+                rule_id="seo.long_tail_constraints",
+                severity=_get_rule_severity(context["rules"], "seo.long_tail_constraints"),
+                message=context["messages"]["long_tail_constraints"],
+                evidence={
+                    "long_tail_keywords_provided": total,
+                    "long_tail_keywords_present": 0,
+                },
+            ),
+        )
+        return 8
+
+    return 0
+
+
 def _compute_lexical_penalty(
     context: dict[str, Any],
     semantic_compensation: dict[str, Any],
@@ -1022,6 +1131,8 @@ def _compute_lexical_penalty(
             _evaluate_main_keyword_locations(context, semantic_compensation, findings),
             _evaluate_keyword_occurrences(context, semantic_compensation, findings),
             _evaluate_keyword_distribution(context, semantic_compensation, findings),
+            _evaluate_secondary_keywords(context, findings),
+            _evaluate_long_tail_constraints(context, findings),
             _evaluate_overoptimization(context, semantic_state, findings),
             _evaluate_formatting_constraints(context, findings),
         ),
@@ -1048,34 +1159,54 @@ def _compute_global_seo_score(
     lexical_score: int,
     semantic_score: int,
     semantic_state: dict[str, Any],
+    scoring: dict[str, Any],
 ) -> int:
-    """Compute the global SEO score."""
+    """Compute the global SEO score using weights from the resolved rules."""
     overoptimization_score = int(
         semantic_state["overoptimization"]["overoptimization_score"],
     )
+    weights = scoring.get("global_weights", _DEFAULT_SCORING["global_weights"])
+
     if semantic_state["overoptimization"]["overoptimization_applicable"]:
+        w = weights.get("with_overoptimization", _DEFAULT_SCORING["global_weights"]["with_overoptimization"])
         return round(
-            (0.55 * lexical_score)
-            + (0.30 * semantic_score)
-            + (0.15 * overoptimization_score),
+            (w["lexical"] * lexical_score)
+            + (w["semantic"] * semantic_score)
+            + (w["overoptimization"] * overoptimization_score),
         )
 
-    return round((0.65 * lexical_score) + (0.35 * semantic_score))
+    w = weights.get("without_overoptimization", _DEFAULT_SCORING["global_weights"]["without_overoptimization"])
+    return round((w["lexical"] * lexical_score) + (w["semantic"] * semantic_score))
+
+
+_SEMANTIC_AVAILABILITY_RULE_IDS = {
+    "seo.semantic_unavailable",
+    "seo.overoptimization_semantic_unavailable",
+}
 
 
 def _compute_seo_status(
     context: dict[str, Any],
     global_score: int,
     findings: list[dict[str, Any]],
+    scoring: dict[str, Any],
 ) -> str:
     """Compute the SEO status from score and findings."""
     if not context["has_main_keyword_occurrence"]:
         return "fail"
 
-    if global_score >= SEO_PASS_SCORE_THRESHOLD and not findings:
+    pass_threshold = scoring.get("pass_threshold", SEO_PASS_SCORE_THRESHOLD)
+    warn_threshold = scoring.get("warn_threshold", SEO_WARN_SCORE_THRESHOLD)
+
+    evaluable_findings = [
+        f for f in findings
+        if f.get("rule_id") not in _SEMANTIC_AVAILABILITY_RULE_IDS
+    ]
+
+    if global_score >= pass_threshold and not evaluable_findings:
         return "pass"
 
-    if global_score >= SEO_WARN_SCORE_THRESHOLD:
+    if global_score >= warn_threshold:
         return "warn"
 
     return "fail"
@@ -1107,6 +1238,8 @@ def run_seo_judge(
         findings,
     )
 
+    scoring = judge_rules.get("scoring") or _DEFAULT_SCORING
+
     lexical_score = max(100 - lexical_penalty, 0)
     semantic_score = _compute_guarded_semantic_score(
         context,
@@ -1116,8 +1249,9 @@ def run_seo_judge(
         lexical_score,
         semantic_score,
         semantic_state,
+        scoring,
     )
-    status = _compute_seo_status(context, global_score, findings)
+    status = _compute_seo_status(context, global_score, findings, scoring)
 
     return {
         "dimension": "seo",

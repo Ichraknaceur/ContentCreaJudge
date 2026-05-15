@@ -9,6 +9,9 @@ from typing import Any
 
 from bs4 import BeautifulSoup
 
+from contentcreajudge.core.errors import ConfigurationError
+from contentcreajudge.core.settings import settings
+
 
 def _normalize_text(text: str) -> str:
     """Decode HTML entities and normalize whitespace."""
@@ -280,8 +283,8 @@ def _detect_forbidden_keyword_emphasis(
 
 # ***************** Semantic *****************#
 
-SEMANTIC_CHUNK_SIZE = 128
-SEMANTIC_CHUNK_OVERLAP = 16
+SEMANTIC_CHUNK_SIZE = settings.seo_chunk_size
+SEMANTIC_CHUNK_OVERLAP = settings.seo_chunk_overlap
 
 
 def _build_semantic_body_text(
@@ -336,13 +339,13 @@ def _build_semantic_chunks(
         return []
 
     if chunk_size <= 0:
-        raise ValueError("chunk_size must be greater than 0.")
+        raise ConfigurationError("chunk_size must be greater than 0.")
 
     if overlap < 0:
-        raise ValueError("overlap must be greater than or equal to 0.")
+        raise ConfigurationError("overlap must be greater than or equal to 0.")
 
     if overlap >= chunk_size:
-        raise ValueError("overlap must be smaller than chunk_size.")
+        raise ConfigurationError("overlap must be smaller than chunk_size.")
 
     chunks: list[dict[str, Any]] = []
     step = chunk_size - overlap
