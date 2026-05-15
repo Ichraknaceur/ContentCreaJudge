@@ -36,7 +36,7 @@ run-ui: check-uv install ## Run the Streamlit client UI
 .PHONY: init
 init: check-uv pyproject.toml .pre-commit-config.yaml install ## Initialize project (first installation)
 	uv run -- pre-commit install
-	cp .env.example .env || true
+	if not exist .env copy .env.example .env
 
 .PHONY: format
 format: check-uv ## Format code

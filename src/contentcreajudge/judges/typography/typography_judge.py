@@ -163,7 +163,11 @@ def run_typography_judge(
     }
 
     findings = _collect_findings(
-        decoded_text, original_content, original_lines, severity_by_rule_id, messages,
+        decoded_text,
+        original_content,
+        original_lines,
+        severity_by_rule_id,
+        messages,
     )
 
     if not findings:

@@ -10,3 +10,5 @@ __pycache__/
 coverage.xml
 htmlcov/
 site/
+.pre-commit-cache/
+.uv-cache/

@@ -1,0 +1,123 @@
+judge_id: seo
+version: 1
+label: "SEO judge"
+description: "Evaluate SEO compliance through lexical keyword rules."
+
+seo_rules:
+  main_keyword:
+    require_presence: true
+    required_locations:
+      introduction: true
+      heading_h2_or_h3: true
+      conclusion: true
+      body: true
+
+  keyword_occurrences:
+    enforce_minimum_occurrences: true
+    by_length:
+      SIMPLE:
+        min_total: 5
+        min_main: 3
+      MEDIUM:
+        min_total: 7
+        max_total: 10
+      LONG:
+        min_total: 10
+        max_total: 15
+
+  secondary_keywords:
+    require_natural_integration: true
+    require_distribution_across_content: true
+    forbid_artificial_grouping: true
+    allow_exceptional_omission_if_readability_is_harmed: true
+
+  long_tail_keywords:
+    require_funnel_length_compatibility: true
+    awareness_simple_excludes_complex_long_tail: true
+    consideration_decision_simple_allows_only_if_concise: true
+    forbid_keyword_that_breaks_funnel_or_length: true
+
+  keyword_integrity:
+    preserve_exact_internal_structure: true
+    forbid_reordering: true
+    forbid_deletion: true
+    forbid_addition: true
+    forbid_rephrasing: true
+    allow_only_grammatical_context_adjustments: true
+
+  keyword_distribution:
+    require_at_least_one_secondary_or_long_tail_per_h2_section: true
+    allow_next_section_compensation_if_needed: true
+    forbid_single_section_concentration: true
+
+  readability_priority:
+    readability_over_secondary_keyword_insertion: true
+    coherence_over_forced_insertion: true
+    tone_and_voice_over_forced_insertion: true
+
+  over_optimization:
+    forbid_keyword_stuffing: true
+    forbid_excessive_long_tail_repetition: true
+    max_identical_long_tail_occurrences: 2
+
+  formatting_constraints:
+    forbid_emphasis_tags_on_keywords:
+      - em
+      - strong
+
+  exceptions:
+    awareness_simple_disables_mandatory_full_long_tail: true
+
+rules:
+  - rule_id: seo.main_keyword_presence
+    enabled: true
+    severity: major
+
+  - rule_id: seo.main_keyword_locations
+    enabled: true
+    severity: major
+
+  - rule_id: seo.keyword_occurrences
+    enabled: true
+    severity: major
+
+  - rule_id: seo.keyword_distribution
+    enabled: true
+    severity: minor
+
+  - rule_id: seo.secondary_keywords
+    enabled: true
+    severity: minor
+
+  - rule_id: seo.long_tail_constraints
+    enabled: true
+    severity: minor
+
+  - rule_id: seo.keyword_integrity
+    enabled: true
+    severity: major
+
+  - rule_id: seo.readability_priority
+    enabled: true
+    severity: minor
+
+  - rule_id: seo.over_optimization
+    enabled: true
+    severity: major
+
+  - rule_id: seo.formatting_constraints
+    enabled: true
+    severity: minor
+
+messages:
+  main_keyword_presence: "The main keyword is missing."
+  main_keyword_locations: "The main keyword is not present in all required locations."
+  keyword_occurrences: "Keyword occurrences are below or above the expected range."
+  keyword_distribution: "Keywords are not properly distributed across the content."
+  secondary_keywords: "Secondary keywords are insufficiently integrated."
+  long_tail_constraints: "Long-tail keywords are not compliant with funnel or length constraints."
+  keyword_integrity: "A keyword has been altered or reformulated."
+  readability_priority: "Keyword insertion negatively impacts readability."
+  over_optimization: "Keyword over-optimization detected."
+  formatting_constraints: "Keywords must not be emphasized with HTML tags."
+  semantic_unavailable: "L’analyse sémantique SEO n’a pas pu être exécutée. Les contrôles lexicaux ont été appliqués."
