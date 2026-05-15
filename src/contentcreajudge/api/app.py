@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from contentcreajudge.api.error_handlers import register_error_handlers
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
+from contentcreajudge.api.judges.length import router as length_judge_router
 from contentcreajudge.api.judges.seo import router as seo_judge_router
 from contentcreajudge.api.judges.typography import router as typography_judge_router
 from contentcreajudge.api.root import router as root_router
@@ -50,6 +51,7 @@ def create_app() -> FastAPI:
     application.include_router(root_router)
     application.include_router(health_router)
     application.include_router(evaluations_router)
+    application.include_router(length_judge_router)
     application.include_router(seo_judge_router)
     application.include_router(typography_judge_router)
     return application

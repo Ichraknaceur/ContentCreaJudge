@@ -49,6 +49,14 @@ output-format = "concise"
 target-version = "py314"
 line-length = 88
 indent-width = 4
+exclude = [
+  ".git",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".uv-cache",
+  ".venv",
+  "htmlcov",
+]
 
 lint.pydocstyle.convention = "google"
 lint.flake8-bandit.check-typed-exception = true
@@ -60,6 +68,7 @@ lint.ignore = [
   "D100", # pydocstyle
   "EM", # flake8-errmsg
   "INP001", # implicit-namespace-package
+  "COM812", # may conflict with ruff format
   "TRY003", # raise-vanilla-args
   "TRY401", # verbose-log-message
 ]
