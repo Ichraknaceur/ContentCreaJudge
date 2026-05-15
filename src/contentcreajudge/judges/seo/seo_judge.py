@@ -720,7 +720,6 @@ def _build_seo_context(
         "main_keyword_rules": judge_rules["main_keyword_rules"],
         "occurrence_rules": judge_rules["keyword_occurrence_rules"],
         "distribution_rules": judge_rules["keyword_distribution_rules"],
-        "long_tail_keyword_rules": judge_rules.get("long_tail_keyword_rules", {}),
         "total_occurrences": total_occurrences,
         "has_main_keyword_occurrence": total_occurrences > 0,
         "main_keyword_exact_missing": main_keyword_occurrences["body"] == 0,
@@ -1042,82 +1041,6 @@ def _evaluate_formatting_constraints(
     return 10
 
 
-def _evaluate_secondary_keywords(
-    context: dict[str, Any],
-    findings: list[dict[str, Any]],
-) -> int:
-    """Evaluate secondary keyword presence in the content."""
-    secondary_occurrences = context["lexical_signals"]["secondary_keyword_occurrences"]
-    if not secondary_occurrences:
-        return 0
-
-    present = sum(1 for count in secondary_occurrences.values() if count > 0)
-    total = len(secondary_occurrences)
-
-    if present == 0:
-        findings.append(
-            _build_finding(
-                rule_id="seo.secondary_keywords",
-                severity=_get_rule_severity(context["rules"], "seo.secondary_keywords"),
-                message=context["messages"]["secondary_keywords"],
-                evidence={
-                    "secondary_keywords_provided": total,
-                    "secondary_keywords_present": 0,
-                },
-            ),
-        )
-        return 10
-
-    if present < total:
-        findings.append(
-            _build_finding(
-                rule_id="seo.secondary_keywords",
-                severity="minor",
-                message=context["messages"]["secondary_keywords"],
-                evidence={
-                    "secondary_keywords_provided": total,
-                    "secondary_keywords_present": present,
-                },
-            ),
-        )
-        return 5
-
-    return 0
-
-
-def _evaluate_long_tail_constraints(
-    context: dict[str, Any],
-    findings: list[dict[str, Any]],
-) -> int:
-    """Evaluate long-tail keyword presence when they are applicable."""
-    long_tail_keyword_rules = context.get("long_tail_keyword_rules", {})
-    if not long_tail_keyword_rules.get("allow_long_tail_keywords", True):
-        return 0
-
-    long_tail_occurrences = context["lexical_signals"]["long_tail_keyword_occurrences"]
-    if not long_tail_occurrences:
-        return 0
-
-    present = sum(1 for count in long_tail_occurrences.values() if count > 0)
-    total = len(long_tail_occurrences)
-
-    if present == 0:
-        findings.append(
-            _build_finding(
-                rule_id="seo.long_tail_constraints",
-                severity=_get_rule_severity(context["rules"], "seo.long_tail_constraints"),
-                message=context["messages"]["long_tail_constraints"],
-                evidence={
-                    "long_tail_keywords_provided": total,
-                    "long_tail_keywords_present": 0,
-                },
-            ),
-        )
-        return 8
-
-    return 0
-
-
 def _compute_lexical_penalty(
     context: dict[str, Any],
     semantic_compensation: dict[str, Any],
@@ -1131,8 +1054,6 @@ def _compute_lexical_penalty(
             _evaluate_main_keyword_locations(context, semantic_compensation, findings),
             _evaluate_keyword_occurrences(context, semantic_compensation, findings),
             _evaluate_keyword_distribution(context, semantic_compensation, findings),
-            _evaluate_secondary_keywords(context, findings),
-            _evaluate_long_tail_constraints(context, findings),
             _evaluate_overoptimization(context, semantic_state, findings),
             _evaluate_formatting_constraints(context, findings),
         ),

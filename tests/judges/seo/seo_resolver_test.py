@@ -74,7 +74,7 @@ def test_resolve_seo_rules_with_medium_length() -> None:
         "em",
         "strong",
     ]
-    assert len(result["rules"]) == 10
+    assert len(result["rules"]) == 6
     assert "main_keyword_presence" in result["messages"]
 
 

@@ -85,21 +85,25 @@ rules:
     enabled: true
     severity: minor
 
-  - rule_id: seo.secondary_keywords
-    enabled: true
-    severity: minor
+  # not implemented in v1 — planned for v2
+  # - rule_id: seo.secondary_keywords
+  #   enabled: true
+  #   severity: minor
 
-  - rule_id: seo.long_tail_constraints
-    enabled: true
-    severity: minor
+  # not implemented in v1 — planned for v2
+  # - rule_id: seo.long_tail_constraints
+  #   enabled: true
+  #   severity: minor
 
-  - rule_id: seo.keyword_integrity
-    enabled: true
-    severity: major
+  # not implemented in v1 — requires LLM evaluation
+  # - rule_id: seo.keyword_integrity
+  #   enabled: true
+  #   severity: major
 
-  - rule_id: seo.readability_priority
-    enabled: true
-    severity: minor
+  # not implemented in v1 — requires LLM evaluation
+  # - rule_id: seo.readability_priority
+  #   enabled: true
+  #   severity: minor
 
   - rule_id: seo.over_optimization
     enabled: true
