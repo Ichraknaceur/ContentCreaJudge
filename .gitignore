@@ -1,11 +1,15 @@
 .DS_Store
 .coverage
 .env
+.pre-commit-cache/
 .pytest_cache/
 .ruff_cache/
+.uv-cache/
 .venv/
 __pycache__/
 *.pyc
 *.egg-info/
 coverage.xml
+coverage-debug.json
 htmlcov/
+site/

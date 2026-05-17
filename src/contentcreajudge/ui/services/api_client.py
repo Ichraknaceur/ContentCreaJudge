@@ -47,9 +47,7 @@ def request_json(
     if parsed_url.query:
         path = f"{path}?{parsed_url.query}"
 
-    connection_cls = (
-        HTTPSConnection if parsed_url.scheme == "https" else HTTPConnection
-    )
+    connection_cls = HTTPSConnection if parsed_url.scheme == "https" else HTTPConnection
     connection = connection_cls(parsed_url.netloc, timeout=5)
 
     try:

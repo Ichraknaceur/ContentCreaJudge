@@ -5,10 +5,13 @@ from importlib.metadata import version as get_version
 
 from fastapi import FastAPI
 
+from contentcreajudge.api.error_handlers import register_error_handlers
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
-from contentcreajudge.api.root import router as root_router
 from contentcreajudge.api.judges.sources import router as sources_judge_router
+from contentcreajudge.api.judges.typography import router as typography_judge_router
+from contentcreajudge.api.root import router as root_router
+
 
 def _resolve_package_version() -> str:
     """Return the installed package version or a safe development fallback."""
@@ -28,10 +31,12 @@ def create_app() -> FastAPI:
             "quality checks."
         ),
     )
+    register_error_handlers(application)
     application.include_router(root_router)
     application.include_router(health_router)
     application.include_router(evaluations_router)
     application.include_router(sources_judge_router)
+    application.include_router(typography_judge_router)
     return application
 
 

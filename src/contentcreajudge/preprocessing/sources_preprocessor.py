@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 from html import unescape
 from urllib.parse import urlparse
-from bs4 import BeautifulSoup
 
+from bs4 import BeautifulSoup
 
 RAW_URL_PATTERN = re.compile(r"(?<![\"'=])(https?://[^\s<>\"]+)")
 MARKDOWN_LINK_PATTERN = re.compile(r"\[[^\]]+\]\(https?://[^)]+\)")
@@ -23,14 +23,11 @@ def _is_external_url(url: str, internal_domain: str) -> bool:
 
     return parsed_url.netloc != parsed_internal.netloc
 
+
 def _normalize_html_content(content: str) -> str:
     """Normalize escaped HTML copied from JSON-like payloads."""
-    return (
-        content
-        .replace('\\"', '"')
-        .replace("\\'", "'")
-        .replace("\\n", "\n")
-    )
+    return content.replace('\\"', '"').replace("\\'", "'").replace("\\n", "\n")
+
 
 def _is_complementary_heading(text: str) -> bool:
     """Return True when a heading represents the complementary reading section."""
@@ -44,11 +41,13 @@ def _is_complementary_heading(text: str) -> bool:
 
 def preprocess_sources_content(
     content: str,
-    internal_domain: str = "https://contentcrea.com",
+    internal_domain: str,
 ) -> dict[str, object]:
     """Prepare source-related signals from HTML content."""
+    if not internal_domain.strip():
+        internal_domain = "https://contentcrea.com"
 
-    normalized_content = _normalize_html_content(content)
+    normalized_content = _normalize_html_content(content or "")
     soup = BeautifulSoup(normalized_content, "html.parser")
     anchors = soup.find_all("a")
 
@@ -71,9 +70,12 @@ def preprocess_sources_content(
         section = "body"
 
         previous_heading = anchor.find_previous(["h2", "h3"])
-        if previous_heading and _is_complementary_heading(
-            previous_heading.get_text(" ", strip=True)
-        ):
+
+        heading_text = ""
+        if previous_heading is not None:
+            heading_text = previous_heading.get_text(" ", strip=True)
+
+        if heading_text and _is_complementary_heading(heading_text):
             section = "complementary_reading"
 
         extracted_links.append(
@@ -87,37 +89,27 @@ def preprocess_sources_content(
                 "is_internal": not is_external,
                 "section": section,
                 "html": str(anchor),
-            }
+            },
         )
 
-    raw_urls = RAW_URL_PATTERN.findall(normalized_content)
-    markdown_links = MARKDOWN_LINK_PATTERN.findall(normalized_content)
-    attached_anchor_matches = ATTACHED_ANCHOR_PATTERN.findall(normalized_content)
+    raw_urls = RAW_URL_PATTERN.findall(normalized_content or "")
+    markdown_links = MARKDOWN_LINK_PATTERN.findall(normalized_content or "")
+    attached_anchor_matches = ATTACHED_ANCHOR_PATTERN.findall(
+        normalized_content or "",
+    )
 
-    external_links = [
-        link for link in extracted_links if bool(link["is_external"])
-    ]
-    internal_links = [
-        link for link in extracted_links if bool(link["is_internal"])
-    ]
-    body_links = [
-    link for link in extracted_links if link["section"] == "body"
-    ]
+    external_links = [link for link in extracted_links if bool(link["is_external"])]
+    internal_links = [link for link in extracted_links if bool(link["is_internal"])]
+    body_links = [link for link in extracted_links if link["section"] == "body"]
 
     complementary_reading_links = [
-        link
-        for link in extracted_links
-        if link["section"] == "complementary_reading"
+        link for link in extracted_links if link["section"] == "complementary_reading"
     ]
 
-    body_external_links = [
-        link for link in body_links if bool(link["is_external"])
-    ]
+    body_external_links = [link for link in body_links if bool(link["is_external"])]
 
     complementary_reading_external_links = [
-        link
-        for link in complementary_reading_links
-        if bool(link["is_external"])
+        link for link in complementary_reading_links if bool(link["is_external"])
     ]
 
     return {
@@ -133,7 +125,9 @@ def preprocess_sources_content(
         "body_links_count": len(body_links),
         "complementary_reading_links_count": len(complementary_reading_links),
         "body_external_links_count": len(body_external_links),
-        "complementary_reading_external_links_count": len(complementary_reading_external_links),
+        "complementary_reading_external_links_count": len(
+            complementary_reading_external_links,
+        ),
         "links_count": len(extracted_links),
         "external_links_count": len(external_links),
         "internal_links_count": len(internal_links),

@@ -7,7 +7,6 @@ from pydantic import BaseModel, ConfigDict
 
 from contentcreajudge.application.judge_flow.sources_flow import execute_sources_flow
 
-
 router = APIRouter(prefix="/api/v1/judges/sources", tags=["judges", "sources"])
 
 
@@ -16,6 +15,7 @@ class SourcesJudgeContext(BaseModel):
 
     content_type: str
     expected_length: str
+    organization_website: str = "https://contentcrea.com"
     locale: str | None = None
     require_sources: bool | None = None
 
@@ -32,6 +32,8 @@ class SourcesJudgeRequestPayload(BaseModel):
 
 
 @router.post("/evaluate", status_code=status.HTTP_200_OK)
-def evaluate_sources_judge(payload: SourcesJudgeRequestPayload) -> dict[str, object]:
-    """Execute the sources judge flow."""
-    return execute_sources_flow(payload.model_dump())
+async def evaluate_sources_judge(
+    payload: SourcesJudgeRequestPayload,
+) -> dict[str, object]:
+    """Execute the sources flow."""
+    return await execute_sources_flow(payload.model_dump())

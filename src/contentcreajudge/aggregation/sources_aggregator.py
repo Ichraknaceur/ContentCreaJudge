@@ -5,7 +5,6 @@ from __future__ import annotations
 
 def aggregate_sources_result(judge_result: dict[str, object]) -> dict[str, object]:
     """Summarize the overall result of the sources judge."""
-
     judge_status = str(judge_result["status"])
     findings = judge_result.get("findings", [])
 

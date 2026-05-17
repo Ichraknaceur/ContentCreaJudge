@@ -3,72 +3,91 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
-import yaml
+from contentcreajudge.judges.sources.exceptions import (
+    MissingSourcesContextError,
+    UnsupportedSourcesValueError,
+)
+from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 
 def resolve_sources_rules(context: dict[str, object]) -> dict[str, object]:
     """Resolve the sources rules defined in the YAML based on the evaluation context."""
-
     config_path = Path(__file__).with_name("sources.yaml")
 
-    with open(config_path, "r", encoding="utf-8") as file:
-        config = yaml.safe_load(file)
+    config = load_yaml_config(config_path)
 
-    sources_rules = config["sources_rules"]
+    sources_rules = config.get("sources_rules") or {}
 
-    content_type = context.get("content_type")
-    expected_length = context.get("expected_length")
-    locale = context.get("locale", "fr-FR")
-    require_sources = context.get("require_sources")
+    content_type = str(context.get("content_type", "")).strip()
+    expected_length = str(context.get("expected_length", "")).strip()
+    locale = str(context.get("locale", "fr-FR") or "fr-FR")
+    require_sources = bool(context.get("require_sources", False))
+    organization_website = str(context.get("organization_website", "")).strip()
 
     if not content_type:
-        raise ValueError("Missing context.content_type for sources evaluation.")
+        raise MissingSourcesContextError("content_type")
 
     if not expected_length:
-        raise ValueError("Missing context.expected_length for sources evaluation.")
+        raise MissingSourcesContextError("expected_length")
 
-    content_type_policy = sources_rules["content_type_policy"]
-    allowed_content_types = content_type_policy["allowed"]
-    cautious_content_types = content_type_policy["allowed_with_caution"]
-    forbidden_content_types = content_type_policy[
-        "forbidden_except_official_or_regulatory_need"
-    ]
+    if not organization_website:
+        raise MissingSourcesContextError("organization_website")
 
-    if content_type not in (
+    content_type_policy = sources_rules.get("content_type_policy", {})
+    allowed_content_types = content_type_policy.get("allowed", [])
+    cautious_content_types = content_type_policy.get("allowed_with_caution", [])
+    forbidden_content_types = content_type_policy.get(
+        "forbidden_except_official_or_regulatory_need",
+        [],
+    )
+
+    known_content_types = (
         allowed_content_types + cautious_content_types + forbidden_content_types
-    ):
-        raise ValueError(f"Unknown content_type for sources evaluation: {content_type}")
+    )
 
-    references_by_length = sources_rules["references_by_length"]
+    if content_type not in known_content_types:
+        raise UnsupportedSourcesValueError(
+            "content_type",
+            content_type,
+            known_content_types,
+        )
+
+    references_by_length = sources_rules.get("references_by_length", {})
 
     if expected_length not in references_by_length:
-        raise ValueError(f"Unknown expected_length for sources evaluation: {expected_length}")
+        raise UnsupportedSourcesValueError(
+            "expected_length",
+            expected_length,
+            list(references_by_length.keys()),
+        )
 
-    if require_sources is None:
-        require_sources = False
+    complementary_reading_rules = dict(
+        sources_rules.get("complementary_reading", {}),
+    )
+    complementary_reading_rules["required_domain"] = organization_website
 
     return {
-        "judge_id": config["judge_id"],
-        "version": config["version"],
-        "label": config["label"],
-        "description": config["description"],
+        "judge_id": config.get("judge_id", "sources"),
+        "version": config.get("version", 1),
+        "label": config.get("label", "Sources judge"),
+        "description": config.get("description", ""),
         "content_type": content_type,
         "expected_length": expected_length,
         "locale": locale,
-        "require_sources": bool(require_sources),
+        "require_sources": require_sources,
+        "organization_website": organization_website,
         "is_content_type_allowed": content_type in allowed_content_types,
         "is_content_type_allowed_with_caution": content_type in cautious_content_types,
         "is_content_type_forbidden": content_type in forbidden_content_types,
-        "reference_limits": references_by_length[expected_length],
-        "html_link_format": sources_rules["html_link_format"],
-        "url_cleaning": sources_rules["url_cleaning"],
-        "network_validation": sources_rules["network_validation"],
-        "source_placement": sources_rules["source_placement"],
-        "data_claims": sources_rules["data_claims"],
-        "complementary_reading": sources_rules["complementary_reading"],
-        "conflict_resolution": sources_rules["conflict_resolution"],
-        "rules": sources_rules["rules"],
-        "messages": sources_rules["messages"],
+        "reference_limits": references_by_length.get(expected_length, {}),
+        "html_link_format": sources_rules.get("html_link_format", {}),
+        "url_cleaning": sources_rules.get("url_cleaning", {}),
+        "network_validation": sources_rules.get("network_validation", {}),
+        "source_placement": sources_rules.get("source_placement", {}),
+        "data_claims": sources_rules.get("data_claims", {}),
+        "complementary_reading": complementary_reading_rules,
+        "conflict_resolution": sources_rules.get("conflict_resolution", {}),
+        "rules": sources_rules.get("rules", []),
+        "messages": sources_rules.get("messages", {}),
     }

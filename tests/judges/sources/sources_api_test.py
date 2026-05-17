@@ -8,6 +8,7 @@ from contentcreajudge.api.app import create_app
 
 
 def test_sources_judge_endpoint_returns_result() -> None:
+    """Verify that sources judge endpoint returns result."""
     client = TestClient(create_app())
 
     payload = {
@@ -26,7 +27,7 @@ def test_sources_judge_endpoint_returns_result() -> None:
     }
 
     with patch(
-        "contentcreajudge.application.judge_flow.sources_flow.validate_source_urls"
+        "contentcreajudge.application.judge_flow.sources_flow.validate_source_urls",
     ) as mock_validate:
         mock_validate.return_value = [
             {
@@ -37,7 +38,7 @@ def test_sources_judge_endpoint_returns_result() -> None:
                 "network_status": "reachable",
                 "http_status_code": 200,
                 "error": None,
-            }
+            },
         ]
 
         response = client.post("/api/v1/judges/sources/evaluate", json=payload)
@@ -52,6 +53,7 @@ def test_sources_judge_endpoint_returns_result() -> None:
 
 
 def test_sources_judge_endpoint_rejects_extra_payload_field() -> None:
+    """Verify that sources judge endpoint rejects extra payload field."""
     client = TestClient(create_app())
 
     payload = {

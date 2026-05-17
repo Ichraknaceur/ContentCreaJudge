@@ -11,6 +11,7 @@ requires-python = ">= 3.14"
 dependencies = [
     "beautifulsoup4>=4.13.5,<5.0.0",
     "fastapi>=0.120.0,<0.121.0",
+    "httpx>=0.28.1,<0.28.2",
     "pillow>=12.1.1,<13.0.0",
     "starlette>=0.49.1,<0.50.0",
     "streamlit>=1.54.0,<1.55.0",
@@ -20,6 +21,9 @@ dependencies = [
 [tool.uv]
 add-bounds = "minor"
 package = true
+constraint-dependencies = [
+    "gitpython>=3.1.49",
+]
 
 [dependency-groups]
 dev = [
@@ -42,6 +46,10 @@ output-format = "concise"
 target-version = "py314"
 line-length = 88
 indent-width = 4
+extend-exclude = [
+  ".pre-commit-cache",
+  ".uv-cache",
+]
 
 lint.pydocstyle.convention = "google"
 lint.flake8-bandit.check-typed-exception = true
@@ -49,6 +57,7 @@ lint.flake8-type-checking.strict = true
 
 lint.select = ["ALL"]
 lint.ignore = [
+  "COM812", # Conflicts with `ruff format`
   "PLE1205", # logging-too-many-args
   "D100", # pydocstyle
   "EM", # flake8-errmsg

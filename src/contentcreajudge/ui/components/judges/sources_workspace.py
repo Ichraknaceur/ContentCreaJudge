@@ -1,136 +1,104 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
 import requests
 import streamlit as st
 
+from contentcreajudge.ui.components.judges.shared import (
+    read_uploaded_text_file,
+    render_exchange_summary,
+    render_findings_section,
+)
 
-def _render_exchange_summary(exchange: dict[str, object]) -> None:
-    """Render the API response for the Sources judge."""
+if TYPE_CHECKING:
+    from contentcreajudge.ui.viewmodels.judge_playground_vm import JudgeWorkbenchItem
 
-    response_status = exchange.get("response_status")
+
+def _render_preprocessing_section(preprocessing: dict[str, object]) -> None:
+    """Render the Sources preprocessing pipeline step."""
+    st.markdown("**Preprocessing**")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Links", str(preprocessing.get("links_count", "n/a")))
+    with col2:
+        st.metric(
+            "External links",
+            str(preprocessing.get("external_links_count", "n/a")),
+        )
+    with col3:
+        st.metric("Raw URLs", str(preprocessing.get("raw_urls_count", "n/a")))
+
+    with st.expander("Show extracted links"):
+        st.json(preprocessing.get("links", []))
+
+
+def _render_judge_result_section(judge_result: dict[str, object]) -> None:
+    """Render the Sources judge result pipeline step."""
+    st.markdown("**Judge result**")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("Judge status", str(judge_result.get("status", "unknown")))
+    with col2:
+        st.metric("Judge score", str(judge_result.get("score", "n/a")))
+
+    applied_rule = judge_result.get("applied_rule")
+    if applied_rule:
+        with st.expander("Show applied rule"):
+            st.json(applied_rule)
+
+    render_findings_section(judge_result.get("findings", []))
+
+
+def _render_sources_exchange_summary(exchange: dict[str, object]) -> None:
+    """Render the Sources API response."""
+    render_exchange_summary(
+        exchange,
+        success_message="Sources judge executed successfully.",
+        render_preprocessing=_render_preprocessing_section,
+        render_judge_result=_render_judge_result_section,
+    )
+
     response_body = exchange.get("response_body") or {}
-    error = exchange.get("error")
-
-    if error:
-        st.error(str(error))
-    elif response_status and 200 <= int(response_status) < 300:
-        st.success("Sources judge executed successfully.")
-    else:
-        st.error(f"Request failed with status {response_status}.")
-
     if not isinstance(response_body, dict):
-        st.warning("Response body is not a JSON object.")
-        with st.expander("Show raw API exchange"):
-            st.json(exchange)
         return
 
-    rule_resolution = response_body.get("rule_resolution")
-    preprocessing = response_body.get("preprocessing")
     url_validation = response_body.get("url_validation")
-    judge_result = response_body.get("judge_result")
-    aggregation = response_body.get("aggregation")
-    response_message = response_body.get("message")
-
-    if response_message:
-        st.caption(str(response_message))
-
-    st.markdown("#### Pipeline steps")
-
-    if isinstance(rule_resolution, dict):
-        st.markdown(
-            f"**Rule resolution** - profile: "
-            f"`{rule_resolution.get('profile', 'unknown')}`"
-        )
-
-        judge_rules = rule_resolution.get("judge_rules")
-        if judge_rules:
-            with st.expander("Show resolved rules"):
-                st.json(judge_rules)
-
-    if isinstance(preprocessing, dict):
-        st.markdown("**Preprocessing**")
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            st.metric("Links", str(preprocessing.get("links_count", "n/a")))
-        with col2:
-            st.metric(
-                "External links",
-                str(preprocessing.get("external_links_count", "n/a")),
-            )
-        with col3:
-            st.metric(
-                "Raw URLs",
-                str(preprocessing.get("raw_urls_count", "n/a")),
-            )
-
-        with st.expander("Show extracted links"):
-            st.json(preprocessing.get("links", []))
-
     if isinstance(url_validation, list):
         st.markdown("**URL validation**")
         with st.expander("Show URL validation results"):
             st.json(url_validation)
 
-    if isinstance(judge_result, dict):
-        st.markdown("**Judge result**")
-        col1, col2 = st.columns(2)
 
-        with col1:
-            st.metric("Judge status", str(judge_result.get("status", "unknown")))
-        with col2:
-            st.metric("Judge score", str(judge_result.get("score", "n/a")))
-
-        findings = judge_result.get("findings", [])
-        if findings:
-            st.markdown("**Findings**")
-            for finding in findings:
-                if not isinstance(finding, dict):
-                    continue
-
-                severity = str(finding.get("severity", "unknown"))
-                message = str(finding.get("message", "No message"))
-                rule_id = str(finding.get("rule_id", "unknown"))
-
-                st.markdown(f"- `{severity}` - {message} (`{rule_id}`)")
-
-                evidence = finding.get("evidence")
-                if isinstance(evidence, dict) and evidence:
-                    st.caption(
-                        ", ".join(
-                            f"{key}: {value}" for key, value in evidence.items()
-                        )
-                    )
-
-    if isinstance(aggregation, dict):
-        st.markdown("**Aggregation**")
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.metric("Global status", str(aggregation.get("status", "unknown")))
-        with col2:
-            st.metric("Global score", str(aggregation.get("score", "n/a")))
-
-        summary = aggregation.get("summary")
-        if summary:
-            st.caption(str(summary))
-
-    with st.expander("Show raw API exchange"):
-        st.json(exchange)
-
-
-def render_sources_form(selected_item: Any) -> None:
+def render_sources_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG001
     """Render the Sources judge form."""
-
     st.markdown("### Sources test input")
 
+    if "sources_content_input" not in st.session_state:
+        st.session_state["sources_content_input"] = ""
+
     with st.form("sources_judge_form"):
+        st.markdown("**Content input**")
+
+        uploaded_content_file = st.file_uploader(
+            "Upload content file",
+            type=["html", "htm", "txt"],
+            key="sources_content_file_uploader",
+        )
+
+        content_value = st.session_state["sources_content_input"]
+        if uploaded_content_file is not None:
+            content_value = read_uploaded_text_file(uploaded_content_file)
+
         content = st.text_area(
             "Content to evaluate",
             height=260,
             placeholder="Paste HTML content with sources here...",
+            value=content_value,
         )
 
         expected_length = st.selectbox(
@@ -155,6 +123,13 @@ def render_sources_form(selected_item: Any) -> None:
             index=0,
         )
 
+        organization_website = st.text_input(
+            "Organization website",
+            value="https://contentcrea.com",
+            placeholder="https://contentcrea.com",
+            help="Internal domain used to validate Lecture complémentaire links.",
+        )
+
         locale = st.text_input(
             "Locale",
             value="fr-FR",
@@ -168,6 +143,8 @@ def render_sources_form(selected_item: Any) -> None:
 
         submitted = st.form_submit_button("Run Sources Judge")
 
+    st.session_state["sources_content_input"] = content
+
     if not submitted:
         return
 
@@ -177,6 +154,8 @@ def render_sources_form(selected_item: Any) -> None:
         "context": {
             "content_type": content_type,
             "expected_length": expected_length,
+            "organization_website": organization_website.strip()
+            or "https://contentcrea.com",
             "locale": locale.strip() or None,
             "require_sources": require_sources,
         },
@@ -186,9 +165,8 @@ def render_sources_form(selected_item: Any) -> None:
     st.session_state["sources_run_requested"] = True
 
 
-def render_sources_result(api_url: str, selected_item: Any) -> None:
+def render_sources_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
     """Read the Sources payload and display the API response."""
-
     st.markdown(
         '<div class="section-label">Sources result</div>',
         unsafe_allow_html=True,
@@ -209,12 +187,12 @@ def render_sources_result(api_url: str, selected_item: Any) -> None:
     if not should_run:
         last_exchange = st.session_state.get("last_sources_exchange")
         if last_exchange:
-            _render_exchange_summary(last_exchange)
+            _render_sources_exchange_summary(last_exchange)
         return
 
     content = payload.get("content", "")
 
-    if not str(content).strip():
+    if not isinstance(content, str) or not content.strip():
         st.warning("Please provide content to evaluate.")
         st.session_state["sources_run_requested"] = False
         return
@@ -231,7 +209,7 @@ def render_sources_result(api_url: str, selected_item: Any) -> None:
             "error": f"API request failed: {exc}",
         }
         st.session_state["last_sources_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_sources_exchange_summary(exchange)
         st.session_state["sources_run_requested"] = False
         return
 
@@ -245,7 +223,7 @@ def render_sources_result(api_url: str, selected_item: Any) -> None:
             "error": "The API returned a non-JSON response.",
         }
         st.session_state["last_sources_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_sources_exchange_summary(exchange)
         st.session_state["sources_run_requested"] = False
         return
 
@@ -257,5 +235,5 @@ def render_sources_result(api_url: str, selected_item: Any) -> None:
     }
 
     st.session_state["last_sources_exchange"] = exchange
-    _render_exchange_summary(exchange)
+    _render_sources_exchange_summary(exchange)
     st.session_state["sources_run_requested"] = False

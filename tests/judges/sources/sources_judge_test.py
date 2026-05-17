@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from contentcreajudge.judges.sources.sources_judge import run_sources_judge
 
-
 JUDGE_RULES = {
     "require_sources": True,
     "expected_length": "MEDIUM",
@@ -28,13 +27,16 @@ JUDGE_RULES = {
     },
     "messages": {
         "real_and_accessible_sources": (
-            "External sources must be real, accessible, and directly related to the claim."
+            "External sources must be real, accessible, and directly related "
+            "to the claim."
         ),
         "external_reference_count_by_length": (
-            "The number of external references must be consistent with the expected content length."
+            "The number of external references must be consistent with the "
+            "expected content length."
         ),
         "content_type_policy": (
-            "External links are not allowed for this content type unless officially required."
+            "External links are not allowed for this content type unless "
+            "officially required."
         ),
         "network_accessibility": (
             "Source URLs must be checked through a network accessibility validation."
@@ -59,9 +61,12 @@ def _base_preprocessed_content() -> dict[str, object]:
                 "target": "_blank",
                 "rel": "noopener noreferrer",
                 "is_external": True,
-            }
+            },
         ],
         "external_links_count": 1,
+        "body_external_links_count": 1,
+        "complementary_reading_links_count": 0,
+        "complementary_reading_external_links": [],
         "raw_urls": [],
         "raw_urls_count": 0,
         "markdown_links": [],
@@ -83,11 +88,12 @@ def _base_validation_results() -> list[dict[str, object]]:
             "network_status": "reachable",
             "http_status_code": 200,
             "error": None,
-        }
+        },
     ]
 
 
 def test_sources_judge_passes_with_valid_source() -> None:
+    """Verify that sources judge passes with valid source."""
     result = run_sources_judge(
         preprocessed_content=_base_preprocessed_content(),
         validation_results=_base_validation_results(),
@@ -101,9 +107,11 @@ def test_sources_judge_passes_with_valid_source() -> None:
 
 
 def test_sources_judge_fails_when_required_source_is_missing() -> None:
+    """Verify that sources judge fails when required source is missing."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"] = []
     preprocessed["external_links_count"] = 0
+    preprocessed["body_external_links_count"] = 0
 
     result = run_sources_judge(
         preprocessed_content=preprocessed,
@@ -117,6 +125,7 @@ def test_sources_judge_fails_when_required_source_is_missing() -> None:
 
 
 def test_sources_judge_fails_on_raw_url() -> None:
+    """Verify that sources judge fails on raw url."""
     preprocessed = _base_preprocessed_content()
     preprocessed["has_raw_urls"] = True
     preprocessed["raw_urls"] = ["https://example.com/report"]
@@ -136,6 +145,7 @@ def test_sources_judge_fails_on_raw_url() -> None:
 
 
 def test_sources_judge_fails_on_markdown_link() -> None:
+    """Verify that sources judge fails on markdown link."""
     preprocessed = _base_preprocessed_content()
     preprocessed["has_markdown_links"] = True
     preprocessed["markdown_links"] = ["[Source](https://example.com/report)"]
@@ -155,6 +165,7 @@ def test_sources_judge_fails_on_markdown_link() -> None:
 
 
 def test_sources_judge_warn_on_invalid_external_link_attributes() -> None:
+    """Verify that sources judge warn on invalid external link attributes."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"][0]["target"] = ""
     preprocessed["external_links"][0]["rel"] = ""
@@ -173,6 +184,7 @@ def test_sources_judge_warn_on_invalid_external_link_attributes() -> None:
 
 
 def test_sources_judge_warns_on_attached_anchor() -> None:
+    """Verify that sources judge warns on attached anchor."""
     preprocessed = _base_preprocessed_content()
     preprocessed["has_attached_anchors"] = True
     preprocessed["attached_anchor_count"] = 1
@@ -194,6 +206,7 @@ def test_sources_judge_warns_on_attached_anchor() -> None:
 
 
 def test_sources_judge_warns_on_empty_anchor_text() -> None:
+    """Verify that sources judge warns on empty anchor text."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"][0]["anchor_text"] = "   "
 
@@ -214,6 +227,7 @@ def test_sources_judge_warns_on_empty_anchor_text() -> None:
 
 
 def test_sources_judge_warns_on_generic_anchor_text() -> None:
+    """Verify that sources judge warns on generic anchor text."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"][0]["anchor_text"] = "cliquez ici"
 
@@ -232,6 +246,7 @@ def test_sources_judge_warns_on_generic_anchor_text() -> None:
 
 
 def test_sources_judge_warns_on_duplicate_external_links() -> None:
+    """Verify that sources judge warns on duplicate external links."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"].append(
         {
@@ -240,7 +255,7 @@ def test_sources_judge_warns_on_duplicate_external_links() -> None:
             "target": "_blank",
             "rel": "noopener noreferrer",
             "is_external": True,
-        }
+        },
     )
     preprocessed["external_links_count"] = 2
 
@@ -258,6 +273,7 @@ def test_sources_judge_warns_on_duplicate_external_links() -> None:
 
 
 def test_sources_judge_fails_on_tracking_parameters() -> None:
+    """Verify that sources judge fails on tracking parameters."""
     validation_results = _base_validation_results()
     validation_results[0]["has_tracking_parameters"] = True
     validation_results[0]["tracking_parameters"] = ["utm_source"]
@@ -276,6 +292,7 @@ def test_sources_judge_fails_on_tracking_parameters() -> None:
 
 
 def test_sources_judge_fails_on_invalid_url_format() -> None:
+    """Verify that sources judge fails on invalid url format."""
     validation_results = _base_validation_results()
     validation_results[0]["is_valid_format"] = False
     validation_results[0]["error"] = "invalid_url_format"
@@ -290,12 +307,13 @@ def test_sources_judge_fails_on_invalid_url_format() -> None:
     assert any(
         finding["rule_id"] == "sources.real_and_accessible_sources"
         and finding["severity"] == "major"
-        and finding["evidence"]["error"] == "invalid_url_format"
+        and finding["evidence"].get("error") == "invalid_url_format"
         for finding in result["findings"]
     )
 
 
 def test_sources_judge_fails_on_unreachable_url() -> None:
+    """Verify that sources judge fails on unreachable url."""
     validation_results = _base_validation_results()
     validation_results[0]["network_status"] = "unreachable"
     validation_results[0]["http_status_code"] = 404
@@ -315,6 +333,7 @@ def test_sources_judge_fails_on_unreachable_url() -> None:
 
 
 def test_sources_judge_warns_on_unknown_network_status() -> None:
+    """Verify that sources judge warns on unknown network status."""
     validation_results = _base_validation_results()
     validation_results[0]["network_status"] = "unknown"
     validation_results[0]["error"] = "timeout"
@@ -333,7 +352,8 @@ def test_sources_judge_warns_on_unknown_network_status() -> None:
     )
 
 
-def test_sources_judge_fails_when_simple_content_has_too_many_external_sources() -> None:
+def test_sources_judge_fails_when_simple_content_has_too_many_sources() -> None:
+    """Verify that simple content fails with too many external sources."""
     preprocessed = _base_preprocessed_content()
     preprocessed["external_links"].append(
         {
@@ -342,7 +362,7 @@ def test_sources_judge_fails_when_simple_content_has_too_many_external_sources()
             "target": "_blank",
             "rel": "noopener noreferrer",
             "is_external": True,
-        }
+        },
     )
     preprocessed["external_links_count"] = 2
 
@@ -364,7 +384,7 @@ def test_sources_judge_fails_when_simple_content_has_too_many_external_sources()
             "network_status": "reachable",
             "http_status_code": 200,
             "error": None,
-        }
+        },
     )
 
     result = run_sources_judge(
@@ -380,7 +400,8 @@ def test_sources_judge_fails_when_simple_content_has_too_many_external_sources()
     )
 
 
-def test_sources_judge_fails_when_external_links_are_forbidden_for_content_type() -> None:
+def test_sources_judge_fails_when_links_are_forbidden_for_content_type() -> None:
+    """Verify that forbidden content types fail with external links."""
     judge_rules = {
         **JUDGE_RULES,
         "content_type": "quiz",
@@ -403,6 +424,7 @@ def test_sources_judge_fails_when_external_links_are_forbidden_for_content_type(
 
 
 def test_sources_judge_warns_when_external_links_are_allowed_with_caution() -> None:
+    """Verify that sources judge warns when external links are allowed with caution."""
     judge_rules = {
         **JUDGE_RULES,
         "content_type": "audioScript",

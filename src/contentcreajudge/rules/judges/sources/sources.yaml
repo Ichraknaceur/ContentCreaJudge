@@ -57,6 +57,7 @@ sources_rules:
     require_accessibility_check: true
     timeout_seconds: 5
     follow_redirects: true
+    max_concurrency: 5
     method_priority:
       - HEAD
       - GET
@@ -136,11 +137,10 @@ sources_rules:
     enabled_when_relevant: true
     allow_only_internal_links: true
     require_links_from_organization_website: true
-    required_domain: "https://contentcrea.com"
+    required_domain_source: "context.organization_website"
     forbid_external_links: true
-    forbid_www_variant: true
-    forbid_http_variant: true
-    forbid_subdomains: true
+    require_same_domain: true
+    require_https: true
     require_canonical_url: true
     forbid_tracking_parameters: true
     enforce_language_consistency: true

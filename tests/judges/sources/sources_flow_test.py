@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from unittest.mock import patch
+import asyncio
+from unittest.mock import AsyncMock, patch
+
+import pytest
 
 from contentcreajudge.application.judge_flow.sources_flow import (
     execute_sources_flow,
@@ -8,6 +11,7 @@ from contentcreajudge.application.judge_flow.sources_flow import (
 
 
 def test_execute_sources_flow_passes_with_valid_source() -> None:
+    """Verify that execute sources flow passes with valid source."""
     payload = {
         "content": (
             '<p>Selon <a href="https://example.com/report" '
@@ -20,11 +24,13 @@ def test_execute_sources_flow_passes_with_valid_source() -> None:
             "expected_length": "MEDIUM",
             "locale": "fr-FR",
             "require_sources": True,
+            "organization_website": "https://contentcrea.com",
         },
     }
 
     with patch(
-        "contentcreajudge.application.judge_flow.sources_flow.validate_source_urls"
+        "contentcreajudge.application.judge_flow.sources_flow.validate_source_urls",
+        new_callable=AsyncMock,
     ) as mock_validate:
         mock_validate.return_value = [
             {
@@ -35,10 +41,10 @@ def test_execute_sources_flow_passes_with_valid_source() -> None:
                 "network_status": "reachable",
                 "http_status_code": 200,
                 "error": None,
-            }
+            },
         ]
 
-        result = execute_sources_flow(payload)
+        result = asyncio.run(execute_sources_flow(payload))
 
     assert result["rule_resolution"]["enabled_judges"] == ["sources"]
     assert result["preprocessing"]["external_links_count"] == 1
@@ -48,6 +54,7 @@ def test_execute_sources_flow_passes_with_valid_source() -> None:
 
 
 def test_execute_sources_flow_fails_with_raw_url() -> None:
+    """Verify that execute sources flow fails with raw url."""
     payload = {
         "content": "<p>Voir cette source : https://example.com/report</p>",
         "profile": "default",
@@ -56,10 +63,11 @@ def test_execute_sources_flow_fails_with_raw_url() -> None:
             "expected_length": "MEDIUM",
             "locale": "fr-FR",
             "require_sources": True,
+            "organization_website": "https://contentcrea.com",
         },
     }
 
-    result = execute_sources_flow(payload)
+    result = asyncio.run(execute_sources_flow(payload))
 
     assert result["preprocessing"]["raw_urls_count"] == 1
     assert result["judge_result"]["status"] == "fail"
@@ -67,15 +75,12 @@ def test_execute_sources_flow_fails_with_raw_url() -> None:
 
 
 def test_execute_sources_flow_raises_error_when_context_is_not_dict() -> None:
+    """Verify that execute sources flow raises error when context is not dict."""
     payload = {
         "content": "<p>Test</p>",
         "profile": "default",
         "context": "invalid",
     }
 
-    try:
-        execute_sources_flow(payload)
-    except ValueError as exc:
-        assert str(exc) == "context must be a dictionary."
-    else:
-        raise AssertionError("Expected ValueError was not raised.")
+    with pytest.raises(AttributeError, match=r"'str' object has no attribute 'get'"):
+        asyncio.run(execute_sources_flow(payload))

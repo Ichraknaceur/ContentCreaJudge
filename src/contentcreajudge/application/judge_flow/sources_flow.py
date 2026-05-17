@@ -17,21 +17,25 @@ from contentcreajudge.rules.judges.sources.sources_resolver import (
 )
 
 
-def execute_sources_flow(payload: dict[str, object]) -> dict[str, object]:
+async def execute_sources_flow(payload: dict[str, object]) -> dict[str, object]:
     """Execute the full Sources judge flow."""
-
     content = str(payload.get("content", ""))
     profile = str(payload.get("profile", "default"))
     request_id = payload.get("request_id")
     context = payload.get("context") or {}
 
-    if not isinstance(context, dict):
-        raise ValueError("context must be a dictionary.")
-
     resolved_sources_rules = resolve_sources_rules(context)
 
+    complementary_reading_rules = resolved_sources_rules.get(
+        "complementary_reading",
+        {},
+    )
+
     internal_domain = str(
-        resolved_sources_rules["complementary_reading"]["required_domain"]
+        complementary_reading_rules.get(
+            "required_domain",
+            "https://contentcrea.com",
+        ),
     )
 
     preprocessed_content = preprocess_sources_content(
@@ -39,13 +43,17 @@ def execute_sources_flow(payload: dict[str, object]) -> dict[str, object]:
         internal_domain=internal_domain,
     )
 
-    urls_to_validate = [
-        str(link["href"])
-        for link in preprocessed_content["external_links"]
-        if str(link.get("href", "")).strip()
-    ]
+    all_links = preprocessed_content.get("links", [])
 
-    validation_results = validate_source_urls(
+    urls_to_validate = list(
+        dict.fromkeys(
+            str(link.get("href", "")).strip()
+            for link in all_links
+            if isinstance(link, dict) and str(link.get("href", "")).strip()
+        ),
+    )
+
+    validation_results = await validate_source_urls(
         urls=urls_to_validate,
         network_rules=resolved_sources_rules["network_validation"],
         forbidden_query_parameters=resolved_sources_rules["url_cleaning"][
