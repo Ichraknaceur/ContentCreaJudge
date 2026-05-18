@@ -81,9 +81,15 @@ def render_global_evaluation(*, api_url: str) -> None:
             )
 
             st.text_input(
-                "Organization domain",
-                key="organization_domain",
+                "Organization website",
+                key="organization_website",
                 value="https://contentcrea.com",
+            )
+
+            st.checkbox(
+                "Require external sources",
+                key="require_sources",
+                value=True,
             )
 
         uploaded_content_file = st.file_uploader(
@@ -110,16 +116,39 @@ def render_global_evaluation(*, api_url: str) -> None:
                 "sent through preprocessing, mini-judges, and aggregation."
             ),
         )
+        uploaded_outline_file = st.file_uploader(
+            "Upload expected outline file",
+            type=["txt", "html", "md"],
+            key="global_expected_outline_file",
+        )
+
+        if uploaded_outline_file is not None:
+            uploaded_outline_file_name = uploaded_outline_file.name
+
+            if (
+                st.session_state.get("last_uploaded_expected_outline_file")
+                != uploaded_outline_file_name
+            ):
+                uploaded_outline = read_uploaded_text_file(uploaded_outline_file)
+
+                if uploaded_outline:
+                    st.session_state["expected_outline_html"] = uploaded_outline
+                    st.session_state["last_uploaded_expected_outline_file"] = (
+                        uploaded_outline_file_name
+                    )
+        st.text_area(
+            "Expected outline HTML",
+            key="expected_outline_html",
+            height=180,
+            placeholder=(
+                "Paste the expected structure/outline HTML here. "
+                "Example: <p>Intro...</p><h2>Section</h2><h3>Subsection</h3>"
+            ),
+        )
         st.text_input(
             "Main keyword",
             key="main_keyword",
             placeholder="différenciation éditoriale en contexte saturé",
-        )
-        st.text_area(
-            "Declared sources",
-            key="declared_sources",
-            height=110,
-            placeholder="One source URL per line",
         )
         submitted = st.form_submit_button("Run global evaluation")
 
@@ -188,8 +217,10 @@ def _build_evaluation_payload() -> dict[str, object]:
         "main_keyword": st.session_state.get("main_keyword", ""),
         "secondary_keywords": [],
         "long_tail_keywords": [],
-        "organization_domain": st.session_state.get(
-            "organization_domain",
+        "expected_outline_html": st.session_state.get("expected_outline_html", ""),
+        "require_sources": st.session_state.get("require_sources", True),
+        "organization_website": st.session_state.get(
+            "organization_website",
             "https://contentcrea.com",
         ),
     }
@@ -198,7 +229,7 @@ def _build_evaluation_payload() -> dict[str, object]:
         "content": st.session_state.get("content", ""),
         "profile": st.session_state.get("profile", "default"),
         "context": context,
-        "enabled_judges": ["length", "typography", "seo"],
+        "enabled_judges": ["length", "typography", "seo", "structure", "sources"],
     }
 
     request_id = st.session_state.get("request_id", "")

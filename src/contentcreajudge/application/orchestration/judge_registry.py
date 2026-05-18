@@ -10,6 +10,10 @@ from contentcreajudge.application.judge_flow.seo_flow import execute_seo_flow
 from contentcreajudge.application.judge_flow.typography_flow import (
     execute_typography_flow,
 )
+from contentcreajudge.application.judge_flow.structure_flow import (
+    execute_structure_flow,
+)
+from contentcreajudge.application.judge_flow.sources_flow import execute_sources_flow
 
 
 JudgeFlow = Callable[[dict[str, object]], dict[str, object]]
@@ -19,10 +23,12 @@ JUDGE_REGISTRY: dict[str, JudgeFlow] = {
     "length": execute_length_flow,
     "typography": execute_typography_flow,
     "seo": execute_seo_flow,
+    "structure": execute_structure_flow,
+    "sources": execute_sources_flow,
 }
 
 
-DEFAULT_ENABLED_JUDGES = ["length", "typography", "seo"]
+DEFAULT_ENABLED_JUDGES = ["length", "typography", "seo", "structure", "sources"]
 
 
 def get_runnable_judges(

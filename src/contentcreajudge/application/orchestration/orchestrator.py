@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
@@ -24,7 +25,10 @@ async def _run_judge(
 ) -> dict[str, object]:
     """Run one judge flow and protect the global evaluation from judge errors."""
     try:
-        result = await asyncio.to_thread(judge_flow, payload)
+        if inspect.iscoroutinefunction(judge_flow):
+            result = await judge_flow(payload)
+        else:
+            result = await asyncio.to_thread(judge_flow, payload)
     except Exception as exc:  # noqa: BLE001
         return {
             "judge": judge_name,

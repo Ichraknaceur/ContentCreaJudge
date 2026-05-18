@@ -21,7 +21,7 @@ class GlobalEvaluationContext(BaseModel):
     expected_length: str | None = None
     locale: str | None = None
 
-    organization_domain: str | None = None
+    organization_website: str | None = None
     expected_cta: str | None = None
     funnel_stage: str | None = None
     evergreen: bool | None = None
@@ -29,6 +29,7 @@ class GlobalEvaluationContext(BaseModel):
     main_keyword: str | None = None
     secondary_keywords: list[str] = Field(default_factory=list)
     expected_structure: str | None = None
+    expected_outline_html: str | None = None
 
 
 class GlobalEvaluationRequestPayload(BaseModel):
