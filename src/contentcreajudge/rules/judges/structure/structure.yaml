@@ -1,0 +1,134 @@
+judge_id: structure
+version: 1
+label: "Structure judge"
+description: "Validate the generated HTML structure against the expected outline and HTML constraints."
+
+structure_rules:
+  enforce_provided_rules: true
+  keep_same_heading_order: true
+  keep_same_heading_levels: true
+  keep_same_heading_text: true
+
+  forbid:
+    add_sections: true
+    remove_sections: true
+    add_new_nodes: true
+    use_h1_in_body: true
+    expose_internal_comments_from_outline: true
+    use_unauthorized_html_tags: true
+
+  internal_outline_comments:
+    treat_as_instructions_only: true
+    must_not_appear_in_output: true
+    patterns:
+      - "Angle de réponse"
+      - "Note"
+      - "Instruction"
+      - "Indication"
+      
+  optional_trailing_sections:
+    allow_enabled: true
+    allowed_titles:
+      - "Lecture complémentaire"
+      - "Learn more"
+
+  allowed_html_tags:
+    headings:
+      - h2
+      - h3
+      - h4
+    body:
+      - p
+      - ul
+      - ol
+      - li
+      - blockquote
+      - em
+      - strong
+      - code
+      - a
+      - figure
+      - figcaption
+      - table
+      - thead
+      - tbody
+      - tr
+      - th
+      - td
+
+  html_constraints:
+    forbid_inline_styles_except_tables: true
+    forbid_scripts: true
+    forbid_decorative_spans: true
+
+  post_generation_checks:
+    verify_heading_order: true
+    verify_heading_levels: true
+    verify_no_h1_in_body: true
+    verify_only_allowed_tags: true
+  
+
+rules:
+  - rule_id: structure.heading_order
+    enabled: true
+    severity: major
+
+  - rule_id: structure.heading_levels
+    enabled: true
+    severity: major
+
+  - rule_id: structure.heading_text
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_added_sections
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_removed_sections
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_new_nodes
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_h1_in_body
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_internal_outline_comments_exposed
+    enabled: true
+    severity: major
+
+  - rule_id: structure.allowed_tags_only
+    enabled: true
+    severity: major
+
+  - rule_id: structure.no_scripts
+    enabled: true
+    severity: critical
+
+  - rule_id: structure.no_decorative_spans
+    enabled: true
+    severity: minor
+
+  - rule_id: structure.no_inline_styles_except_tables
+    enabled: true
+    severity: major
+
+messages:
+  pass: "The HTML structure matches the expected outline."
+  fail: "The HTML structure does not comply with one or more expected rules."
+  heading_order_mismatch: "The heading order does not match the expected outline."
+  heading_level_mismatch: "One or more heading levels do not match the expected outline."
+  heading_text_mismatch: "One or more heading texts do not match the expected outline."
+  added_sections_detected: "Unexpected sections were added to the generated HTML."
+  removed_sections_detected: "Expected sections are missing from the generated HTML."
+  new_nodes_detected: "Unexpected structural nodes were detected."
+  h1_in_body_detected: "The HTML body must not contain an h1 tag."
+  internal_outline_comment_exposed: "Internal outline instructions were exposed in the final output."
+  unauthorized_tags_detected: "Unauthorized HTML tags were detected."
+  script_tag_detected: "Script tags are forbidden."
+  decorative_span_detected: "Decorative span tags are forbidden."
+  inline_style_detected: "Inline styles are forbidden except on table-related tags."
