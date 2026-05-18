@@ -2,20 +2,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
 from contentcreajudge.judges.typography.exceptions import (
     MissingTypographyContextError,
     UnsupportedTypographyLocaleError,
 )
+from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 
 def resolve_typography_rules(context: dict[str, object]) -> dict[str, object]:
     """Resolve typography rules from YAML using the evaluation context."""
     config_path = Path(__file__).with_name("typography.yaml")
 
-    with config_path.open(encoding="utf-8") as file:
-        config = yaml.safe_load(file)
+    config = load_yaml_config(config_path)
 
     judge_id = config["judge_id"]
     version = config["version"]

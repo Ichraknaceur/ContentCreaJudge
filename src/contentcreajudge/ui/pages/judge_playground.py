@@ -14,6 +14,10 @@ from contentcreajudge.ui.viewmodels.judge_playground_vm import (
 
 WORKSPACE_MODULES = {
     "sources": "contentcreajudge.ui.components.judges.sources_workspace",
+    "structure": "contentcreajudge.ui.components.judges.structure_workspace",
+    "length": "contentcreajudge.ui.components.judges.length_workspace",
+    "typography": "contentcreajudge.ui.components.judges.typography_workspace",
+    "seo": "contentcreajudge.ui.components.judges.seo_workspace",
 }
 
 
@@ -74,7 +78,7 @@ def render_default_workspace() -> None:
     )
 
 
-def render_judge_playground() -> None:
+def render_judge_playground(*, api_url: str) -> None:
     """Render the judge-by-judge demo workspace."""
     st.markdown(
         '<div class="section-label">Judge playground</div>',
@@ -173,7 +177,7 @@ def render_judge_playground() -> None:
     with right_column:
         if renderer_config is not None:
             renderer_config["result"](
-                api_url="http://127.0.0.1:8000",
+                api_url=api_url,
                 selected_item=selected_item,
             )
         else:

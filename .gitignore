@@ -13,3 +13,5 @@ coverage.xml
 coverage-debug.json
 htmlcov/
 site/
+.pre-commit-cache/
+.uv-cache/
