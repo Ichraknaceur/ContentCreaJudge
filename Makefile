@@ -8,6 +8,8 @@ UV_COMMAND := $(shell command -v uv 2> /dev/null)
 COPY_ENV_COMMAND = cp .env.example .env || true
 endif
 
+RUFF_TARGETS := src tests pyproject.toml
+
 .PHONY: help
 help: ## Display this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -36,16 +38,20 @@ run-ui: check-uv install ## Run the Streamlit client UI
 .PHONY: init
 init: check-uv pyproject.toml .pre-commit-config.yaml install ## Initialize project (first installation)
 	uv run -- pre-commit install
+ifeq ($(OS),Windows_NT)
 	if not exist .env copy .env.example .env
+else
+	cp .env.example .env || true
+endif
 
 .PHONY: format
 format: check-uv ## Format code
-	-uv run -- ruff format
-	uv run -- ruff check --fix
+	uv run -- ruff format $(RUFF_TARGETS)
+	uv run -- ruff check --fix $(RUFF_TARGETS)
 
 .PHONY: lint
 lint: check-uv ## Run linting checks
-	uv run -- ruff check
+	uv run -- ruff check $(RUFF_TARGETS)
 
 .PHONY: typecheck
 typecheck: check-uv ## Run type checking with ty

@@ -14,6 +14,9 @@ from contentcreajudge.ui.viewmodels.judge_playground_vm import (
 
 WORKSPACE_MODULES = {
     "structure": "contentcreajudge.ui.components.judges.structure_workspace",
+    "length": "contentcreajudge.ui.components.judges.length_workspace",
+    "typography": "contentcreajudge.ui.components.judges.typography_workspace",
+    "seo": "contentcreajudge.ui.components.judges.seo_workspace",
 }
 
 

@@ -26,7 +26,8 @@ repos:
     rev: v2.4.2
     hooks:
       - id: codespell
-        exclude: ^docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$
+        args: ["-L", "complet,mot,reste,valide"]
+        exclude: ^(\.pre-commit-cache/|\.pytest_cache/|\.ruff_cache/|\.uv-cache/|docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$)
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.11.2
@@ -37,9 +38,10 @@ repos:
     rev: 0.17.0
     hooks:
       - id: uv-secure
-        args: [ --show-severity, --ignore-unfixed, --severity=medium ]
+        # GHSA-69w3-r845-3855: transformers<5.0.0 via sentence-transformers — fix is 5.0.0rc3 (RC only, not stable yet)
+        args: [ --show-severity, --ignore-unfixed, --severity=medium, --ignore-vulns, GHSA-69w3-r845-3855 ]
 
-  - repo: https://github.com/mrtazz/checkmake.git
-    rev: 0.2.2
+  - repo: https://github.com/checkmake/checkmake.git
+    rev: v0.3.2
     hooks:
       - id: checkmake
