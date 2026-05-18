@@ -9,6 +9,7 @@ readme = "docs/README.md"
 requires-python = ">= 3.14"
 
 dependencies = [
+    "httpx>=0.28.1,<0.28.2",
     "beautifulsoup4>=4.14.3,<4.15.0",
     "fastapi>=0.120.0,<0.121.0",
     "keybert>=0.9.0,<1.0.0",
@@ -70,6 +71,7 @@ lint.flake8-type-checking.strict = true
 
 lint.select = ["ALL"]
 lint.ignore = [
+  "COM812", # Conflicts with `ruff format`
   "PLE1205", # logging-too-many-args
   "D100", # pydocstyle
   "EM", # flake8-errmsg

@@ -13,6 +13,7 @@ from contentcreajudge.ui.viewmodels.judge_playground_vm import (
 )
 
 WORKSPACE_MODULES = {
+    "sources": "contentcreajudge.ui.components.judges.sources_workspace",
     "structure": "contentcreajudge.ui.components.judges.structure_workspace",
     "length": "contentcreajudge.ui.components.judges.length_workspace",
     "typography": "contentcreajudge.ui.components.judges.typography_workspace",
@@ -21,7 +22,7 @@ WORKSPACE_MODULES = {
 
 
 def get_workspace_renderer_config(selected_key: str) -> dict[str, object] | None:
-    """Load the selected mini-judge workspace renderers."""
+    """Load the selected mini-judge workspace and return its renderers."""
     module_path = WORKSPACE_MODULES.get(selected_key)
     if module_path is None:
         return None
