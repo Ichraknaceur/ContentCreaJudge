@@ -18,14 +18,39 @@ from contentcreajudge.rules.judges.typography.typography_resolver import (
 
 def execute_typography_flow(payload: dict[str, object]) -> dict[str, object]:
     """Execute the steps of the typography judge flow."""
-
     content = str(payload.get("content", ""))
     profile = str(payload.get("profile", "default"))
     request_id = payload.get("request_id")
     context = payload.get("context") or {}
 
     resolved_typography_rules = resolve_typography_rules(context)
-    preprocessed_content = preprocess_typography_content(content)
+
+    global_preprocessing = payload.get("global_preprocessing")
+
+    if isinstance(global_preprocessing, dict) and isinstance(
+        global_preprocessing.get("typography"),
+        dict,
+    ):
+        typography_preprocessing = global_preprocessing["typography"]
+
+        preprocessed_content = {
+            "original_content": content,
+            "text_without_html": typography_preprocessing.get("text_without_html", ""),
+            "decoded_text": typography_preprocessing.get("decoded_text", ""),
+            "decoded_text_no_newlines": typography_preprocessing.get(
+                "decoded_text_no_newlines",
+                "",
+            ),
+            "normalized_text": typography_preprocessing.get("normalized_text", ""),
+            "original_lines": typography_preprocessing.get("original_lines", []),
+            "decoded_lines": typography_preprocessing.get("decoded_lines", []),
+            "br_tag_count": typography_preprocessing.get("br_tag_count", 0),
+            "anchor_tag_count": typography_preprocessing.get("anchor_tag_count", 0),
+            "is_empty": typography_preprocessing.get("is_empty", True),
+        }
+    else:
+        preprocessed_content = preprocess_typography_content(content)
+
     typography_result = run_typography_judge(
         preprocessed_content=preprocessed_content,
         judge_rules=resolved_typography_rules,

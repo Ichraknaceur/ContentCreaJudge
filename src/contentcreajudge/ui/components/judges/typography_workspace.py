@@ -1,136 +1,72 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
 import requests
 import streamlit as st
 
-def _read_uploaded_text_file(uploaded_file: Any) -> str:
-    """Read an uploaded text-based file and return its UTF-8 content."""
-    if uploaded_file is None:
-        return ""
+from contentcreajudge.ui.components.judges.shared import (
+    read_uploaded_text_file,
+    render_exchange_summary,
+    render_findings_section,
+)
 
-    file_bytes = uploaded_file.read()
-    if not file_bytes:
-        return ""
+if TYPE_CHECKING:
+    from contentcreajudge.ui.viewmodels.judge_playground_vm import JudgeWorkbenchItem
 
-    try:
-        return file_bytes.decode("utf-8")
-    except UnicodeDecodeError:
-        return file_bytes.decode("utf-8", errors="replace")
 
-def _render_exchange_summary(exchange: dict[str, object]) -> None:
-    """Render the API response in a much more readable way"""
-    response_status = exchange.get("response_status")
-    response_body = exchange.get("response_body") or {}
-    error = exchange.get("error")
-
-    if error:
-        st.error(str(error))
-    elif response_status and 200 <= int(response_status) < 300:
-        st.success("Typography judge executed successfully.")
-    else:
-        st.error(f"Request failed with status {response_status}.")
-
-    if not isinstance(response_body, dict):
-        st.warning("Response body is not a JSON object.")
-        with st.expander("Show raw API exchange"):
-            st.json(exchange)
-        return
-
-    rule_resolution = response_body.get("rule_resolution")
-    preprocessing = response_body.get("preprocessing")
-    judge_result = response_body.get("judge_result")
-    aggregation = response_body.get("aggregation")
-    response_message = response_body.get("message")
-
-    if response_message:
-        st.caption(str(response_message))
-
-    st.markdown("#### Pipeline steps")
-
-    if isinstance(rule_resolution, dict):
-        st.markdown(
-            f"**Rule resolution** - profile: "
-            f"`{rule_resolution.get('profile', 'unknown')}`"
+def _render_preprocessing_section(preprocessing: dict[str, object]) -> None:
+    """Render the preprocessing pipeline step."""
+    st.markdown("**Preprocessing**")
+    pre_left, pre_right = st.columns(2)
+    with pre_left:
+        st.metric("Is empty", str(preprocessing.get("is_empty", "n/a")))
+        st.metric("BR tag count", str(preprocessing.get("br_tag_count", "n/a")))
+    with pre_right:
+        st.metric("Anchor tag count", str(preprocessing.get("anchor_tag_count", "n/a")))
+        st.metric("Decoded lines", len(preprocessing.get("decoded_lines", [])))
+    with st.expander("Show preprocessing text signals"):
+        st.json(
+            {
+                "text_without_html": preprocessing.get("text_without_html", ""),
+                "decoded_text": preprocessing.get("decoded_text", ""),
+                "normalized_text": preprocessing.get("normalized_text", ""),
+                "decoded_text_no_newlines": preprocessing.get(
+                    "decoded_text_no_newlines",
+                    "",
+                ),
+            },
         )
 
-        judge_rules = rule_resolution.get("judge_rules")
-        if judge_rules:
-            with st.expander("Show resolved rules"):
-                st.json(judge_rules)
 
-    if isinstance(preprocessing, dict):
-        st.markdown("**Preprocessing**")
+def _render_judge_result_section(judge_result: dict[str, object]) -> None:
+    """Render the judge result pipeline step."""
+    st.markdown("**Judge result**")
+    judge_left, judge_right = st.columns(2)
+    with judge_left:
+        st.metric("Judge status", str(judge_result.get("status", "unknown")))
+    with judge_right:
+        st.metric("Judge score", str(judge_result.get("score", "n/a")))
 
-        pre_left, pre_right = st.columns(2)
+    applied_rule = judge_result.get("applied_rule")
+    if applied_rule:
+        with st.expander("Show applied rule"):
+            st.json(applied_rule)
 
-        with pre_left:
-            st.metric("Is empty", str(preprocessing.get("is_empty", "n/a")))
-            st.metric(
-                "BR tag count",
-                str(preprocessing.get("br_tag_count", "n/a")),
-            )
-
-        with pre_right:
-            st.metric(
-                "Anchor tag count",
-                str(preprocessing.get("anchor_tag_count", "n/a")),
-            )
-            st.metric(
-                "Decoded lines",
-                len(preprocessing.get("decoded_lines", [])),
-            )
-
-        with st.expander("Show preprocessing text signals"):
-            st.json(
-                {
-                    "text_without_html": preprocessing.get("text_without_html", ""),
-                    "decoded_text": preprocessing.get("decoded_text", ""),
-                    "normalized_text": preprocessing.get("normalized_text", ""),
-                    "decoded_text_no_newlines": preprocessing.get(
-                        "decoded_text_no_newlines", ""
-                    ),
-                }
-            )
-
-    if isinstance(judge_result, dict):
-        st.markdown("**Judge result**")
-        judge_left, judge_right = st.columns(2)
-        with judge_left:
-            st.metric("Judge status", str(judge_result.get("status", "unknown")))
-        with judge_right:
-            st.metric("Judge score", str(judge_result.get("score", "n/a")))
-
-        applied_rule = judge_result.get("applied_rule")
-        if applied_rule:
-            with st.expander("Show applied rule"):
-                st.json(applied_rule)
-
-        findings = judge_result.get("findings", [])
-        if findings:
-            st.markdown("**Findings**")
-            for finding in findings:
-                if not isinstance(finding, dict):
-                    continue
-                severity = str(finding.get("severity", "unknown"))
-                finding_message = str(finding.get("message", "No message"))
-                rule_id = str(finding.get("rule_id", "unknown"))
-                st.markdown(f"- `{severity}` - {finding_message} (`{rule_id}`)")
-
-                evidence = finding.get("evidence")
-                if isinstance(evidence, dict) and evidence:
-                    st.caption(
-                        ", ".join(
-                            f"{key}: {value}" for key, value in evidence.items()
-                        )
-                    )
-                    
-    with st.expander("Show raw API exchange"):
-        st.json(exchange)
+    render_findings_section(judge_result.get("findings", []))
 
 
-def render_typography_form(selected_item: Any) -> None:
+def _render_typography_exchange_summary(exchange: dict[str, object]) -> None:
+    """Render the Typography API response."""
+    render_exchange_summary(
+        exchange,
+        success_message="Typography judge executed successfully.",
+        render_preprocessing=_render_preprocessing_section,
+        render_judge_result=_render_judge_result_section,
+    )
+
+
+def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG001
     """Render the typography judge form."""
     st.markdown("### Typography test input")
 
@@ -148,7 +84,7 @@ def render_typography_form(selected_item: Any) -> None:
 
         content_value = st.session_state["typography_content_input"]
         if uploaded_content_file is not None:
-            content_value = _read_uploaded_text_file(uploaded_content_file)
+            content_value = read_uploaded_text_file(uploaded_content_file)
 
         content = st.text_area(
             "Content to evaluate",
@@ -182,8 +118,8 @@ def render_typography_form(selected_item: Any) -> None:
     st.session_state["typography_run_requested"] = True
 
 
-def render_typography_result(api_url: str, selected_item: Any) -> None:
-    """Read the payload and display the API response"""
+def render_typography_result(api_url: str, selected_item: JudgeWorkbenchItem) -> None:
+    """Read the payload and display the API response."""
     st.markdown(
         '<div class="section-label">Typography result</div>',
         unsafe_allow_html=True,
@@ -203,7 +139,7 @@ def render_typography_result(api_url: str, selected_item: Any) -> None:
     if not should_run:
         last_exchange = st.session_state.get("last_typography_exchange")
         if last_exchange:
-            _render_exchange_summary(last_exchange)
+            _render_typography_exchange_summary(last_exchange)
         return
 
     content = payload.get("content", "")
@@ -232,7 +168,7 @@ def render_typography_result(api_url: str, selected_item: Any) -> None:
             "error": f"API request failed: {exc}",
         }
         st.session_state["last_typography_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_typography_exchange_summary(exchange)
         st.session_state["typography_run_requested"] = False
         return
 
@@ -246,7 +182,7 @@ def render_typography_result(api_url: str, selected_item: Any) -> None:
             "error": "The API returned a non-JSON response.",
         }
         st.session_state["last_typography_exchange"] = exchange
-        _render_exchange_summary(exchange)
+        _render_typography_exchange_summary(exchange)
         st.session_state["typography_run_requested"] = False
         return
 
@@ -257,6 +193,6 @@ def render_typography_result(api_url: str, selected_item: Any) -> None:
         "error": None if response.ok else "The Typography judge request failed.",
     }
     st.session_state["last_typography_exchange"] = exchange
-    _render_exchange_summary(exchange)
+    _render_typography_exchange_summary(exchange)
 
     st.session_state["typography_run_requested"] = False
