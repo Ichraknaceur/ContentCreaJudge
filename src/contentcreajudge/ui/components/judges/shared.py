@@ -17,7 +17,7 @@ def read_uploaded_text_file(uploaded_file: Any) -> str:  # noqa: ANN401
     if uploaded_file is None:
         return ""
 
-    file_bytes = uploaded_file.read()
+    file_bytes = uploaded_file.getvalue()
     if not file_bytes:
         return ""
 

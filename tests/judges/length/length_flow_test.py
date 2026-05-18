@@ -157,3 +157,28 @@ def test_execute_length_flow_uses_default_values_when_missing() -> None:
     assert result["request_echo"]["context"] == {}
 
     assert result["aggregation"] == aggregation_result
+
+
+def test_execute_length_flow_uses_global_preprocessing_when_available() -> None:
+    payload = {
+        "content": "<p>Texte original court.</p>",
+        "profile": "default",
+        "context": {
+            "content_type": "articles",
+            "expected_length": "MEDIUM",
+            "locale": "fr-FR",
+        },
+        "global_preprocessing": {
+            "normalized_text": "mot " * 1200,
+            "word_count": 1200,
+            "is_empty": False,
+        },
+    }
+
+    result = execute_length_flow(payload)
+
+    preprocessing = result["preprocessing"]
+
+    assert preprocessing["word_count"] == 1200
+    assert preprocessing["is_empty"] is False
+    assert result["judge_result"]["status"] == "pass"
