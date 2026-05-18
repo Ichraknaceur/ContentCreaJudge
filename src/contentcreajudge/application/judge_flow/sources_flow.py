@@ -34,7 +34,7 @@ async def execute_sources_flow(payload: dict[str, object]) -> dict[str, object]:
     internal_domain = str(
         complementary_reading_rules.get(
             "required_domain",
-            "https://contentcrea.com",
+            "",
         ),
     )
 
@@ -55,10 +55,12 @@ async def execute_sources_flow(payload: dict[str, object]) -> dict[str, object]:
 
     validation_results = await validate_source_urls(
         urls=urls_to_validate,
-        network_rules=resolved_sources_rules["network_validation"],
-        forbidden_query_parameters=resolved_sources_rules["url_cleaning"][
-            "forbidden_query_parameters"
-        ],
+        network_rules=resolved_sources_rules.get("network_validation", {}),
+        forbidden_query_parameters=(
+            resolved_sources_rules.get("url_cleaning", {}).get(
+                "forbidden_query_parameters", []
+            )
+        ),
     )
 
     sources_result = run_sources_judge(

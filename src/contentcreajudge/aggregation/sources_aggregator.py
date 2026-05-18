@@ -5,7 +5,7 @@ from __future__ import annotations
 
 def aggregate_sources_result(judge_result: dict[str, object]) -> dict[str, object]:
     """Summarize the overall result of the sources judge."""
-    judge_status = str(judge_result["status"])
+    judge_status = str(judge_result.get("status", "unknown"))
     findings = judge_result.get("findings", [])
 
     if not isinstance(findings, list):
@@ -29,7 +29,7 @@ def aggregate_sources_result(judge_result: dict[str, object]) -> dict[str, objec
     if judge_status == "warn":
         return {
             "status": "warn",
-            "score": int(judge_result["score"]),
+            "score": int(judge_result.get("score", 0)),
             "summary": "Global evaluation has warnings for the sources dimension.",
             "dimension_results": [judge_result],
             "blocking_issues": [],

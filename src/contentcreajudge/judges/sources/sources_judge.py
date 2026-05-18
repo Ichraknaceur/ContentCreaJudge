@@ -86,7 +86,7 @@ def _append_content_type_policy_finding(
                 severity="minor",
                 message=_get_message(
                     messages,
-                    "content_type_policy",
+                    "content_type_policy_caution",
                     "External links are allowed with caution for this content type.",
                 ),
                 evidence={
@@ -502,11 +502,20 @@ def _build_judge_summary(
             ),
         )
 
+    applied_rule = {
+        "judge_id": judge_rules.get("judge_id"),
+        "content_type": judge_rules.get("content_type"),
+        "expected_length": judge_rules.get("expected_length"),
+        "locale": judge_rules.get("locale"),
+        "require_sources": judge_rules.get("require_sources"),
+        "organization_website": judge_rules.get("organization_website"),
+    }
+
     return {
         "dimension": "sources",
         "status": status,
         "score": score,
-        "applied_rule": judge_rules,
+        "applied_rule": applied_rule,
         "findings": findings,
     }
 
