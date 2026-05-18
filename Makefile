@@ -1,5 +1,8 @@
 .DEFAULT_GOAL := help
 
+UV_CACHE_DIR ?= .uv-cache
+export UV_CACHE_DIR
+
 ifeq ($(OS),Windows_NT)
 UV_COMMAND := $(shell where uv 2>NUL)
 COPY_ENV_COMMAND = if not exist .env copy .env.example .env
