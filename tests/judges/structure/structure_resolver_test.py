@@ -1,5 +1,6 @@
 import pytest
 
+from contentcreajudge.judges.structure.exceptions import MissingStructureContextError
 from contentcreajudge.rules.judges.structure.structure_resolver import (
     resolve_structure_rules,
 )
@@ -29,7 +30,7 @@ def test_resolve_structure_rules_missing_expected_outline_html() -> None:
     }
 
     with pytest.raises(
-        ValueError,
-        match=r"Missing context\.expected_outline_html for structure evaluation\.",
+        MissingStructureContextError,
+        match="Missing structure context field: expected_outline_html",
     ):
         resolve_structure_rules(context)

@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
+from contentcreajudge.judges.structure.exceptions import MissingStructureContextError
 from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
 
-def resolve_structure_rules(context: dict[str, object]) -> dict[str, Any]:
+def resolve_structure_rules(context: dict[str, object]) -> dict[str, object]:
     """Resolve structure rules from YAML for the current evaluation context."""
     config_path = Path(__file__).with_name("structure.yaml")
 
@@ -18,9 +18,7 @@ def resolve_structure_rules(context: dict[str, object]) -> dict[str, Any]:
     locale = context.get("locale")
 
     if not expected_outline_html:
-        raise ValueError(
-            "Missing context.expected_outline_html for structure evaluation.",
-        )
+        raise MissingStructureContextError("expected_outline_html")
 
     return {
         "judge_id": config.get("judge_id", "structure"),

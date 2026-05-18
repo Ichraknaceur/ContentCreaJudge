@@ -54,6 +54,7 @@ indent-width = 4
 extend-exclude = [
   ".pre-commit-cache",
   ".uv-cache",
+]
 exclude = [
   ".git",
   ".pytest_cache",

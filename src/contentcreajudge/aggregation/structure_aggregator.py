@@ -12,9 +12,7 @@ def aggregate_structure_result(
     judge_status = str(judge_result.get("status", "unknown"))
     judge_score = int(judge_result.get("score", 0))
 
-    findings = judge_result.get("findings", [])
-    if not isinstance(findings, list):
-        findings = []
+    findings = list(judge_result.get("findings", []))
 
     if judge_status == "pass":
         return {

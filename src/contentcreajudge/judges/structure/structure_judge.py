@@ -57,7 +57,7 @@ def _enabled_finding(
     return _build_finding(
         rule_id=check.rule_id,
         severity=rule["severity"],
-        message=messages[check.message_key],
+        message=messages.get(check.message_key, check.message_key),
         evidence=check.evidence,
     )
 
@@ -264,12 +264,18 @@ def run_structure_judge(
         messages,
     )
 
+    applied_rule = {
+        "judge_id": judge_rules.get("judge_id"),
+        "expected_outline_html": judge_rules.get("expected_outline_html"),
+        "locale": judge_rules.get("locale"),
+    }
+
     if findings:
         return {
             "dimension": "structure",
             "status": "fail",
             "score": 0,
-            "applied_rule": judge_rules,
+            "applied_rule": applied_rule,
             "findings": findings,
         }
 
@@ -277,12 +283,14 @@ def run_structure_judge(
         "dimension": "structure",
         "status": "pass",
         "score": 100,
-        "applied_rule": judge_rules,
+        "applied_rule": applied_rule,
         "findings": [
             _build_finding(
                 rule_id="structure.valid",
                 severity="info",
-                message=messages["pass"],
+                message=messages.get(
+                    "pass", "The HTML structure matches the expected outline."
+                ),
                 evidence={
                     "expected_heading_count": len(expected_headings),
                     "generated_heading_count": len(generated_headings),

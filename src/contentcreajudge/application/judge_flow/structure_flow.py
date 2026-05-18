@@ -27,9 +27,11 @@ def execute_structure_flow(payload: dict[str, object]) -> dict[str, Any]:
 
     resolved_structure_rules = resolve_structure_rules(context)
 
-    internal_comment_patterns = resolved_structure_rules["structure_rules"][
-        "internal_outline_comments"
-    ]["patterns"]
+    internal_comment_patterns = (
+        resolved_structure_rules.get("structure_rules", {})
+        .get("internal_outline_comments", {})
+        .get("patterns", [])
+    )
 
     preprocessed_content = preprocess_structure_content(
         expected_outline_html=resolved_structure_rules["expected_outline_html"],
