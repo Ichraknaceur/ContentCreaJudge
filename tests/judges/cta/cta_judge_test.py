@@ -11,6 +11,8 @@ from contentcreajudge.judges.cta.cta_judge import (
     _is_cta_before_complementary_reading,
     _is_educational_purpose,
     _is_language_consistent,
+    _looks_like_awareness_cta,
+    _looks_like_decision_cta,
     run_cta_judge,
 )
 from contentcreajudge.preprocessing.cta_preprocessor import preprocess_cta_content
@@ -51,22 +53,22 @@ def test_get_message_returns_key_when_messages_is_not_a_dict() -> None:
     assert _get_message({"messages": "invalid"}, "position") == "position"
 
 
-def test_get_allowed_labels_returns_empty_list_when_rule_shape_is_invalid() -> None:
+def test_get_allowed_labels_accepts_language_agnostic_list() -> None:
     judge_rules = _rules()
     judge_rules["funnel_alignment"]["expected_by_funnel"]["AWARENESS"][
         "allowed_cta_labels"
     ] = ["Read more"]
 
-    assert _get_allowed_labels(judge_rules) == []
+    assert _get_allowed_labels(judge_rules) == ["Read more"]
 
 
-def test_get_forbidden_labels_returns_empty_list_when_rule_shape_is_invalid() -> None:
+def test_get_forbidden_labels_accepts_language_agnostic_list() -> None:
     judge_rules = _rules()
     judge_rules["funnel_alignment"]["expected_by_funnel"]["AWARENESS"][
         "forbidden_cta_labels"
     ] = ["Buy"]
 
-    assert _get_forbidden_labels(judge_rules) == []
+    assert _get_forbidden_labels(judge_rules) == ["Buy"]
 
 
 def test_is_cta_at_end_returns_false_without_cta() -> None:
@@ -119,10 +121,14 @@ def test_cta_judge_fails_when_cta_is_missing() -> None:
 
 def test_cta_judge_fails_when_cta_text_mismatches() -> None:
     content = '<p>Intro</p><p class="cta"><strong>Discover</strong></p>'
+    judge_rules = _rules(expected_cta="Read more")
+    judge_rules["semantic_fallback"][
+        "allow_semantic_check_for_unknown_or_custom_cta"
+    ] = False
 
     result = run_cta_judge(
         preprocess_cta_content(content),
-        _rules(expected_cta="Read more"),
+        judge_rules,
     )
 
     rule_ids = [finding["rule_id"] for finding in result["findings"]]
@@ -146,7 +152,7 @@ def test_cta_judge_is_not_applicable_without_expected_cta_and_without_cta() -> N
 
 def test_cta_judge_fails_when_multiple_ctas_exist() -> None:
     content = (
-        '<p>Intro</p>'
+        "<p>Intro</p>"
         '<p class="cta"><strong>Read more</strong></p>'
         '<p class="cta"><strong>Read more</strong></p>'
     )
@@ -178,9 +184,9 @@ def test_cta_judge_fails_when_cta_has_bad_html_format() -> None:
 
 def test_cta_judge_fails_when_cta_is_not_at_end() -> None:
     content = (
-        '<p>Intro</p>'
+        "<p>Intro</p>"
         '<p class="cta"><strong>Read more</strong></p>'
-        '<p>Conclusion after CTA</p>'
+        "<p>Conclusion after CTA</p>"
     )
 
     result = run_cta_judge(
@@ -194,7 +200,9 @@ def test_cta_judge_fails_when_cta_is_not_at_end() -> None:
     assert "cta.position" in rule_ids
 
 
-def test_cta_judge_passes_when_read_more_is_omitted_with_complementary_reading() -> None:
+def test_cta_judge_passes_when_read_more_is_omitted_with_complementary_reading() -> (
+    None
+):
     content = "<p>Intro</p><h2>Lecture complémentaire</h2><ul><li>Article</li></ul>"
 
     result = run_cta_judge(
@@ -239,6 +247,28 @@ def test_cta_judge_fails_for_sales_cta_in_awareness() -> None:
     assert "cta.funnel_alignment" in rule_ids
 
 
+def test_cta_judge_rejects_decision_like_cta_in_awareness_before_semantic_fallback() -> (
+    None
+):
+    content = '<p>Intro</p><p class="cta"><strong>Demander une démo</strong></p>'
+
+    result = run_cta_judge(
+        preprocess_cta_content(content),
+        _rules(expected_cta="Demander une démo", funnel_stage="AWARENESS"),
+    )
+
+    funnel_finding = next(
+        finding
+        for finding in result["findings"]
+        if finding["rule_id"] == "cta.funnel_alignment"
+    )
+
+    assert result["status"] == "fail"
+    assert funnel_finding["evidence"]["reason"] == (
+        "CTA intent is incompatible with this funnel stage."
+    )
+
+
 def test_cta_judge_passes_decision_cta() -> None:
     content = '<p>Intro</p><p class="cta"><strong>Contact us</strong></p>'
 
@@ -256,9 +286,35 @@ def test_cta_judge_passes_decision_cta() -> None:
     assert result["score"] == 100
 
 
+def test_cta_judge_rejects_awareness_like_cta_in_decision_before_semantic_fallback() -> (
+    None
+):
+    content = '<p>Intro</p><p class="cta"><strong>Learn more</strong></p>'
+
+    result = run_cta_judge(
+        preprocess_cta_content(content),
+        _rules(
+            expected_cta="Learn more",
+            funnel_stage="DECISION",
+            content_purpose="Conversion",
+        ),
+    )
+
+    funnel_finding = next(
+        finding
+        for finding in result["findings"]
+        if finding["rule_id"] == "cta.funnel_alignment"
+    )
+
+    assert result["status"] == "fail"
+    assert funnel_finding["evidence"]["reason"] == (
+        "CTA intent is incompatible with this funnel stage."
+    )
+
+
 def test_cta_judge_validates_quiz_position() -> None:
     content = (
-        "<ol><li><p><strong>Q1 – Question</strong></p></li></ol>"
+        "<ol><li><p><strong>Q1 - Question</strong></p></li></ol>"
         "<h2>Corrigé du quiz</h2>"
         "<ol><li><p>Réponse correcte : A</p></li></ol>"
         '<p class="cta"><strong>Read more</strong></p>'
@@ -292,7 +348,9 @@ def test_cta_judge_fails_when_quiz_cta_is_not_after_correction_at_end() -> None:
     assert "cta.quiz_position" in rule_ids
 
 
-def test_cta_judge_fails_when_cta_is_not_immediately_before_complementary_reading() -> None:
+def test_cta_judge_fails_when_cta_is_not_immediately_before_complementary_reading() -> (
+    None
+):
     content = (
         "<p>Intro</p>"
         '<p class="cta"><strong>Explore</strong></p>'
@@ -314,10 +372,12 @@ def test_cta_judge_fails_when_cta_is_not_immediately_before_complementary_readin
 
 def test_cta_judge_fails_when_cta_is_not_in_allowed_labels() -> None:
     content = '<p>Intro</p><p class="cta"><strong>Keep reading</strong></p>'
+    judge_rules = _rules(expected_cta="Keep reading")
+    judge_rules["semantic_fallback"]["enabled"] = False
 
     result = run_cta_judge(
         preprocess_cta_content(content),
-        _rules(expected_cta="Keep reading"),
+        judge_rules,
     )
 
     rule_ids = [finding["rule_id"] for finding in result["findings"]]
@@ -348,7 +408,9 @@ def test_cta_judge_flags_vague_anchor_when_it_differs_from_expected_cta() -> Non
     )
 
     anchor_findings = [
-        finding for finding in result["findings"] if finding["rule_id"] == "cta.anchor_quality"
+        finding
+        for finding in result["findings"]
+        if finding["rule_id"] == "cta.anchor_quality"
     ]
 
     assert anchor_findings
@@ -370,6 +432,14 @@ def test_cta_judge_flags_language_inconsistency_when_override_is_disabled() -> N
     rule_ids = [finding["rule_id"] for finding in result["findings"]]
 
     assert "cta.language_consistency" in rule_ids
+
+
+def test_looks_like_decision_cta_uses_configured_markers() -> None:
+    assert _looks_like_decision_cta("Planifier un appel", _rules()) is True
+
+
+def test_looks_like_awareness_cta_uses_configured_markers() -> None:
+    assert _looks_like_awareness_cta("Read more", _rules()) is True
 
 
 def test_cta_judge_returns_warn_when_only_minor_findings_exist() -> None:

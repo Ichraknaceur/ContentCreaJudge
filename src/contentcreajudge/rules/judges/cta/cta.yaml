@@ -51,6 +51,46 @@ cta_rules:
     enabled: true
     require_cta_consistent_with_funnel_stage: true
     require_cta_not_more_commercial_than_funnel_allows: true
+    awareness_intent_markers:
+      - "lire la suite"
+      - "read more"
+      - "learn more"
+      - "en savoir plus"
+      - "decouvrir"
+      - "découvrir"
+      - "explorer"
+      - "consulter"
+      - "approfondir"
+      - "comprendre"
+      - "mieux comprendre"
+      - "les bases"
+      - "guide"
+      - "article"
+      - "ressource"
+      - "contenu"
+    decision_intent_markers:
+      - "demo"
+      - "demonstration"
+      - "démonstration"
+      - "demander une demonstration"
+      - "demander une démonstration"
+      - "reserver"
+      - "réserver"
+      - "prendre rendez vous"
+      - "prendre rendez-vous"
+      - "planifier un appel"
+      - "appel commercial"
+      - "contacter"
+      - "contactez nous"
+      - "contactez-nous"
+      - "acheter"
+      - "commander"
+      - "s inscrire"
+      - "s'inscrire"
+      - "essai gratuit"
+      - "devis"
+      - "tarif"
+      - "prix"
 
     expected_by_funnel:
       AWARENESS:
@@ -58,6 +98,17 @@ cta_rules:
           - informational
           - exploratory
           - educational_continuation
+        expected_intents:
+          fr:
+            - "approfondir un sujet sans intention commerciale"
+            - "explorer un concept pour mieux le comprendre"
+            - "continuer la lecture sur un sujet pédagogique"
+            - "découvrir des informations complémentaires"
+            - "comprendre les mécanismes ou les enjeux d'un sujet"
+          en:
+            - "learn more about an educational topic"
+            - "explore a concept without commercial intent"
+            - "continue reading informational content"
         allowed_cta_labels:
           fr:
             - "En savoir plus"
@@ -91,6 +142,15 @@ cta_rules:
           - comparison
           - solution_exploration
           - soft_contact
+        expected_intents:
+          fr:
+            - "comparer plusieurs solutions avant de décider"
+            - "évaluer les avantages et limites d'une approche"
+            - "explorer une solution de manière approfondie"
+            - "analyser quelle option correspond le mieux au besoin"
+          en:
+            - "compare several solutions before deciding"
+            - "evaluate the advantages and limits of an approach"
         allowed_cta_labels:
           fr:
             - "En savoir plus"
@@ -121,6 +181,16 @@ cta_rules:
           - contact
           - subscription
           - booking
+        expected_intents:
+          fr:
+            - "passer à l'action concrètement"
+            - "prendre contact avec une équipe commerciale"
+            - "réserver une démonstration"
+            - "s'inscrire ou commencer à utiliser une solution"
+          en:
+            - "take concrete action"
+            - "contact a sales team"
+            - "book a demonstration"
         allowed_cta_labels:
           fr:
             - "Nous contacter"
@@ -205,11 +275,13 @@ cta_rules:
         - "Limited offer"
 
   semantic_fallback:
-    enabled: false
+    enabled: true
+    model_name: "paraphrase-multilingual-MiniLM-L12-v2"
+    minimum_similarity: 0.35
+    forbidden_margin: 0.03
+    forbidden_similarity_threshold: 0.75
     allow_semantic_check_for_unknown_or_custom_cta: true
     compare_cta_intent_to_funnel_stage: true
-    compare_cta_intent_to_content_purpose: true
-    compare_cta_intent_to_brief: true
 
   rules:
     - rule_id: cta.presence_when_required

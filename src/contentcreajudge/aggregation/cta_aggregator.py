@@ -5,7 +5,6 @@ from __future__ import annotations
 
 def aggregate_cta_result(judge_result: dict[str, object]) -> dict[str, object]:
     """Summarize the overall result of the CTA judge."""
-
     judge_status = str(judge_result["status"])
     judge_score = int(judge_result["score"])
     findings = judge_result.get("findings", [])

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import re
+
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
@@ -11,8 +12,7 @@ from bs4.element import Tag
 def _normalize_text(text: str) -> str:
     """Normalize text for reliable CTA comparisons."""
     decoded_text = html.unescape(text)
-    normalized_text = re.sub(r"\s+", " ", decoded_text).strip()
-    return normalized_text
+    return re.sub(r"\s+", " ", decoded_text).strip()
 
 
 def _is_cta_tag(tag: Tag) -> bool:
@@ -22,13 +22,12 @@ def _is_cta_tag(tag: Tag) -> bool:
 
 def _get_direct_body_children(soup: BeautifulSoup) -> list[Tag]:
     """Return top-level HTML tags in document order."""
-    root = soup.body if soup.body else soup
+    root = soup.body or soup
     return [child for child in root.children if isinstance(child, Tag)]
 
 
 def preprocess_cta_content(content: str) -> dict[str, object]:
     """Prepare HTML content for CTA evaluation."""
-
     soup = BeautifulSoup(content, "html.parser")
     direct_children = _get_direct_body_children(soup)
 

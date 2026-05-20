@@ -1,10 +1,17 @@
 site_name: ContentCreaJudge
-theme: material
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.tabs.link
 
 nav:
   - Home: README.md
   - Cadrage Équipe: CADRAGE_EQUIPE.md
   - Architecture: ARCHITECTURE.md
+  - Error Handling: ERROR_HANDLING.md
   - Configuration Des Règles: RULES_CONFIGURATION.md
   - API Contract: API_CONTRACT.md
   - Developer Guide: DEVELOPER_GUIDE.md
@@ -24,3 +31,16 @@ plugins:
             show_source: false
             extensions:
               - griffe_inherited_docstrings
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

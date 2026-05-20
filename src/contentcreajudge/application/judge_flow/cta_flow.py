@@ -10,14 +10,13 @@ from contentcreajudge.rules.judges.cta.cta_resolver import resolve_cta_rules
 
 def execute_cta_flow(payload: dict[str, object]) -> dict[str, object]:
     """Execute the steps of the CTA judge flow."""
-
     content = str(payload.get("content", ""))
     profile = str(payload.get("profile", "default"))
     request_id = payload.get("request_id")
     context = payload.get("context") or {}
 
     if not isinstance(context, dict):
-        raise ValueError("context must be a dictionary.")
+        raise TypeError("context must be a dictionary.")
 
     resolved_cta_rules = resolve_cta_rules(context)
     preprocessed_content = preprocess_cta_content(content)

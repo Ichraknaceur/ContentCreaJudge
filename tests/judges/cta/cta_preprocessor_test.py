@@ -33,7 +33,7 @@ def test_preprocess_cta_detects_missing_cta() -> None:
 
 def test_preprocess_cta_detects_multiple_cta_blocks() -> None:
     content = (
-        '<p>Intro</p>'
+        "<p>Intro</p>"
         '<p class="cta"><strong>Read more</strong></p>'
         '<p class="cta"><strong>Discover</strong></p>'
     )
@@ -75,7 +75,7 @@ def test_preprocess_cta_detects_learn_more_section() -> None:
 
 def test_preprocess_cta_detects_quiz_correction_block() -> None:
     content = (
-        "<ol><li><p><strong>Q1 – Question</strong></p></li></ol>"
+        "<ol><li><p><strong>Q1 - Question</strong></p></li></ol>"
         "<h2>Corrigé du quiz</h2>"
         "<ol><li><p>Réponse correcte : A</p></li></ol>"
         '<p class="cta"><strong>Read more</strong></p>'

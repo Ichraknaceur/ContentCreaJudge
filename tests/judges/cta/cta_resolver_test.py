@@ -4,6 +4,10 @@ from __future__ import annotations
 
 import pytest
 
+from contentcreajudge.judges.cta.exceptions import (
+    MissingCTAContextError,
+    UnsupportedCTAValueError,
+)
 from contentcreajudge.rules.judges.cta.cta_resolver import resolve_cta_rules
 
 
@@ -47,7 +51,10 @@ def test_resolve_cta_rules_raises_error_without_content_type() -> None:
         "expected_cta": "Read more",
     }
 
-    with pytest.raises(ValueError, match="Missing context.content_type"):
+    with pytest.raises(
+        MissingCTAContextError,
+        match=r"Missing CTA context field: content_type",
+    ):
         resolve_cta_rules(context)
 
 
@@ -57,7 +64,10 @@ def test_resolve_cta_rules_raises_error_without_funnel_stage() -> None:
         "expected_cta": "Read more",
     }
 
-    with pytest.raises(ValueError, match="Missing context.funnel_stage"):
+    with pytest.raises(
+        MissingCTAContextError,
+        match=r"Missing CTA context field: funnel_stage",
+    ):
         resolve_cta_rules(context)
 
 
@@ -68,5 +78,8 @@ def test_resolve_cta_rules_raises_error_for_unknown_funnel_stage() -> None:
         "expected_cta": "Read more",
     }
 
-    with pytest.raises(ValueError, match="Unknown funnel_stage"):
+    with pytest.raises(
+        UnsupportedCTAValueError,
+        match=r"Unsupported value for funnel_stage: UNKNOWN",
+    ):
         resolve_cta_rules(context)

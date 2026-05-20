@@ -92,6 +92,30 @@ than fully implemented workflow stages.
   - response serialization
 - Does not contain business evaluation logic.
 
+### Error-Handling Architecture
+
+The project uses a layered error-handling model:
+
+- business and judge layers raise typed application exceptions
+- the API layer translates them into stable HTTP responses
+- clients consume one normalized error envelope
+
+Current implementation anchors:
+
+- shared exception hierarchy in `src/contentcreajudge/core/errors.py`
+- shared error payload model in `src/contentcreajudge/core/error_models.py`
+- centralized HTTP mapping in `src/contentcreajudge/api/error_handlers.py`
+
+This separation exists to avoid mixing domain logic with transport concerns.
+
+Example:
+
+- unsupported judge input -> typed domain exception -> `422`
+- broken server configuration -> configuration exception -> `500`
+- unexpected runtime crash -> generic handler -> `500`
+
+For the detailed internal doctrine, see [Error Handling](ERROR_HANDLING.md).
+
 ### Evaluation Application Service
 
 - Responsibility: orchestrate the full evaluation workflow.

@@ -95,5 +95,5 @@ def test_execute_cta_flow_raises_error_when_context_is_not_a_dictionary() -> Non
         "context": "invalid-context",
     }
 
-    with pytest.raises(ValueError, match="context must be a dictionary."):
+    with pytest.raises(TypeError, match=r"context must be a dictionary\."):
         execute_cta_flow(payload)
