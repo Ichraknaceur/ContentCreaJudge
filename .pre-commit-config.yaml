@@ -24,7 +24,8 @@ repos:
     rev: v2.4.2
     hooks:
       - id: codespell
-        args: [--ignore-words-list=annonce]
+        args:
+          - --ignore-words-list=annonce,bloc,informations,inventer,juge,objet,probleme,recommandations,reste,valide
         exclude: ^docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$
 
   - repo: https://github.com/astral-sh/uv-pre-commit

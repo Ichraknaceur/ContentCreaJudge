@@ -105,6 +105,88 @@ def _render_exchange_summary(exchange: dict[str, object]) -> None:  # noqa: C901
         with judge_right:
             st.metric("Judge score", str(judge_result.get("score", "n/a")))
 
+        llm_evaluation = judge_result.get("llm_evaluation")
+        if isinstance(llm_evaluation, dict) and llm_evaluation:
+            st.markdown("**LLM Evergreen evaluation**")
+
+            level = llm_evaluation.get("niveau")
+            if level:
+                st.metric("Evergreen level", str(level))
+
+            llm_evaluation = judge_result.get("llm_evaluation")
+
+            if isinstance(llm_evaluation, dict) and llm_evaluation:
+                with st.expander("Show LLM evaluation results"):
+                    scores = llm_evaluation.get("scores", {})
+
+                    if isinstance(scores, dict) and scores:
+                        score_rows = [
+                            {
+                                "Critère": "Dépendance temporelle",
+                                "Score": scores.get("dependance_temporelle"),
+                            },
+                            {
+                                "Critère": "Stabilité des informations",
+                                "Score": scores.get("stabilite_informations"),
+                            },
+                            {
+                                "Critère": "Utilité durable",
+                                "Score": scores.get("utilite_durable"),
+                            },
+                            {
+                                "Critère": "Besoin de mise à jour",
+                                "Score": scores.get("besoin_mise_a_jour"),
+                            },
+                            {
+                                "Critère": "Réutilisabilité éditoriale",
+                                "Score": scores.get("reutilisabilite_editoriale"),
+                            },
+                        ]
+
+                        st.dataframe(score_rows, use_container_width=True)
+
+                    score_col, level_col = st.columns(2)
+
+                    with score_col:
+                        st.metric(
+                            "Score global evergreen",
+                            llm_evaluation.get("score_global_evergreen", "n/a"),
+                        )
+
+                    with level_col:
+                        st.metric(
+                            "Niveau",
+                            llm_evaluation.get("niveau", "n/a"),
+                        )
+
+            justification = llm_evaluation.get("justification_courte")
+            if justification:
+                st.info(str(justification))
+
+            informations = llm_evaluation.get("informations_a_surveiller")
+            if isinstance(informations, list) and informations:
+                st.markdown("**Informations à surveiller**")
+                for item in informations:
+                    st.markdown(f"- {item}")
+
+            recommandations = llm_evaluation.get("recommandations")
+            if isinstance(recommandations, list) and recommandations:
+                st.markdown("**Recommandations**")
+                for item in recommandations:
+                    st.markdown(f"- {item}")
+
+            passages = llm_evaluation.get("passages_problematiques")
+            if isinstance(passages, list) and passages:
+                st.markdown("**Passages problématiques**")
+                for passage in passages:
+                    if not isinstance(passage, dict):
+                        continue
+
+                    st.warning(
+                        f"{passage.get('extrait', '')} — "
+                        f"{passage.get('probleme', '')} "
+                        f"({passage.get('gravite', 'n/a')})",
+                    )
         applied_rule = judge_result.get("applied_rule")
         if applied_rule:
             with st.expander("Show applied rule"):
@@ -178,25 +260,6 @@ def render_evergreen_form(selected_item: JudgeWorkbenchItem) -> None:
             placeholder="fr-FR",
         )
 
-        st.markdown("**Brief input**")
-
-        uploaded_brief_file = st.file_uploader(
-            "Upload brief file",
-            type=["txt", "md"],
-            key="evergreen_brief_file_uploader",
-        )
-
-        brief_value = ""
-        if uploaded_brief_file is not None:
-            brief_value = _read_uploaded_text_file(uploaded_brief_file)
-
-        brief = st.text_area(
-            "Brief",
-            height=120,
-            placeholder="Paste the brief here or upload a brief file...",
-            value=brief_value,
-        )
-
         submitted = st.form_submit_button("Run Evergreen Judge")
 
     st.session_state["evergreen_content_input"] = content
@@ -210,7 +273,6 @@ def render_evergreen_form(selected_item: JudgeWorkbenchItem) -> None:
         "context": {
             "evergreen": evergreen,
             "locale": locale.strip() or None,
-            "brief": brief.strip() or None,
         },
     }
 

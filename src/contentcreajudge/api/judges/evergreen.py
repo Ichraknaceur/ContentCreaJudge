@@ -17,7 +17,6 @@ class EvergreenJudgeContext(BaseModel):
 
     evergreen: bool = False
     locale: str | None = "fr-FR"
-    brief: str | None = None
 
 
 class EvergreenJudgeRequestPayload(BaseModel):

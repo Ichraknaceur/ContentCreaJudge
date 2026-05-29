@@ -1,5 +1,10 @@
 .DEFAULT_GOAL := help
 
+UV_CACHE_DIR ?= .uv-cache
+PRE_COMMIT_HOME ?= .pre-commit-cache
+export UV_CACHE_DIR
+export PRE_COMMIT_HOME
+
 ifeq ($(OS),Windows_NT)
 UV_COMMAND := $(shell where uv 2>NUL)
 COPY_ENV_COMMAND = if not exist .env copy .env.example .env

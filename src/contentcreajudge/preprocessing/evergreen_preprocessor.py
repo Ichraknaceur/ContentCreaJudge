@@ -79,11 +79,45 @@ class _ReferenceBuildContext:
     anchor_texts: list[str]
 
 
+def _remove_complementary_reading_section(content: str | None) -> str:
+    """Remove complementary reading sections from HTML content."""
+    if not content:
+        return ""
+
+    soup = BeautifulSoup(content, "html.parser")
+
+    for heading in soup.find_all(["h2", "h3"]):
+        heading_text = html.unescape(heading.get_text(" ", strip=True)).lower()
+
+        if heading_text in {
+            "lecture complémentaire",
+            "lecture complementaire",
+            "learn more",
+        }:
+            current = heading
+            while current is not None:
+                next_node = current.find_next_sibling()
+
+                if current is not heading and getattr(current, "name", None) in {
+                    "h2",
+                    "h3",
+                }:
+                    break
+
+                current.extract()
+                current = next_node
+
+    return str(soup)
+
+
 def _normalize_text(content: str | None) -> str:
     if not content:
         return ""
 
-    text_without_html = re.sub(r"<[^>]+>", " ", content)
+    content_without_complementary_reading = _remove_complementary_reading_section(
+        content,
+    )
+    text_without_html = re.sub(r"<[^>]+>", " ", content_without_complementary_reading)
     decoded_text = html.unescape(text_without_html)
     return re.sub(r"\s+", " ", decoded_text).strip()
 

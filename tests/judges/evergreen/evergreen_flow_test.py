@@ -1,11 +1,56 @@
+import json
+
+import pytest
+
 from contentcreajudge.application.judge_flow.evergreen_flow import (
     execute_evergreen_flow,
 )
 
 
-def test_execute_evergreen_flow_with_evergreen_true_and_unprovided_year() -> None:
+def _mock_llm_response(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    score: int,
+    passages: list[dict[str, object]] | None = None,
+) -> None:
     payload = {
-        "content": "En 2024, les pratiques éditoriales évoluent.",
+        "scores": {
+            "dependance_temporelle": 3,
+            "stabilite_informations": 3,
+            "utilite_durable": 3,
+            "besoin_mise_a_jour": 3,
+            "reutilisabilite_editoriale": 3,
+        },
+        "score_global_evergreen": score,
+        "niveau": "moyen",
+        "passages_problematiques": passages or [],
+        "informations_a_surveiller": [],
+        "justification_courte": "Evaluation de test.",
+        "recommandations": [],
+    }
+
+    monkeypatch.setattr(
+        "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
+        lambda **_kwargs: json.dumps(payload),
+    )
+
+
+def test_execute_evergreen_flow_with_evergreen_true_and_unprovided_year(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(
+        monkeypatch,
+        score=30,
+        passages=[
+            {
+                "extrait": "En 2024",
+                "probleme": "Reference temporelle forte.",
+                "gravite": "forte",
+            },
+        ],
+    )
+    payload = {
+        "content": "En 2024, les pratiques editoriales evoluent.",
         "profile": "default",
         "request_id": "req-1",
         "context": {
@@ -29,9 +74,12 @@ def test_execute_evergreen_flow_with_evergreen_true_and_unprovided_year() -> Non
     assert result["message"].startswith("Evergreen flow complete")
 
 
-def test_execute_evergreen_flow_with_evergreen_false_returns_warning() -> None:
+def test_execute_evergreen_flow_with_evergreen_false_returns_warning(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=60)
     payload = {
-        "content": "En 2024, les pratiques éditoriales évoluent.",
+        "content": "En 2024, les pratiques editoriales evoluent.",
         "profile": "default",
         "context": {
             "evergreen": False,
@@ -42,13 +90,16 @@ def test_execute_evergreen_flow_with_evergreen_false_returns_warning() -> None:
     result = execute_evergreen_flow(payload)
 
     assert result["judge_result"]["status"] == "warn"
-    assert result["judge_result"]["score"] == 90
+    assert result["judge_result"]["score"] == 60
     assert result["aggregation"]["status"] == "warn"
 
 
-def test_execute_evergreen_flow_allows_input_date() -> None:
+def test_execute_evergreen_flow_allows_input_date(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=85)
     payload = {
-        "content": "Le cadre éditorial a été défini en 2024.",
+        "content": "Le cadre editorial a ete defini en 2024.",
         "profile": "default",
         "context": {
             "evergreen": True,
@@ -63,9 +114,12 @@ def test_execute_evergreen_flow_allows_input_date() -> None:
     assert result["aggregation"]["status"] == "pass"
 
 
-def test_execute_evergreen_flow_allows_source_context() -> None:
+def test_execute_evergreen_flow_allows_source_context(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=85)
     payload = {
-        "content": "Selon une étude de 2024, les usages éditoriaux évoluent.",
+        "content": "Selon une etude de 2024, les usages editoriaux evoluent.",
         "profile": "default",
         "context": {
             "evergreen": True,
@@ -79,9 +133,12 @@ def test_execute_evergreen_flow_allows_source_context() -> None:
     assert result["aggregation"]["status"] == "pass"
 
 
-def test_execute_evergreen_flow_with_missing_context_does_not_crash() -> None:
+def test_execute_evergreen_flow_with_missing_context_does_not_crash(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=30)
     payload = {
-        "content": "En 2024, le sujet évolue.",
+        "content": "En 2024, le sujet evolue.",
         "profile": "default",
     }
 
@@ -92,9 +149,12 @@ def test_execute_evergreen_flow_with_missing_context_does_not_crash() -> None:
     assert "aggregation" in result
 
 
-def test_execute_evergreen_flow_with_invalid_context_type_does_not_crash() -> None:
+def test_execute_evergreen_flow_with_invalid_context_type_does_not_crash(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=30)
     payload = {
-        "content": "En 2024, le sujet évolue.",
+        "content": "En 2024, le sujet evolue.",
         "profile": "default",
         "context": "invalid-context",
     }
@@ -106,7 +166,11 @@ def test_execute_evergreen_flow_with_invalid_context_type_does_not_crash() -> No
     assert "aggregation" in result
 
 
-def test_execute_evergreen_flow_with_empty_payload_does_not_crash() -> None:
+def test_execute_evergreen_flow_with_empty_payload_does_not_crash(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mock_llm_response(monkeypatch, score=85)
+
     result = execute_evergreen_flow({})
 
     assert result["request_echo"]["content"] == ""
