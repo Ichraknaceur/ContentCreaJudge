@@ -1,26 +1,26 @@
-from typing import NoReturn
-
 import pytest
 
+from contentcreajudge.judges.evergreen.exceptions import MissingEvergreenContextError
 from contentcreajudge.rules.judges.evergreen.evergreen_resolver import (
     resolve_evergreen_rules,
 )
 
 
-def test_resolve_evergreen_rules_falls_back_when_config_loading_fails(
+def test_resolve_evergreen_rules_uses_config_fallbacks_when_sections_are_missing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Ensure default config is used when YAML loading fails."""
-
-    def raise_config_error(_file: object) -> NoReturn:
-        raise RuntimeError("invalid config")
-
+    """Resolve evergreen defaults when optional YAML sections are missing."""
     monkeypatch.setattr(
-        "contentcreajudge.rules.judges.evergreen.evergreen_resolver.yaml.safe_load",
-        raise_config_error,
+        "contentcreajudge.rules.judges.evergreen.evergreen_resolver.load_yaml_config",
+        lambda _config_path: {
+            "judge_id": "evergreen",
+            "version": 2,
+            "label": "Evergreen judge",
+            "evergreen_rules": {},
+        },
     )
 
-    resolved = resolve_evergreen_rules({"evergreen": True})
+    resolved = resolve_evergreen_rules({"evergreen": True, "locale": "fr-FR"})
 
     assert resolved["judge_id"] == "evergreen"
     assert resolved["version"] == 2
@@ -93,10 +93,11 @@ def test_resolve_evergreen_rules_with_evergreen_false() -> None:
     assert resolved["scoring"]["warn_min_score"] == 50
 
 
-def test_resolver_with_empty_context() -> None:
-    """Resolve evergreen config with default context values."""
-    resolved = resolve_evergreen_rules({})
+def test_resolver_with_empty_context_raises_missing_evergreen() -> None:
+    """Reject an empty context because evergreen is required."""
+    with pytest.raises(MissingEvergreenContextError) as exc_info:
+        resolve_evergreen_rules({})
 
-    assert resolved["evergreen_required"] is False
-    assert resolved["locale"] == "fr-FR"
-    assert resolved["mode"] == "llm"
+    exc = exc_info.value
+    assert str(exc) == "Missing evergreen context field: evergreen"
+    assert exc.details == {"field_name": "evergreen"}

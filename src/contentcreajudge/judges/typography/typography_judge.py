@@ -53,24 +53,14 @@ def find_repeated_line_breaks(original_content: str) -> list[str]:
     )
 
 
-def run_typography_judge(  # noqa: C901
-    preprocessed_content: dict[str, object],
-    judge_rules: dict[str, object],
-) -> dict[str, object]:
-    """Evaluate the content against typography rules."""
-    decoded_text = str(preprocessed_content["decoded_text"])
-    original_content = str(preprocessed_content["original_content"])
-    original_lines = list(preprocessed_content["original_lines"])
-
-    messages = judge_rules["messages"]
-    configured_rules = judge_rules["rules"]
-
-    severity_by_rule_id = {
-        rule["rule_id"]: rule["severity"]
-        for rule in configured_rules
-        if rule.get("enabled", False)
-    }
-
+def _collect_findings(
+    decoded_text: str,
+    original_content: str,
+    original_lines: list[object],
+    severity_by_rule_id: dict[str, str],
+    messages: dict[str, object],
+) -> list[dict[str, object]]:
+    """Run all typography checks and return the collected findings."""
     findings: list[dict[str, object]] = []
 
     def add_finding(
@@ -90,66 +80,95 @@ def run_typography_judge(  # noqa: C901
     double_spaces_matches = find_double_spaces(decoded_text)
     if double_spaces_matches:
         add_finding(
-            rule_id="typography.double_spaces",
-            message_key="double_spaces",
-            evidence={"matches_count": len(double_spaces_matches)},
+            "typography.double_spaces",
+            "double_spaces",
+            {"matches_count": len(double_spaces_matches)},
         )
 
     trailing_spaces_matches = find_trailing_spaces(original_lines)
     if trailing_spaces_matches:
         add_finding(
-            rule_id="typography.trailing_spaces",
-            message_key="trailing_spaces",
-            evidence={"lines_count": len(trailing_spaces_matches)},
+            "typography.trailing_spaces",
+            "trailing_spaces",
+            {"lines_count": len(trailing_spaces_matches)},
         )
 
     space_before_dot_matches = find_space_before_dot(decoded_text)
     if space_before_dot_matches:
         add_finding(
-            rule_id="typography.space_before_dot",
-            message_key="space_before_dot",
-            evidence={"matches_count": len(space_before_dot_matches)},
+            "typography.space_before_dot",
+            "space_before_dot",
+            {"matches_count": len(space_before_dot_matches)},
         )
 
     space_before_comma_matches = find_space_before_comma(decoded_text)
     if space_before_comma_matches:
         add_finding(
-            rule_id="typography.space_before_comma",
-            message_key="space_before_comma",
-            evidence={"matches_count": len(space_before_comma_matches)},
+            "typography.space_before_comma",
+            "space_before_comma",
+            {"matches_count": len(space_before_comma_matches)},
         )
 
     french_nbsp_matches = find_french_nbsp_issues(decoded_text)
     if french_nbsp_matches:
         add_finding(
-            rule_id="typography.french_nbsp_before_double_punctuation",
-            message_key="french_nbsp_before_double_punctuation",
-            evidence={"matches_count": len(french_nbsp_matches)},
+            "typography.french_nbsp_before_double_punctuation",
+            "french_nbsp_before_double_punctuation",
+            {"matches_count": len(french_nbsp_matches)},
         )
 
     multiple_punctuation_matches = find_multiple_punctuation(decoded_text)
     if multiple_punctuation_matches:
         add_finding(
-            rule_id="typography.multiple_punctuation",
-            message_key="multiple_punctuation",
-            evidence={"matches_count": len(multiple_punctuation_matches)},
+            "typography.multiple_punctuation",
+            "multiple_punctuation",
+            {"matches_count": len(multiple_punctuation_matches)},
         )
 
     attached_links_matches = find_attached_links(original_content)
     if attached_links_matches:
         add_finding(
-            rule_id="typography.attached_links",
-            message_key="attached_links",
-            evidence={"matches_count": len(attached_links_matches)},
+            "typography.attached_links",
+            "attached_links",
+            {"matches_count": len(attached_links_matches)},
         )
 
     repeated_breaks_matches = find_repeated_line_breaks(original_content)
     if repeated_breaks_matches:
         add_finding(
-            rule_id="typography.repeated_line_breaks",
-            message_key="repeated_line_breaks",
-            evidence={"matches_count": len(repeated_breaks_matches)},
+            "typography.repeated_line_breaks",
+            "repeated_line_breaks",
+            {"matches_count": len(repeated_breaks_matches)},
         )
+
+    return findings
+
+
+def run_typography_judge(
+    preprocessed_content: dict[str, object],
+    judge_rules: dict[str, object],
+) -> dict[str, object]:
+    """Evaluate the content against typography rules."""
+    decoded_text = str(preprocessed_content["decoded_text"])
+    original_content = str(preprocessed_content["original_content"])
+    original_lines = list(preprocessed_content["original_lines"])
+
+    messages = judge_rules["messages"]
+    configured_rules = judge_rules["rules"]
+
+    severity_by_rule_id = {
+        rule["rule_id"]: rule["severity"]
+        for rule in configured_rules
+        if rule.get("enabled", False)
+    }
+
+    findings = _collect_findings(
+        decoded_text,
+        original_content,
+        original_lines,
+        severity_by_rule_id,
+        messages,
+    )
 
     if not findings:
         return {

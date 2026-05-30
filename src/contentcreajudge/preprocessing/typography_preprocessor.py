@@ -10,12 +10,12 @@ def preprocess_typography_content(content: str) -> dict[str, object]:
     """Prepare the content for typography evaluation."""
     html_tag_marker = "__HTML_TAG__"
     content_with_tag_markers = re.sub(r"<[^>]+>", html_tag_marker, content)
-    repeated_marker_pattern = (
+    _tag_gap_pattern = (
         rf"[ \t]*{re.escape(html_tag_marker)}"
         rf"(?:[ \t]*{re.escape(html_tag_marker)})*[ \t]*"
     )
     text_without_html = re.sub(
-        repeated_marker_pattern,
+        _tag_gap_pattern,
         " ",
         content_with_tag_markers,
     )

@@ -1,12 +1,17 @@
-import json
+from __future__ import annotations
 
-import pytest
+import json
+from typing import TYPE_CHECKING
 
 from contentcreajudge.adapters.llm.client import LLMClientError
 from contentcreajudge.judges.evergreen.evergreen_judge import run_evergreen_judge
-from contentcreajudge.preprocessing.evergreen_preprocessor import (
-    EvergreenPreprocessingResult,
-)
+
+if TYPE_CHECKING:
+    import pytest
+
+    from contentcreajudge.preprocessing.evergreen_preprocessor import (
+        EvergreenPreprocessingResult,
+    )
 
 
 def _rules() -> dict[str, object]:

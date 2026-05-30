@@ -5,6 +5,7 @@ import pytest
 from contentcreajudge.application.judge_flow.evergreen_flow import (
     execute_evergreen_flow,
 )
+from contentcreajudge.judges.evergreen.exceptions import MissingEvergreenContextError
 
 
 def _mock_llm_response(
@@ -133,49 +134,33 @@ def test_execute_evergreen_flow_allows_source_context(
     assert result["aggregation"]["status"] == "pass"
 
 
-def test_execute_evergreen_flow_with_missing_context_does_not_crash(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _mock_llm_response(monkeypatch, score=30)
+def test_execute_evergreen_flow_with_missing_context_raises_typed_error() -> None:
     payload = {
         "content": "En 2024, le sujet evolue.",
         "profile": "default",
     }
 
-    result = execute_evergreen_flow(payload)
+    with pytest.raises(MissingEvergreenContextError) as exc_info:
+        execute_evergreen_flow(payload)
 
-    assert result["request_echo"]["context"] == {}
-    assert result["judge_result"]["dimension"] == "evergreen"
-    assert "aggregation" in result
+    assert exc_info.value.details == {"field_name": "evergreen"}
 
 
-def test_execute_evergreen_flow_with_invalid_context_type_does_not_crash(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _mock_llm_response(monkeypatch, score=30)
+def test_execute_evergreen_flow_with_invalid_context_type_raises_typed_error() -> None:
     payload = {
         "content": "En 2024, le sujet evolue.",
         "profile": "default",
         "context": "invalid-context",
     }
 
-    result = execute_evergreen_flow(payload)
+    with pytest.raises(MissingEvergreenContextError) as exc_info:
+        execute_evergreen_flow(payload)
 
-    assert result["request_echo"]["context"] == {}
-    assert result["judge_result"]["dimension"] == "evergreen"
-    assert "aggregation" in result
+    assert exc_info.value.details == {"field_name": "evergreen"}
 
 
-def test_execute_evergreen_flow_with_empty_payload_does_not_crash(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _mock_llm_response(monkeypatch, score=85)
+def test_execute_evergreen_flow_with_empty_payload_raises_typed_error() -> None:
+    with pytest.raises(MissingEvergreenContextError) as exc_info:
+        execute_evergreen_flow({})
 
-    result = execute_evergreen_flow({})
-
-    assert result["request_echo"]["content"] == ""
-    assert result["request_echo"]["profile"] == "default"
-    assert result["request_echo"]["request_id"] is None
-    assert result["preprocessing"]["is_empty"] is True
-    assert result["judge_result"]["status"] == "pass"
-    assert result["aggregation"]["status"] == "pass"
+    assert exc_info.value.details == {"field_name": "evergreen"}

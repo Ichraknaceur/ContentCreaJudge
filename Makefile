@@ -1,9 +1,7 @@
 .DEFAULT_GOAL := help
 
 UV_CACHE_DIR ?= .uv-cache
-PRE_COMMIT_HOME ?= .pre-commit-cache
 export UV_CACHE_DIR
-export PRE_COMMIT_HOME
 
 ifeq ($(OS),Windows_NT)
 UV_COMMAND := $(shell where uv 2>NUL)
@@ -12,6 +10,8 @@ else
 UV_COMMAND := $(shell command -v uv 2> /dev/null)
 COPY_ENV_COMMAND = cp .env.example .env || true
 endif
+
+RUFF_TARGETS := src tests pyproject.toml
 
 .PHONY: help
 help: ## Display this help message
@@ -41,16 +41,20 @@ run-ui: check-uv install ## Run the Streamlit client UI
 .PHONY: init
 init: check-uv pyproject.toml .pre-commit-config.yaml install ## Initialize project (first installation)
 	uv run -- pre-commit install
+ifeq ($(OS),Windows_NT)
+	if not exist .env copy .env.example .env
+else
 	cp .env.example .env || true
+endif
 
 .PHONY: format
 format: check-uv ## Format code
-	-uv run -- ruff format
-	uv run -- ruff check --fix
+	uv run -- ruff format $(RUFF_TARGETS)
+	uv run -- ruff check --fix $(RUFF_TARGETS)
 
 .PHONY: lint
 lint: check-uv ## Run linting checks
-	uv run -- ruff check
+	uv run -- ruff check $(RUFF_TARGETS)
 
 .PHONY: typecheck
 typecheck: check-uv ## Run type checking with ty

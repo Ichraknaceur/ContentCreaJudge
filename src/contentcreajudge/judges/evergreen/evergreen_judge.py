@@ -24,6 +24,13 @@ def _safe_int(value: object, fallback: int = 0) -> int:
         return fallback
 
 
+def _safe_float(value: object, fallback: float = 0.0) -> float:
+    try:
+        return float(value)
+    except TypeError, ValueError:
+        return fallback
+
+
 def _build_temporal_signals(preprocessed_content: dict[str, object]) -> str:
     temporal_references = _as_list(preprocessed_content.get("temporal_references"))
 
@@ -174,7 +181,7 @@ def run_evergreen_judge(
     model = os.getenv(model_env_var) or str(
         llm_config.get("default_model", "gpt-4.1-mini"),
     )
-    temperature = float(llm_config.get("temperature", 0.0))
+    temperature = _safe_float(llm_config.get("temperature"), 0.0)
 
     try:
         raw_response = call_openai_json(

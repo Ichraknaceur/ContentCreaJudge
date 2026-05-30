@@ -3,8 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import yaml
-from yaml import YAMLError
+from contentcreajudge.judges.evergreen.exceptions import (
+    MissingEvergreenContextError,
+    UnsupportedEvergreenValueError,
+)
+from contentcreajudge.rules.shared.config_loader import load_yaml_config
+
+SUPPORTED_LOCALES = ["fr-FR", "en-US"]
 
 
 def _as_dict(value: object) -> dict[str, Any]:
@@ -18,24 +23,33 @@ def _as_list(value: object) -> list[object]:
 
 
 def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
-    """Resolve evergreen rules safely with LLM configuration fallbacks."""
+    """Resolve evergreen rules with typed context validation."""
     config_path = Path(__file__).with_name("evergreen.yaml")
+    config = load_yaml_config(config_path)
 
-    try:
-        with config_path.open(encoding="utf-8") as file:
-            config = yaml.safe_load(file) or {}
-    except OSError, RuntimeError, YAMLError:
-        config = {}
+    rules = config.get("evergreen_rules") or {}
 
-    rules = _as_dict(config.get("evergreen_rules"))
+    evergreen_value = context.get("evergreen")
+    locale = context.get("locale")
+
+    if evergreen_value is None:
+        raise MissingEvergreenContextError("evergreen")
+
+    if not locale:
+        raise MissingEvergreenContextError("locale")
+
+    locale_value = str(locale)
+    if locale_value not in SUPPORTED_LOCALES:
+        raise UnsupportedEvergreenValueError(
+            "locale",
+            locale_value,
+            SUPPORTED_LOCALES,
+        )
 
     llm_config = _as_dict(rules.get("llm"))
     scoring = _as_dict(rules.get("scoring"))
     weights = _as_dict(rules.get("weights"))
     llm_messages = _as_dict(rules.get("llm_messages"))
-
-    evergreen_value = bool(context.get("evergreen", False))
-    locale = str(context.get("locale", "fr-FR"))
 
     allowed_dates = context.get("allowed_dates") or []
     allowed_temporal_references = context.get("allowed_temporal_references") or []
@@ -50,8 +64,8 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
         ),
         "mode": str(rules.get("mode", "llm")),
         "is_blocking_rule": bool(rules.get("is_blocking_rule", False)),
-        "evergreen_required": evergreen_value,
-        "locale": locale,
+        "evergreen_required": bool(evergreen_value),
+        "locale": locale_value,
         "allowed_dates": allowed_dates,
         "allowed_temporal_references": allowed_temporal_references,
         "llm": {
