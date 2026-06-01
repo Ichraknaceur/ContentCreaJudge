@@ -1,0 +1,127 @@
+judge_id: tone
+version: 1
+label: "Tone judge"
+description: "Evaluate whether the content respects the expected tone while staying contextually appropriate."
+
+tone_rules:
+  is_blocking_rule: false
+  evaluation_method: llm_judge
+
+  supported_providers:
+    - openai
+    - mistral
+
+  default_providers:
+    - openai
+    - mistral
+
+  score:
+    min: 0
+    max: 100
+    pass_threshold: 80
+    warn_threshold: 60
+    fail_below: 60
+
+  decision_rules:
+    pass:
+      min_score: 80
+    warn:
+      min_score: 60
+      max_score: 79
+    fail:
+      max_score: 59
+    unknown:
+      when:
+        - missing_content
+        - missing_expected_tone
+        - llm_response_unusable
+
+  criteria:
+    - criterion_id: tone.expected_tone_match
+      label: "Respect du ton attendu"
+      description: "Checks whether the expected tone is perceptible in vocabulary, posture, precision, rhythm and explanation level."
+      weight: 35
+      severity: major
+
+    - criterion_id: tone.contextual_alignment
+      label: "Alignement contextuel du ton"
+      description: "Checks whether the tone remains appropriate considering the funnel, editorial voice, persona, content type and brief, without judging these dimensions directly."
+      weight: 25
+      severity: major
+
+    - criterion_id: tone.register_consistency
+      label: "Cohérence du registre"
+      description: "Checks whether the register remains stable across the content without abrupt shifts."
+      weight: 15
+      severity: major
+
+    - criterion_id: tone.intensity_calibration
+      label: "Calibrage de l’intensité"
+      description: "Checks whether the tone is neither over-intensified nor under-intensified compared with the expected posture."
+      weight: 15
+      severity: major
+
+    - criterion_id: tone.natural_expression
+      label: "Naturalité de l’expression"
+      description: "Checks whether the tone feels natural, fluent and non-mechanical."
+      weight: 10
+      severity: minor
+
+  expected_criterion_ids:
+    - tone.expected_tone_match
+    - tone.contextual_alignment
+    - tone.register_consistency
+    - tone.intensity_calibration
+    - tone.natural_expression
+
+  output_schema:
+    required_fields:
+      - dimension
+      - status
+      - score
+      - expected_tone
+      - detected_tone
+      - confidence
+      - summary
+      - criterion_scores
+      - findings
+
+    dimension_value: tone
+
+    allowed_statuses:
+      - pass
+      - warn
+      - fail
+      - unknown
+
+    allowed_severities:
+      - info
+      - minor
+      - major
+      - critical
+
+  finding_rules:
+    excerpt_required: true
+    explanation_required: true
+    allowed_rule_ids:
+      - tone.expected_tone_match
+      - tone.contextual_alignment
+      - tone.register_consistency
+      - tone.intensity_calibration
+      - tone.natural_expression
+
+  severity_policy:
+    critical:
+      description: "Major contradiction with the expected tone or massive register drift."
+    major:
+      description: "Clear tone mismatch, important contextual incompatibility or strongly visible artificiality."
+    minor:
+      description: "Local tone deviation that does not affect the whole content."
+    info:
+      description: "Weak signal or non-blocking observation."
+
+  messages:
+    pass: "The content respects the expected tone."
+    warn: "The content mostly respects the expected tone, with some noticeable deviations."
+    fail: "The content does not sufficiently respect the expected tone."
+    unknown: "Tone evaluation could not be completed reliably."
