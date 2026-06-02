@@ -68,6 +68,13 @@ def get_judge_workbench_items() -> list[JudgeWorkbenchItem]:
             endpoint="/api/v1/judges/seo/evaluate",
             status="Planned",
         ),
+        JudgeWorkbenchItem(
+            key="persona",
+            title="Persona",
+            summary="Evaluates the suitability of the content for the target persona.",
+            endpoint="/api/v1/judges/persona/evaluate",
+            status="Planned",
+        ),
     ]
 
 
