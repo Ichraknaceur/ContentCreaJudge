@@ -14,6 +14,7 @@ class ToneJudgeContext(BaseModel):
     """Context required to run the tone judge."""
 
     expected_tone: str
+    org_tones: list[str] | None = None
     organization_voice: str | None = None
     organization_voice_description: str | None = None
     writing_style: str | None = None

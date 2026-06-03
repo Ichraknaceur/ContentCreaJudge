@@ -3,10 +3,23 @@
 from __future__ import annotations
 
 
+def _safe_score(value: object) -> int | None:
+    """Return a valid score or None when unavailable."""
+    if value is None:
+        return None
+
+    try:
+        score = int(value)
+    except TypeError, ValueError:
+        return None
+
+    return max(0, min(100, score))
+
+
 def aggregate_tone_result(judge_result: dict[str, object]) -> dict[str, object]:
     """Summarize the overall result of the tone judge."""
     judge_status = str(judge_result.get("status", "unknown"))
-    judge_score = int(judge_result.get("score", 0) or 0)
+    judge_score = _safe_score(judge_result.get("score"))
     findings = judge_result.get("findings", [])
 
     if not isinstance(findings, list):

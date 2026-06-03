@@ -10,7 +10,7 @@ from contentcreajudge.judges.tone.exceptions import (
 )
 from contentcreajudge.rules.shared.config_loader import load_yaml_config
 
-_TOTAL_WEIGHT = 100
+_TOTAL_CRITERIA_WEIGHT = 100
 
 
 def _normalize_optional_context_value(
@@ -27,6 +27,22 @@ def _normalize_optional_context_value(
     normalized_value = str(value).strip()
 
     return normalized_value or default
+
+
+def _normalize_org_tones(context: dict[str, object]) -> list[str]:
+    """Return organization tones as a clean list of strings."""
+    value = context.get("org_tones")
+
+    if value is None:
+        return []
+
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+
+    return []
 
 
 def _validate_tone_configuration(rules: dict[str, object]) -> None:
@@ -54,7 +70,7 @@ def _validate_tone_configuration(rules: dict[str, object]) -> None:
 
         total_weight += int(criterion.get("weight", 0))
 
-    if total_weight != _TOTAL_WEIGHT:
+    if total_weight != _TOTAL_CRITERIA_WEIGHT:
         raise InvalidToneConfigurationError("Tone criteria weights must sum to 100.")
 
 
@@ -90,16 +106,27 @@ def resolve_tone_rules(context: dict[str, object]) -> dict[str, object]:
         "evaluation_method": rules.get("evaluation_method", "llm_judge"),
         "supported_providers": rules.get("supported_providers", []),
         "default_providers": rules.get("default_providers", []),
+        "guards": rules.get("guards", {}),
         "score": rules.get("score", {}),
         "decision_rules": rules.get("decision_rules", {}),
+        "phases": rules.get("phases", []),
+        "organization_tones": rules.get("organization_tones", {}),
+        "blind_observation": rules.get("blind_observation", {}),
         "criteria": rules.get("criteria", []),
         "expected_criterion_ids": rules.get("expected_criterion_ids", []),
+        "criterion_scoring": rules.get("criterion_scoring", {}),
         "output_schema": rules.get("output_schema", {}),
         "finding_rules": rules.get("finding_rules", {}),
         "severity_policy": rules.get("severity_policy", {}),
+        "confidence": rules.get("confidence", {}),
+        "natural_expression_thresholds": rules.get(
+            "natural_expression_thresholds",
+            {},
+        ),
         "messages": rules.get("messages", {}),
         "context": {
             "expected_tone": normalized_expected_tone,
+            "org_tones": _normalize_org_tones(context),
             "organization_voice": _normalize_optional_context_value(
                 context,
                 "organization_voice",

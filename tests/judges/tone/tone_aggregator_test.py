@@ -43,9 +43,9 @@ def test_aggregate_tone_result_warn() -> None:
 def test_aggregate_tone_result_fail() -> None:
     findings = [
         {
-            "rule_id": "tone.expected_tone_match",
+            "rule_id": "tone.contextual_alignment",
             "severity": "major",
-            "message": "Expected tone is not respected.",
+            "message": "Tone is not contextually aligned.",
         }
     ]
 

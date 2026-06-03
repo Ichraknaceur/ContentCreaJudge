@@ -90,6 +90,10 @@ lint.extend-unfixable = [
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
+"src/contentcreajudge/judges/tone/tone_prompt.py" = [
+    "E501", # Prompt template wording is intentionally preserved.
+    "RUF001", # Prompt uses French typography intentionally.
+]
 "tests/**" = [
     "S101", # Asserts allowed in tests...
     "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...
