@@ -26,11 +26,8 @@ repos:
     rev: v2.4.2
     hooks:
       - id: codespell
-        args: [
-          "-L",
-          "arbitre,attribut,complet,concret,exemple,exemples,explicite,informations,invalide,inventer,juge,mesure,mot,processus,responsable,reste,somme,te,valide",
-        ]
-        exclude: ^(\.pre-commit-cache/|\.pytest_cache/|\.ruff_cache/|\.uv-cache/|docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$)
+        args: ["-L", "complet,fonction,mot,processus,reste,valide"]
+        exclude: ^(\.pre-commit-cache/|\.pytest_cache/|\.ruff_cache/|\.uv-cache/|docs/(CADRAGE_EQUIPE|RULES_CONFIGURATION)\.md$|src/contentcreajudge/judges/tone/tone_prompt\.py$|src/contentcreajudge/rules/judges/tone/tone\.yaml$)
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.11.2

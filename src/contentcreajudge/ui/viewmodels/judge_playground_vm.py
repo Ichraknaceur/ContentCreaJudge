@@ -75,6 +75,13 @@ def get_judge_workbench_items() -> list[JudgeWorkbenchItem]:
             endpoint="/api/v1/judges/persona/evaluate",
             status="Planned",
         ),
+        JudgeWorkbenchItem(
+            key="tone",
+            title="Ton",
+            summary="Validate tone of voice, editorial style and brand consistency.",
+            endpoint="/api/v1/judges/tone/evaluate",
+            status="Scaffolded",
+        ),
     ]
 
 

@@ -11,20 +11,20 @@ requires-python = ">= 3.14"
 dependencies = [
     "httpx>=0.28.1,<0.28.2",
     "beautifulsoup4>=4.14.3,<4.15.0",
-    "fastapi>=0.121.0",
+    "fastapi>=0.136.3,<0.137.0",
     "keybert>=0.9.0,<1.0.0",
     "nltk>=3.9.2,<4.0.0",
     "pillow>=12.1.1,<13.0.0",
     "requests>=2.33.1,<2.34.0",
     "sentence-transformers>=3.0.0,<4.0.0",
     "spacy>=3.8.7,<4.0.0",
-    "starlette>=1.0.1",
+    "starlette>=1.0.1,<1.1.0",
     "streamlit>=1.54.0,<1.55.0",
     "urllib3>=2.7.0,<2.8.0",
     "uvicorn>=0.37.0,<0.38.0",
-    "openai>=2.40.0,<2.41.0",
+    "openai>=2.38.0,<2.39.0",
     "mistralai>=2.4.8,<2.5.0",
-    "dotenv>=0.9.9,<0.9.10",
+    "python-dotenv>=1.2.1,<1.3.0",
 ]
 
 [tool.uv]
@@ -90,6 +90,10 @@ lint.extend-unfixable = [
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
+"src/contentcreajudge/judges/tone/tone_prompt.py" = [
+    "E501", # Prompt template wording is intentionally preserved.
+    "RUF001", # Prompt uses French typography intentionally.
+]
 "tests/**" = [
     "S101", # Asserts allowed in tests...
     "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...

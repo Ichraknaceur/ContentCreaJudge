@@ -1,0 +1,225 @@
+judge_id: tone
+version: 1
+label: "Tone judge"
+description: "Evaluate the real detected tone, distribute it across organization tones when applicable, and compare it with the expected tone."
+
+tone_rules:
+  is_blocking_rule: false
+  evaluation_method: llm_judge
+
+  supported_providers:
+    - openai
+    - mistral
+
+  default_providers:
+    - openai
+    - mistral
+
+  guards:
+    min_words: 80
+    min_sentences: 3
+
+  score:
+    min: 0
+    max: 100
+    pass_threshold: 80
+    warn_threshold: 60
+    fail_below: 60
+
+  decision_rules:
+    pass:
+      min_score: 80
+    warn:
+      min_score: 60
+      max_score: 79
+    fail:
+      max_score: 59
+    unknown:
+      when:
+        - missing_content
+        - missing_expected_tone
+        - content_too_short
+        - llm_response_unusable
+
+  phases:
+    - phase_id: tone.blind_observation
+      label: "Observation aveugle"
+      description: "Detect the real tone manifested by the content before comparing it with the expected tone or organization tones."
+
+    - phase_id: tone.org_tone_distribution
+      label: "Distribution des tons organisation"
+      description: "Distribute detected tone shares across the official organization tones when the detected tone clearly belongs to the organization tone list."
+
+    - phase_id: tone.criteria_evaluation
+      label: "Évaluation par critères"
+      description: "Evaluate the content against tone criteria using both detected tone and expected tone."
+
+  organization_tones:
+    required: false
+    input_field: org_tones
+    matching_policy:
+      strict_clear_match_only: true
+      avoid_forced_semantic_matching: true
+      fallback_when_uncertain: not_in_org_list
+    distribution_rules:
+      distribute_only_if_detected_tone_in_org_list: true
+      include_all_org_tones_once: true
+      do_not_invent_org_tones: true
+      assign_zero_when_absent: true
+      sum_must_equal_source_score: true
+
+  blind_observation:
+    perceived_tone:
+      min_words: 2
+      max_words: 4
+    lexical_evidence:
+      min_items: 2
+      max_items: 4
+      exact_excerpt_required: true
+    tone_presence:
+      enabled: true
+      max_components: 4
+      min_component_pct: 11
+      sum_must_equal: 100
+
+  criteria:
+    - criterion_id: tone.contextual_alignment
+      label: "Alignement contextuel du ton"
+      description: "Checks whether the detected tone remains compatible with the funnel, editorial voice, persona, content type and brief, without evaluating these dimensions directly."
+      weight: 30
+      severity: major
+
+    - criterion_id: tone.register_consistency
+      label: "Cohérence du registre"
+      description: "Checks whether the detected tone remains stable across the content without abrupt shifts."
+      weight: 25
+      severity: major
+
+    - criterion_id: tone.intensity_calibration
+      label: "Calibrage de l’intensité"
+      description: "Checks whether the detected tone is proportionate and neither over-intensified nor under-intensified."
+      weight: 25
+      severity: major
+
+    - criterion_id: tone.natural_expression
+      label: "Naturalité de l’expression"
+      description: "Checks whether the tone feels natural, human, fluent and non-mechanical."
+      weight: 20
+      severity: minor
+
+  expected_criterion_ids:
+    - tone.contextual_alignment
+    - tone.register_consistency
+    - tone.intensity_calibration
+    - tone.natural_expression
+
+  criterion_scoring:
+    score_unit: points_out_of_100
+    recompute_global_score: true
+    reject_weight_values_as_scores: true
+    weights:
+      tone.contextual_alignment: 0.30
+      tone.register_consistency: 0.25
+      tone.intensity_calibration: 0.25
+      tone.natural_expression: 0.20
+
+  output_schema:
+    required_fields:
+      - dimension
+      - confidence
+      - blind_observation
+      - ton_distribution
+      - expected_tone
+      - detected_tone
+      - summary
+      - criterion_scores
+      - findings
+    
+    backend_computed_fields:
+      - status
+      - score
+
+    nullable_when_unknown:
+      - confidence
+      - blind_observation
+      - ton_distribution
+      - criterion_scores
+
+    dimension_value: tone
+
+    allowed_statuses:
+      - pass
+      - warn
+      - fail
+      - unknown
+
+    allowed_severities:
+      - info
+      - minor
+      - major
+      - critical
+
+    blind_observation_fields:
+      - perceived_tone
+      - lexical_evidence
+      - tone_presence
+
+    ton_distribution_fields:
+      - source_tone
+      - source_score
+      - in_org_list
+      - distribution
+      - sum_check
+
+  finding_rules:
+    max_findings: 8
+    excerpt_required: true
+    explanation_required: true
+    allowed_rule_ids:
+      - tone.contextual_alignment
+      - tone.register_consistency
+      - tone.intensity_calibration
+      - tone.natural_expression
+
+    consistency_with_status:
+      pass:
+        allowed_severities:
+          - info
+      warn:
+        minimum_severity:
+          - minor
+          - major
+          - critical
+      fail:
+        requires:
+          - at_least_one_major_or_critical
+          - or_multiple_significant_findings
+
+  severity_policy:
+    critical:
+      description: "Major contradiction with the expected tone or massive register drift."
+    major:
+      description: "Clear tone mismatch, important contextual incompatibility or strongly visible artificiality."
+    minor:
+      description: "Local tone deviation with limited impact."
+    info:
+      description: "Weak signal or non-penalizing observation."
+
+  confidence:
+    min: 0.0
+    max: 1.0
+    meaning: "Confidence measures only the clarity of tonal interpretation, not the quality of the text or its fit with the expected tone."
+
+  natural_expression_thresholds:
+    same_pattern_repeated_possible_penalty: 2
+    same_pattern_repeated_strong_penalty: 3
+    distinct_artificial_patterns_in_same_section_strong_penalty: 3
+    isolated_pattern_policy: info_only_when_contextually_natural
+
+  messages:
+    pass: "The content respects the expected tone."
+    warn: "The content mostly respects the expected tone, with some noticeable deviations."
+    fail: "The content does not sufficiently respect the expected tone."
+    unknown: "Tone evaluation could not be completed reliably."
+    missing_expected_tone: "The expected tone is missing or cannot be interpreted."
+    content_too_short: "The content is too short for reliable tone evaluation."

@@ -21,6 +21,7 @@ from contentcreajudge.api.judges.persona import router as persona_judge_router
 from contentcreajudge.api.judges.seo import router as seo_judge_router
 from contentcreajudge.api.judges.sources import router as sources_judge_router
 from contentcreajudge.api.judges.structure import router as structure_judge_router
+from contentcreajudge.api.judges.tone import router as tone_judge_router
 from contentcreajudge.api.judges.typography import router as typography_judge_router
 from contentcreajudge.api.root import router as root_router
 from contentcreajudge.judges.seo.seo_judge import warmup_semantic_model
@@ -65,6 +66,7 @@ def create_app() -> FastAPI:
     application.include_router(typography_judge_router)
     application.include_router(structure_judge_router)
     application.include_router(persona_judge_router)
+    application.include_router(tone_judge_router)
     return application
 
 
