@@ -22,6 +22,9 @@ dependencies = [
     "streamlit>=1.54.0,<1.55.0",
     "urllib3>=2.7.0,<2.8.0",
     "uvicorn>=0.37.0,<0.38.0",
+    "openai>=2.41.0,<2.42.0",
+    "mistralai>=2.4.9,<2.5.0",
+    "dotenv>=0.9.9,<0.9.10",
 ]
 
 [tool.uv]
@@ -29,6 +32,8 @@ add-bounds = "minor"
 package = true
 constraint-dependencies = [
     "gitpython>=3.1.49",
+    "idna>=3.15",
+    "pymdown-extensions>=10.21.3",
 ]
 
 [dependency-groups]
@@ -100,6 +105,9 @@ lint.extend-unfixable = [
     "I001", # Existing test import blocks are kept stable.
     "PT017", # Existing tests assert exception messages explicitly.
     "SLF001", # Tests may access private helpers for focused coverage.
+]
+"src/contentcreajudge/judges/funnel/funnel_prompt.py" = [
+    "RUF001", # Keep prompt typography unchanged.
 ]
 
 [tool.pytest.ini_options]

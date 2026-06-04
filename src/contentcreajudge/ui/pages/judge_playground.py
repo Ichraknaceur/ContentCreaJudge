@@ -18,6 +18,7 @@ WORKSPACE_MODULES = {
     "length": "contentcreajudge.ui.components.judges.length_workspace",
     "typography": "contentcreajudge.ui.components.judges.typography_workspace",
     "seo": "contentcreajudge.ui.components.judges.seo_workspace",
+    "funnel": "contentcreajudge.ui.components.judges.funnel_workspace",
 }
 
 
