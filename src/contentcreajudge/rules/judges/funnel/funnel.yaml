@@ -1,0 +1,121 @@
+funnel_rules:
+  judge_id: funnel
+  version: 1
+  label: "Funnel judge"
+  description: "Évalue l'adéquation d'un contenu avec l'étape du funnel marketing attendue."
+
+  allowed_funnels:
+    - awareness
+    - consideration
+    - decision
+    - loyalty
+
+  score_calculation:
+    expected_funnel_weight: 0.80
+    funnel_alignment_weight: 0.20
+    rounding: nearest_integer
+    min_score: 0
+    max_score: 100
+
+  status_thresholds:
+    pass_min_score: 80
+    warning_min_score: 60
+    fail_below_score: 60
+
+  funnel_alignment:
+    exact_match_score: 100
+    neighbor_match_score: 50
+    mismatch_score: 0
+    neighbor_pairs:
+      - [awareness, consideration]
+      - [consideration, decision]
+      - [decision, loyalty]
+
+  criteria_by_funnel:
+    awareness:
+      pedagogie:
+        weight: 0.30
+        label: "Pédagogie"
+        description: "Mesure dans quelle mesure le contenu aide le lecteur à comprendre le sujet."
+      clarification_concepts:
+        weight: 0.25
+        label: "Clarification des concepts"
+        description: "Mesure la clarté des notions, distinctions, limites ou tensions."
+      absence_argumentaire_commercial:
+        weight: 0.20
+        label: "Absence d'argumentaire commercial"
+        description: "Mesure l'absence de logique promotionnelle ou de mise en avant commerciale."
+      absence_orientation_conversion:
+        weight: 0.15
+        label: "Absence d'orientation conversion"
+        description: "Mesure l'absence d'incitation vers une action commerciale."
+      purete_funnel_awareness:
+        weight: 0.10
+        label: "Pureté du funnel awareness"
+        description: "Mesure si le contenu reste centré sur la compréhension sans dériver vers un autre funnel."
+
+    consideration:
+      criteres_evaluation:
+        weight: 0.30
+        label: "Critères d'évaluation"
+        description: "Mesure la présence de critères permettant d'évaluer ou comparer plusieurs options."
+      arbitrages:
+        weight: 0.25
+        label: "Arbitrages"
+        description: "Mesure la présence de compromis, limites, conditions ou choix à effectuer."
+      comparaison_options:
+        weight: 0.20
+        label: "Comparaison des options"
+        description: "Mesure la capacité du contenu à comparer plusieurs approches ou possibilités."
+      neutralite_analytique:
+        weight: 0.15
+        label: "Neutralité analytique"
+        description: "Mesure la capacité du contenu à rester analytique sans pousser une option."
+      purete_funnel_consideration:
+        weight: 0.10
+        label: "Pureté du funnel consideration"
+        description: "Mesure si le contenu reste centré sur l'évaluation sans dériver vers un autre funnel."
+
+    decision:
+      aide_decision:
+        weight: 0.30
+        label: "Aide à la décision"
+        description: "Mesure la capacité du contenu à accompagner une prise de décision."
+      elements_reassurance:
+        weight: 0.25
+        label: "Éléments de réassurance"
+        description: "Mesure la présence d'éléments qui réduisent l'incertitude ou répondent aux hésitations."
+      preuves_justifications:
+        weight: 0.20
+        label: "Preuves et justifications"
+        description: "Mesure la présence de preuves, démonstrations ou justifications."
+      valeur_solution:
+        weight: 0.15
+        label: "Valeur de la solution"
+        description: "Mesure la clarté de la valeur apportée par la solution ou l'option."
+      purete_funnel_decision:
+        weight: 0.10
+        label: "Pureté du funnel decision"
+        description: "Mesure si le contenu reste centré sur la décision sans dériver vers un autre funnel."
+
+    loyalty:
+      approfondissement_usage:
+        weight: 0.30
+        label: "Approfondissement de l'usage"
+        description: "Mesure la capacité du contenu à approfondir un usage existant."
+      continuite_usage:
+        weight: 0.25
+        label: "Continuité d'usage"
+        description: "Mesure la capacité du contenu à accompagner une utilisation continue."
+      clarifications_avancees:
+        weight: 0.20
+        label: "Clarifications avancées"
+        description: "Mesure la capacité du contenu à répondre à des questions plus avancées."
+      valeur_long_terme:
+        weight: 0.15
+        label: "Valeur long terme"
+        description: "Mesure la capacité du contenu à renforcer la valeur d'un usage dans la durée."
+      purete_funnel_loyalty:
+        weight: 0.10
+        label: "Pureté du funnel loyalty"
+        description: "Mesure si le contenu reste orienté approfondissement et usage déjà engagé."

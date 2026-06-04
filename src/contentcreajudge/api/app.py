@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 from contentcreajudge.api.error_handlers import register_error_handlers
 from contentcreajudge.api.evaluations import router as evaluations_router
 from contentcreajudge.api.health import router as health_router
+from contentcreajudge.api.judges.funnel import router as funnel_judge_router
 from contentcreajudge.api.judges.length import router as length_judge_router
 from contentcreajudge.api.judges.persona import router as persona_judge_router
 from contentcreajudge.api.judges.seo import router as seo_judge_router
@@ -67,6 +68,7 @@ def create_app() -> FastAPI:
     application.include_router(structure_judge_router)
     application.include_router(persona_judge_router)
     application.include_router(tone_judge_router)
+    application.include_router(funnel_judge_router)
     return application
 
 

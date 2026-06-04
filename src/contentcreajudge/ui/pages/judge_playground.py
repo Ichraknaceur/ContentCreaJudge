@@ -20,6 +20,7 @@ WORKSPACE_MODULES = {
     "seo": "contentcreajudge.ui.components.judges.seo_workspace",
     "persona": "contentcreajudge.ui.components.judges.persona_workspace",
     "tone": "contentcreajudge.ui.components.judges.tone_workspace",
+    "funnel": "contentcreajudge.ui.components.judges.funnel_workspace",
 }
 
 

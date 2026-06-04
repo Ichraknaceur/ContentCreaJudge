@@ -82,6 +82,13 @@ def get_judge_workbench_items() -> list[JudgeWorkbenchItem]:
             endpoint="/api/v1/judges/tone/evaluate",
             status="Scaffolded",
         ),
+        JudgeWorkbenchItem(
+            key="funnel",
+            title="Funnel",
+            summary="Validate alignment with the expected funnel stage.",
+            endpoint="/api/v1/judges/funnel/evaluate",
+            status="Scaffolded",
+        ),
     ]
 
 
