@@ -308,7 +308,6 @@ def _render_provider_details(
             st.markdown("**Criterion scores**")
             st.json(criterion_scores)
 
-        st.markdown("**Findings**")
         render_findings_section(provider_result.get("findings", []))
 
         with st.expander(f"Show raw {provider_label} result"):

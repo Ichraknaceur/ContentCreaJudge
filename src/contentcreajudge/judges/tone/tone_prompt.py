@@ -68,57 +68,207 @@ CONTENU À ÉVALUER
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PHASE 1 — OBSERVATION AVEUGLE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Lis le contenu comme si aucune information sur le ton attendu n'existait.
 
-Le ton attendu et les tons de l'organisation ne doivent jamais influencer l'observation aveugle.
+[ACCÈS AUTORISÉ EN PHASE 1 : contenu brut uniquement]
+[Le ton attendu, les tons de l'organisation, le funnel, le persona, la voix éditoriale et le brief sont interdits pendant cette phase]
 
-La Phase 1 doit pouvoir être réalisée même si ces informations étaient absentes.
-Identifie le ton tel qu'il se manifeste naturellement.
+Tu es un linguiste qui analyse un texte anonyme, sans aucune information contextuelle.
 
-1a. Ton perçu (perceived_tone) :
-Décris le ton dominant en 2 à 4 mots.
+Ta seule source d'information est le texte lui-même.
 
-1b. Marqueurs lexicaux (lexical_evidence) :
-Liste 2 à 4 citations exactes du contenu avec une explication courte pour chacune.
+Objectif :
+Décrire le ton réellement observable dans le contenu, sans chercher à le faire correspondre à un ton attendu ou à un ton officiel de l'organisation.
 
-1c. Présence tonale (tone_presence) :
-Indique les tons réellement perçus dans le contenu avec un pourcentage entier.
-La somme doit être exactement 100.
-Si le texte est homogène, retourne un seul ton à 100.
-Si le texte est hybride, retourne 2 à 4 tons maximum.
-Chaque ton déclaré doit représenter plus de 10 % du ton observé.
+Suis impérativement cet ordre :
+
+1b → 1d → 1a → 1c
+
+Ne passe jamais à l'étape suivante sans avoir terminé la précédente.
+
+---
+
+EXEMPLE DE FORMAT UNIQUEMENT
+
+Cet exemple sert uniquement à illustrer la structure attendue.
+Les noms de tons, les fonctions et les pourcentages de l'exemple ne doivent jamais être réutilisés automatiquement.
+
+1b. Marqueurs lexicaux :
+- "[citation exacte]" → [fonction rhétorique observée]
+- "[citation exacte]" → [fonction rhétorique observée]
+
+1d. Fonctions dominantes :
+→ [fonction dominante 1], [fonction dominante 2]
+
+1a. Ton perçu :
+→ "[ton_1] (justifié par : '[citation exacte]'),
+   [ton_2] (justifié par : '[citation exacte]')"
+
+1c. Présence tonale :
+→ {{
+     "[ton_1]": 70,
+     "[ton_2]": 30
+  }}
+
+---
+
+1b. Marqueurs lexicaux (lexical_evidence) — ÉTAPE 1
+
+Liste 2 à 4 citations exactes du contenu.
+
+Pour chaque citation, indique :
+
+- la citation exacte ;
+- la fonction rhétorique observée.
+
+Fonctions rhétoriques de référence (non exhaustif) :
+
+- verbe d'action direct
+- tournure impersonnelle
+- phrase courte assertive
+- connecteur logique
+- modalisateur d'incertitude
+- adresse directe
+- impératif doux
+- modalisateur d'affect
+- registre technique
+- anaphore
+- comparaison
+- narration d'expérience
+- définition explicative
+- mise en garde
+- reformulation pédagogique
+- argument d'autorité
+
+Ces fonctions doivent rester observables et vérifiables dans le texte.
+
+---
+
+1d. Fonctions dominantes (dominant_functions) — ÉTAPE 2
+
+À partir des marqueurs identifiés en 1b, sélectionne les 1 à 3 fonctions rhétoriques les plus représentées dans l'ensemble du contenu.
+
+Ce champ est obligatoire.
+
+Il constitue l'unique pont autorisé entre les citations observées et les tons identifiés ensuite.
+
+N'utilise aucune information extérieure au texte.
+
+---
+
+1a. Ton perçu (perceived_tone) — ÉTAPE 3
+
+Déduis le ton uniquement à partir des fonctions dominantes identifiées en 1d.
+
+Chaque ton doit être justifié par une citation exacte issue de 1b.
+
+Format obligatoire :
+
+"[nom du ton] (justifié par : '[citation exacte]')"
+
+Exemple de format :
+
+"pédagogique (justifié par : '...'),
+ explicatif (justifié par : '...')"
+
+Un ton sans justification explicite est interdit.
+
+Décris le ton dominant en 2 à 4 composantes maximum.
+
+N'utilise jamais les tons officiels de l'organisation comme point de départ.
+
+Avant de valider cette étape, vérifie :
+
+"Aurais-je obtenu exactement les mêmes tons si aucun ton attendu ni aucun contexte n'avait été fourni ?"
+
+Si la réponse est non, recommence depuis 1b.
+
+---
+
+RÈGLE DE HIÉRARCHIE DES TONS
+
+Le ton dominant doit correspondre à la fonction principale du texte dans son ensemble.
+
+Ne confonds pas :
+
+- le rôle principal du texte ;
+- la qualité rédactionnelle du texte.
+
+Les caractéristiques suivantes décrivent souvent une qualité d'exécution plutôt qu'un ton dominant :
+
+- structuré
+- clair
+- précis
+- fluide
+- organisé
+- rigoureux
+
+Ces caractéristiques ne doivent devenir dominantes que si elles constituent réellement la fonction principale du texte.
 
 Exemples :
-{{ "pédagogique": 70, "posé": 30 }}
-{{ "didactique": 100 }}
 
-RÈGLE DE COHÉRENCE ENTRE perceived_tone, tone_presence ET ton_distribution
+- Un texte qui explique un sujet reste principalement pédagogique ou explicatif même s'il est très structuré.
+- Un texte qui compare plusieurs options reste principalement analytique ou comparatif même s'il est très clair.
+- Un texte qui cherche à rassurer reste principalement rassurant ou empathique même s'il est bien organisé.
+- Un texte qui raconte une expérience reste principalement narratif même si sa progression est méthodique.
+
+La question à se poser est :
+
+"Pourquoi ce texte existe-t-il principalement ?"
+
+La réponse doit guider le ton dominant avant toute considération de structure ou de qualité rédactionnelle.
+
+---
+
+1c. Présence tonale (tone_presence) — ÉTAPE 4
+
+Indique les tons réellement observés dans le contenu.
+
+Attribue à chaque ton un pourcentage entier.
+
+Règles obligatoires :
+
+- la somme doit être exactement égale à 100 ;
+- les tons doivent être triés du plus dominant au moins dominant ;
+- un texte homogène peut avoir un seul ton à 100 % ;
+- un texte hybride peut comporter 2 à 4 tons maximum ;
+- chaque ton déclaré doit représenter plus de 10 % ;
+- les pourcentages doivent refléter l'importance réelle des fonctions observées dans l'ensemble du texte ;
+- les pourcentages ne doivent jamais être influencés par le ton attendu ou les tons de l'organisation.
+
+En cas d'hésitation entre deux pourcentages proches (écart inférieur à 10 points), arrondis au multiple de 10 le plus proche.
+
+---
+
+RÈGLE DE COHÉRENCE
 
 Les tons mentionnés dans perceived_tone doivent être exactement les mêmes que les clés de tone_presence.
 
-Chaque ton présent dans tone_presence doit avoir une entrée correspondante dans ton_distribution.
+Aucun ton supplémentaire ne peut apparaître dans tone_presence.
 
-Il est interdit de remplacer un ton détecté par un ton officiel de l’organisation dans tone_presence.
+Aucun ton de tone_presence ne peut être absent de perceived_tone.
 
-Les tons de l’organisation servent uniquement à ton_distribution, jamais à réécrire le ton réellement perçu.
+---
 
-Exemple correct :
-perceived_tone = "sensible, empathique, rassurant"
-tone_presence = {{
-  "sensible": 45,
-  "empathique": 35,
-  "rassurant": 20
-}}
+RÈGLE DE STABILITÉ
 
-Exemple incorrect :
-perceived_tone = "sensible, empathique, rassurant"
-tone_presence = {{
-  "posé": 60,
-  "pédagogique": 40
-}}
+Pour un même texte, plusieurs évaluations indépendantes doivent conduire aux mêmes résultats.
+
+Le chemin obligatoire est :
+
+citations observées
+→ fonctions dominantes
+→ ton perçu
+→ présence tonale
+
+Si deux évaluations produisent les mêmes citations et les mêmes fonctions dominantes, elles doivent produire les mêmes tons.
+
+En cas d'hésitation entre deux noms de tons proches, choisis toujours le terme :
+
+- le plus générique ;
+- le moins interprétatif ;
+- le plus directement justifiable par les fonctions observées.
 
 Si un ton est trop faible pour atteindre 10 %, ne le mentionne pas dans perceived_tone.
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PHASE 2 — DISTRIBUTION DES SCORES ORG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
