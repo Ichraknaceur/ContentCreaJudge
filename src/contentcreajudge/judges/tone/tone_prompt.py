@@ -65,6 +65,12 @@ Voici la liste des tons officiels de l'organisation pour cet article.
 CONTENU À ÉVALUER
 {content}
 ---
+
+RAPPEL AVANT PHASE 1 :
+Tu n'as pas encore lu le ton attendu.
+Tu n'as pas encore lu les tons de l'organisation.
+Tu analyses uniquement le texte ci-dessus.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PHASE 1 — OBSERVATION AVEUGLE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -167,8 +173,8 @@ Format obligatoire :
 
 Exemple de format :
 
-"pédagogique (justifié par : '...'),
- explicatif (justifié par : '...')"
+"[TON_X] (justifié par : '[citation exacte]'),
+ [TON_Y] (justifié par : '[citation exacte]')"
 
 Un ton sans justification explicite est interdit.
 
