@@ -70,7 +70,8 @@ def test_build_tone_judge_prompt_contains_new_strategy_sections() -> None:
     )
 
     assert "PHASE 1 — OBSERVATION AVEUGLE" in prompt
-    assert "PHASE 2 — DISTRIBUTION DES SCORES ORG" in prompt
-    assert "PHASE 3 — ÉVALUATION PAR CRITÈRES" in prompt
+    assert "PHASE 2 — MAPPING SÉMANTIQUE VERS LES TONS DE L'ORGANISATION" in prompt
+    assert "PHASE 3 — DISTRIBUTION DES SCORES ORG" in prompt
+    assert "PHASE 4 — ÉVALUATION PAR CRITÈRES" in prompt
     assert "blind_observation" in prompt
     assert "ton_distribution" in prompt
