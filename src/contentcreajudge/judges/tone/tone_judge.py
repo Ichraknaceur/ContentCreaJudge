@@ -23,6 +23,7 @@ _UNKNOWN_RESULT = {
     "score": None,
     "confidence": None,
     "blind_observation": None,
+    "semantic_mapping": None,
     "ton_distribution": None,
     "expected_tone": "",
     "detected_tone": "",
@@ -251,6 +252,56 @@ def _normalize_distribution_items(value: object) -> list[dict[str, object]]:
     return normalized_distribution
 
 
+def _normalize_semantic_mapping(value: object) -> dict[str, object] | None:
+    """Normalize semantic mapping data from Phase 2."""
+    if value is None:
+        return None
+
+    if not isinstance(value, dict):
+        return None
+
+    level_1 = value.get("level_1_real_tones")
+    normalized_level_1: dict[str, int] = {}
+    if isinstance(level_1, dict):
+        for tone, score in level_1.items():
+            normalized_level_1[str(tone).strip()] = _safe_int(score)
+
+    level_2 = value.get("level_2_mapping")
+    normalized_level_2: list[dict[str, object]] = []
+    if isinstance(level_2, list):
+        for entry in level_2:
+            if not isinstance(entry, dict):
+                continue
+            normalized_level_2.append(
+                {
+                    "source_tone": str(entry.get("source_tone", "")).strip(),
+                    "source_score": _safe_int(entry.get("source_score", 0)),
+                    "mapped_tone": (
+                        str(entry["mapped_tone"]).strip()
+                        if entry.get("mapped_tone") is not None
+                        else None
+                    ),
+                    "semantic_similarity": _safe_float(
+                        entry.get("semantic_similarity", 0.0)
+                    ),
+                    "in_org_vocabulary": bool(entry.get("in_org_vocabulary", False)),
+                    "justification": str(entry.get("justification", "")).strip(),
+                }
+            )
+
+    level_3 = value.get("level_3_org_scores")
+    normalized_level_3: dict[str, int] = {}
+    if isinstance(level_3, dict):
+        for tone, score in level_3.items():
+            normalized_level_3[str(tone).strip()] = _safe_int(score)
+
+    return {
+        "level_1_real_tones": normalized_level_1,
+        "level_2_mapping": normalized_level_2,
+        "level_3_org_scores": normalized_level_3,
+    }
+
+
 def _normalize_ton_distribution(value: object) -> list[dict[str, object]] | None:
     """Normalize tone distribution information."""
     if value is None:
@@ -446,6 +497,9 @@ def _normalize_provider_result(
         "score": recalculated_score,
         "confidence": _safe_nullable_float(parsed_response.get("confidence")),
         "blind_observation": blind_observation,
+        "semantic_mapping": _normalize_semantic_mapping(
+            parsed_response.get("semantic_mapping")
+        ),
         "ton_distribution": _normalize_ton_distribution(
             parsed_response.get("ton_distribution")
         ),
@@ -484,6 +538,7 @@ def _provider_error_result(
         "score": None,
         "confidence": None,
         "blind_observation": None,
+        "semantic_mapping": None,
         "ton_distribution": None,
         "expected_tone": str(context.get("expected_tone", "")),
         "detected_tone": "",

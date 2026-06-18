@@ -282,6 +282,61 @@ def _render_tone_distribution(provider_result: dict[str, object]) -> None:
             st.info("This detected tone is not distributed across organization tones.")
 
 
+def _render_semantic_mapping(provider_result: dict[str, object]) -> None:
+    """Render semantic mapping between detected tones and organization tones."""
+    semantic_mapping = provider_result.get("semantic_mapping")
+
+    if not isinstance(semantic_mapping, dict) or not semantic_mapping:
+        return
+
+    st.markdown("**Semantic mapping**")
+
+    real_tones = semantic_mapping.get("level_1_real_tones")
+    if isinstance(real_tones, dict) and real_tones:
+        st.markdown("Real detected tones")
+        st.table(
+            {
+                "Tone": list(real_tones.keys()),
+                "Score": list(real_tones.values()),
+            }
+        )
+
+    mappings = semantic_mapping.get("level_2_mapping")
+    if isinstance(mappings, list) and mappings:
+        st.markdown("Tone mapping")
+        table_data = {
+            "Source tone": [],
+            "Source score": [],
+            "Mapped tone": [],
+            "Similarity": [],
+            "In org vocabulary": [],
+            "Justification": [],
+        }
+
+        for item in mappings:
+            if not isinstance(item, dict):
+                continue
+
+            table_data["Source tone"].append(item.get("source_tone", "n/a"))
+            table_data["Source score"].append(item.get("source_score", "n/a"))
+            table_data["Mapped tone"].append(item.get("mapped_tone", "n/a"))
+            table_data["Similarity"].append(item.get("semantic_similarity", "n/a"))
+            table_data["In org vocabulary"].append(item.get("in_org_vocabulary", "n/a"))
+            table_data["Justification"].append(item.get("justification", "n/a"))
+
+        st.table(table_data)
+
+    org_scores = semantic_mapping.get("level_3_org_scores")
+    if isinstance(org_scores, dict) and org_scores:
+        st.markdown("Organization tone scores")
+        st.table(
+            {
+                "Organization tone": list(org_scores.keys()),
+                "Score": list(org_scores.values()),
+            }
+        )
+
+
 def _render_provider_details(
     provider_label: str,
     provider_result: dict[str, object],
@@ -301,6 +356,7 @@ def _render_provider_details(
             st.write(str(summary))
 
         _render_blind_observation(provider_result)
+        _render_semantic_mapping(provider_result)
         _render_tone_distribution(provider_result)
 
         criterion_scores = provider_result.get("criterion_scores")
