@@ -4,8 +4,9 @@ from contentcreajudge.application.judge_flow.typography_flow import (
 
 
 def test_execute_typography_flow_pass() -> None:
+    """The flow should return a passing result for clean content."""
     payload = {
-        "content": "<p>Bonjour\u00A0! Texte propre.</p>",
+        "content": "<p>Bonjour\u00a0! Texte propre.</p>",
         "profile": "default",
         "context": {
             "locale": "fr-FR",
@@ -28,6 +29,7 @@ def test_execute_typography_flow_pass() -> None:
 
 
 def test_execute_typography_flow_warn() -> None:
+    """The flow should return a warning result for content with minor issues."""
     payload = {
         "content": "<p>Bonjour  le monde .</p>",
         "profile": "default",
@@ -44,6 +46,7 @@ def test_execute_typography_flow_warn() -> None:
 
 
 def test_execute_typography_flow_fail() -> None:
+    """The flow should return a failing result for content with major issues."""
     payload = {
         "content": "<p>Bonjour!</p>",
         "profile": "default",
@@ -60,8 +63,9 @@ def test_execute_typography_flow_fail() -> None:
 
 
 def test_execute_typography_flow_keeps_profile_and_context() -> None:
+    """The flow should echo the profile and context in the response."""
     payload = {
-        "content": "<p>Bonjour\u00A0! Texte propre.</p>",
+        "content": "<p>Bonjour\u00a0! Texte propre.</p>",
         "profile": "editorial",
         "context": {
             "locale": "fr-FR",

@@ -42,7 +42,7 @@ def main() -> None:
     with global_tab:
         render_global_evaluation(api_url=api_url)
     with judge_tab:
-        render_judge_playground()
+        render_judge_playground(api_url=api_url)
     with delivery_tab:
         render_delivery_view()
 

@@ -1,9 +1,16 @@
+import pytest
+
+from contentcreajudge.judges.typography.exceptions import (
+    MissingTypographyContextError,
+    UnsupportedTypographyLocaleError,
+)
 from contentcreajudge.rules.judges.typography.typography_resolver import (
     resolve_typography_rules,
 )
 
 
 def test_resolve_typography_rules_success() -> None:
+    """The resolver should return the configured typography rule payload."""
     context = {
         "locale": "fr-FR",
     }
@@ -23,26 +30,29 @@ def test_resolve_typography_rules_success() -> None:
 
 
 def test_resolve_typography_rules_missing_locale() -> None:
+    """The resolver should reject missing locale context with a typed error."""
     context = {}
 
-    try:
+    with pytest.raises(MissingTypographyContextError) as exc_info:
         resolve_typography_rules(context)
-        assert False, "Expected ValueError was not raised"
-    except ValueError as exc:
-        assert str(exc) == (
-            "Missing context.locale for typography evaluation."
-        )
+
+    exc = exc_info.value
+    assert str(exc) == "Missing typography context field: locale"
+    assert exc.details == {"field_name": "locale"}
 
 
 def test_resolve_typography_rules_unsupported_locale() -> None:
+    """The resolver should reject unsupported locales with a typed error."""
     context = {
         "locale": "en-US",
     }
 
-    try:
+    with pytest.raises(UnsupportedTypographyLocaleError) as exc_info:
         resolve_typography_rules(context)
-        assert False, "Expected ValueError was not raised"
-    except ValueError as exc:
-        assert str(exc) == (
-            "Unsupported locale for typography evaluation: en-US"
-        )
+
+    exc = exc_info.value
+    assert str(exc) == "Unsupported locale for typography evaluation: en-US"
+    assert exc.details == {
+        "locale": "en-US",
+        "supported_locales": ["fr-FR"],
+    }
