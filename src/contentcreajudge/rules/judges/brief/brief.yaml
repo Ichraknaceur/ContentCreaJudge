@@ -1,0 +1,73 @@
+brief_rules:
+  judge_id: brief
+  version: 2
+  label: "Brief alignment judge"
+  description: "Evaluates whether the generated article respects the editorial brief."
+
+  score_thresholds:
+    pass: 80
+    warn: 60
+    fail: 0
+
+  criteria:
+    angle_alignment:
+      enabled: true
+      required: true
+      weight: 0.22
+      severity: major
+
+    axis_development:
+      enabled: true
+      required: true
+      weight: 0.22
+      severity: major
+
+    intended_understanding:
+      enabled: true
+      required: true
+      weight: 0.20
+      severity: major
+
+    scope_adherence:
+      enabled: true
+      required: true
+      weight: 0.16
+      severity: major
+
+    specific_element_integration:
+      enabled: true
+      required: false
+      optional: true
+      weight: 0.20
+      severity: major
+
+  aggregation:
+    score_method: weighted_average
+    ignore_optional_when_not_applicable: true
+    round_score: true
+
+    score_caps:
+      enabled: true
+      specific_element_low_score_cap:
+        enabled: true
+        applies_only_when_applicable: true
+        threshold: 40
+        max_final_score: 69
+        reason: "Specific element is applicable but weakly integrated."
+
+  llm_output:
+    require_valid_json: true
+    require_scores_by_criterion: true
+    require_evidence: true
+    require_confidence: true
+    require_distinctive_elements_review: true
+    forbid_global_score: true
+    forbid_status: true
+
+  messages:
+    pass: "The article is well aligned with the editorial brief."
+    warn: "The article is partially aligned with the editorial brief, but some important elements need attention."
+    fail: "The article does not sufficiently respect the editorial brief."
+    unknown: "Brief evaluation could not be completed reliably."
+    invalid_json: "The LLM response is not valid JSON."
+    missing_required_criterion: "A required brief evaluation criterion is missing from the LLM response."

@@ -68,6 +68,15 @@ def get_judge_workbench_items() -> list[JudgeWorkbenchItem]:
             endpoint="/api/v1/judges/seo/evaluate",
             status="Planned",
         ),
+        JudgeWorkbenchItem(
+            key="brief",
+            title="Brief",
+            summary=(
+                "Evaluates whether the generated article respects the editorial brief."
+            ),
+            endpoint="/api/v1/judges/brief/evaluate",
+            status="Planned",
+        ),
     ]
 
 
