@@ -68,6 +68,16 @@ def get_judge_workbench_items() -> list[JudgeWorkbenchItem]:
             endpoint="/api/v1/judges/seo/evaluate",
             status="Planned",
         ),
+        JudgeWorkbenchItem(
+            key="editorial_style",
+            title="Style Editorial",
+            summary=(
+                "Evaluates whether an article follows the editorial style "
+                "provided by the organization."
+            ),
+            endpoint="/api/v1/judges/editorial-style/evaluate",
+            status="Planned",
+        ),
     ]
 
 

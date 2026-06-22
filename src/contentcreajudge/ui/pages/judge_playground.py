@@ -18,6 +18,9 @@ WORKSPACE_MODULES = {
     "length": "contentcreajudge.ui.components.judges.length_workspace",
     "typography": "contentcreajudge.ui.components.judges.typography_workspace",
     "seo": "contentcreajudge.ui.components.judges.seo_workspace",
+    "editorial_style": (
+        "contentcreajudge.ui.components.judges.editorial_style_workspace"
+    ),
 }
 
 
@@ -100,16 +103,21 @@ def render_judge_playground(*, api_url: str) -> None:
     )
 
     items = get_judge_workbench_items()
+    item_keys = [item.key for item in items]
 
-    if "selected_judge_key" not in st.session_state:
+    if st.session_state.get("selected_judge_key") == "editorialStyle":
+        st.session_state["selected_judge_key"] = "editorial_style"
+
+    if (
+        "selected_judge_key" not in st.session_state
+        or st.session_state["selected_judge_key"] not in item_keys
+    ):
         st.session_state["selected_judge_key"] = items[0].key
 
     selected_key = st.selectbox(
         "Mini-judge",
-        options=[item.key for item in items],
-        index=[item.key for item in items].index(
-            st.session_state["selected_judge_key"],
-        ),
+        options=item_keys,
+        index=item_keys.index(st.session_state["selected_judge_key"]),
         format_func=lambda key: get_judge_by_key(key).title,
     )
 

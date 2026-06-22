@@ -1,0 +1,66 @@
+editorial_style_rules:
+  judge_id: editorial_style
+  version: 1
+  label: "Editorial style judge"
+  description: "Evaluates whether an article follows the editorial style provided by the organization."
+
+  required_style_fields:
+    - writingStyle
+    - writeLikeThis
+    - notLikeThis
+
+  criteria:
+    style_alignment:
+      label: "Style alignment"
+      weight: 0.20
+      rule_id: editorial_style.style_alignment
+
+    reasoning_alignment:
+      label: "Reasoning alignment"
+      weight: 0.20
+      rule_id: editorial_style.reasoning_alignment
+
+    concept_handling:
+      label: "Concept handling"
+      weight: 0.15
+      rule_id: editorial_style.concept_handling
+
+    expression_control:
+      label: "Expression control"
+      weight: 0.15
+      rule_id: editorial_style.expression_control
+
+    writing_conventions:
+      label: "Writing conventions"
+      weight: 0.15
+      rule_id: editorial_style.writing_conventions
+
+    example_alignment:
+      label: "Example alignment"
+      weight: 0.15
+      rule_id: editorial_style.example_alignment
+
+  thresholds:
+    pass_score: 80
+    warn_score: 60
+
+  severity_policy:
+    critical_forces_status: fail
+    major_max_status: warn
+
+  scoring_caps:
+    max_score_with_major_finding: 90
+    max_score_with_multiple_major_findings: 75
+
+  output:
+    score_min: 0
+    score_max: 100
+    allowed_statuses:
+      - pass
+      - warn
+      - fail
+      - unknown
+    allowed_severities:
+      - minor
+      - major
+      - critical
