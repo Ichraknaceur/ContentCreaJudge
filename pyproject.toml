@@ -37,6 +37,9 @@ constraint-dependencies = [
     "tornado>=6.5.7,<7.0.0",
 ]
 
+[tool.setuptools.package-data]
+contentcreajudge = ["judges/brief/prompt.md"]
+
 [dependency-groups]
 dev = [
     "diff-cover>=10.2.0,<10.3.0",
