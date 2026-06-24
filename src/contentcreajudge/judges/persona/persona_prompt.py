@@ -17,16 +17,19 @@ def build_persona_judge_prompt(
     funnel_stage = resolved_rules.get("funnel_stage")
     locale = resolved_rules.get("locale")
 
-    input_payload = {
+    detection_payload = {
         "content_to_evaluate": content,
         "personas": personas,
-        "expected_persona_id": expected_persona_id,
         "context": {
             "business_type": business_type,
             "content_type": content_type,
             "funnel_stage": funnel_stage,
             "locale": locale,
         },
+    }
+
+    evaluation_payload = {
+        "expected_persona_id": expected_persona_id,
         "rules": {
             "detection": resolved_rules.get("detection", {}),
             "criteria": resolved_rules.get("criteria", []),
@@ -334,27 +337,45 @@ Le score final doit être arrondi à l'entier le plus proche.
 
 Si un critère vaut null, exclure son poids du dénominateur.
 
-Le champ racine "score" doit être égal à expected_persona_evaluation.score.
+Le backend recalculera les scores à partir des criteria_scores.
+Tu dois donc surtout fournir des criteria_scores cohérents.
+Les champs "score" peuvent être renseignés, mais ils seront recalculés côté backend.
 
 ---
 
 STATUT FINAL
 
-FAIL si une règle bloquante est violée.
+STATUT FINAL
 
-PASS si expected_persona_evaluation.score >= 80.
+Le backend recalculera le score final et le statut final à partir des critères.
 
-WARN si 60 <= expected_persona_evaluation.score < 80.
+Ta priorité est donc de produire :
+- persona_distribution ;
+- detected_persona_id ;
+- expected_persona_id ;
+- criteria_scores pour detected_persona_evaluation ;
+- criteria_scores pour expected_persona_evaluation ;
+- findings argumentés.
 
-FAIL si expected_persona_evaluation.score < 60.
+Ne force pas artificiellement un score faible si detected_persona_id = expected_persona_id.
 
-Si detected_persona_id est différent de expected_persona_id, tu peux signaler
-cet écart dans findings avec :
-rule_id = persona.target_mismatch
-severity = major
+Si detected_persona_id est différent de expected_persona_id :
+- signale l'écart dans findings avec rule_id = persona.target_mismatch ;
+- ne donne pas automatiquement un FAIL si le contenu contient aussi des signaux explicites forts du persona attendu ;
+- en revanche, si le contenu ne contient aucun signal central du persona attendu, persona.relevance et persona.coverage doivent être faibles.
 
-Cet écart ne doit pas automatiquement forcer le statut à fail.
-Le statut dépend du score attendu et des règles bloquantes.
+RÈGLE DE COHÉRENCE ENTRE DÉTECTION ET ÉVALUATION
+
+Si detected_persona_id est différent de expected_persona_id, alors le contenu ne peut pas être fortement aligné avec le persona attendu.
+
+Dans ce cas :
+- persona.relevance dans expected_persona_evaluation doit être 0 ou 1 ;
+- persona.coverage dans expected_persona_evaluation doit être 0 ou 1 ;
+- expected_persona_evaluation.score doit être inférieur à 60 ;
+- le status final doit être "fail".
+
+Exception uniquement si le contenu contient des signaux explicites, nombreux et centraux du persona attendu.
+Dans ce cas, expliquer précisément l'exception dans summary.
 
 ---
 
@@ -379,7 +400,23 @@ Ne jamais produire de finding générique.
 
 JSON D'ENTRÉE À ÉVALUER
 
-{json.dumps(input_payload, ensure_ascii=False, indent=2)}
+DONNÉES POUR L'ÉTAPE 1 — DÉTECTION UNIQUEMENT
+
+Pendant cette étape, tu dois ignorer complètement le persona attendu.
+Le persona attendu n'est pas disponible pour la détection.
+La distribution doit être fondée uniquement sur le contenu et les personas fournis.
+
+{json.dumps(detection_payload, ensure_ascii=False, indent=2)}
+
+---
+
+DONNÉES POUR L'ÉTAPE 2 — ÉVALUATION DU PERSONA ATTENDU
+
+Ces données ne doivent être utilisées qu'après avoir produit mentalement :
+- persona_distribution
+- detected_persona_id
+
+{json.dumps(evaluation_payload, ensure_ascii=False, indent=2)}
 
 ---
 
@@ -389,8 +426,6 @@ Retourner uniquement un JSON valide.
 
 {{
   "dimension": "persona",
-  "status": "pass|warn|fail",
-  "score": 0,
   "provider": "openai|mistral",
   "expected_persona_id": "",
   "detected_persona_id": "",

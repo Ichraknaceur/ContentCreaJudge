@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Callable
 
 from contentcreajudge.judges.persona.persona_llm_runner import call_persona_llm
@@ -11,6 +12,7 @@ from contentcreajudge.judges.persona.persona_prompt import (
 )
 
 LLMCaller = Callable[..., str]
+logger = logging.getLogger(__name__)
 
 _BLOCKING_SEVERITY = "blocking"
 _PASS_SCORE_THRESHOLD = 80
@@ -98,6 +100,98 @@ def _safe_eval_score(evaluation: object) -> int:
         return 0
 
     return _safe_score(evaluation)
+
+
+def _safe_criterion_score(value: object) -> float | None:
+    """Return a safe criterion score between 0 and 3, or None."""
+    if value is None:
+        return None
+
+    try:
+        score = float(value)
+    except TypeError, ValueError:
+        return None
+
+    return max(0.0, min(score, 3.0))
+
+
+def _get_criteria_weights(
+    resolved_rules: dict[str, object],
+) -> dict[str, float]:
+    """Return criterion weights from resolved rules."""
+    criteria = resolved_rules.get("criteria", [])
+
+    if not isinstance(criteria, list):
+        return {}
+
+    weights: dict[str, float] = {}
+
+    for criterion in criteria:
+        if not isinstance(criterion, dict):
+            continue
+
+        criterion_id = criterion.get("criterion_id")
+        weight = criterion.get("weight")
+
+        if not criterion_id:
+            continue
+
+        try:
+            weights[str(criterion_id)] = float(weight)
+        except TypeError, ValueError:
+            logger.debug("Skipping invalid criterion weight.", exc_info=True)
+            continue
+
+    return weights
+
+
+def _compute_evaluation_score(
+    evaluation: dict[str, object],
+    resolved_rules: dict[str, object],
+) -> int:
+    """Compute persona evaluation score from criterion scores."""
+    criteria_scores = evaluation.get("criteria_scores", {})
+
+    if not isinstance(criteria_scores, dict):
+        return 0
+
+    weights = _get_criteria_weights(resolved_rules)
+
+    weighted_sum = 0.0
+    used_weight_sum = 0.0
+
+    for criterion_id, weight in weights.items():
+        criterion_score = _safe_criterion_score(criteria_scores.get(criterion_id))
+
+        if criterion_score is None:
+            continue
+
+        weighted_sum += criterion_score * weight
+        used_weight_sum += weight
+
+    if used_weight_sum == 0:
+        return 0
+
+    score = (weighted_sum / used_weight_sum) * 100 / 3
+    return round(score)
+
+
+def _compute_status_from_score(
+    score: int,
+    *,
+    has_blocking: bool = False,
+) -> str:
+    """Compute status from score and blocking state."""
+    if has_blocking:
+        return "fail"
+
+    if score >= _PASS_SCORE_THRESHOLD:
+        return "pass"
+
+    if score >= _WARN_SCORE_THRESHOLD:
+        return "warn"
+
+    return "fail"
 
 
 def _normalize_distribution(distribution: object) -> list[dict[str, object]]:
@@ -206,10 +300,6 @@ def _normalize_persona_result(
     resolved_rules: dict[str, object],
 ) -> dict[str, object]:
     """Normalize one LLM persona result."""
-    status = str(parsed_response.get("status", "unknown"))
-    if status not in {"pass", "warn", "fail", "unknown"}:
-        status = "unknown"
-
     expected_persona_id = parsed_response.get(
         "expected_persona_id",
         resolved_rules.get("expected_persona_id"),
@@ -223,9 +313,17 @@ def _normalize_persona_result(
         parsed_response.get("expected_persona_evaluation", {})
     )
 
-    normalized_score = _safe_score(parsed_response)
-    if normalized_score == 0 and expected_persona_evaluation.get("score"):
-        normalized_score = _safe_eval_score(expected_persona_evaluation)
+    detected_persona_evaluation["score"] = _compute_evaluation_score(
+        detected_persona_evaluation,
+        resolved_rules,
+    )
+
+    expected_persona_evaluation["score"] = _compute_evaluation_score(
+        expected_persona_evaluation,
+        resolved_rules,
+    )
+
+    normalized_score = int(expected_persona_evaluation.get("score", 0) or 0)
 
     persona_match = parsed_response.get("persona_match")
     if not isinstance(persona_match, bool):
@@ -240,9 +338,20 @@ def _normalize_persona_result(
         provider,
     )
 
+    has_blocking = any(
+        isinstance(finding, dict)
+        and str(finding.get("severity", "")).lower() == _BLOCKING_SEVERITY
+        for finding in findings
+    )
+
+    computed_status = _compute_status_from_score(
+        normalized_score,
+        has_blocking=has_blocking,
+    )
+
     return {
         "dimension": "persona",
-        "status": status,
+        "status": computed_status,
         "score": normalized_score,
         "provider": provider,
         "expected_persona_id": (

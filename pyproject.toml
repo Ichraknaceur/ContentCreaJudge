@@ -18,7 +18,7 @@ dependencies = [
     "requests>=2.33.1,<2.34.0",
     "sentence-transformers>=3.0.0,<4.0.0",
     "spacy>=3.8.7,<4.0.0",
-    "starlette>=1.0.1",
+    "starlette>=1.3.1",
     "streamlit>=1.54.0,<1.55.0",
     "urllib3>=2.7.0,<2.8.0",
     "uvicorn>=0.37.0,<0.38.0",
@@ -32,6 +32,7 @@ add-bounds = "minor"
 package = true
 constraint-dependencies = [
     "gitpython>=3.1.49",
+    "tornado>=6.5.7",
 ]
 
 [dependency-groups]
@@ -90,6 +91,9 @@ lint.extend-unfixable = [
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
+"src/contentcreajudge/judges/persona/persona_prompt.py" = [
+    "E501", # Prompt text must remain untouched.
+]
 "tests/**" = [
     "S101", # Asserts allowed in tests...
     "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...

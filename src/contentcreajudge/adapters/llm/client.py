@@ -21,7 +21,7 @@ def call_openai_json(
     """Call OpenAI and return the raw text response."""
     load_dotenv()
 
-    selected_model = model or os.getenv("OPENAI_DEFAULT_MODEL", "gpt-4.1-mini")
+    selected_model = model or os.getenv("OPENAI_DEFAULT_MODEL", "gpt-5.4-mini")
 
     try:
         client = OpenAI()
