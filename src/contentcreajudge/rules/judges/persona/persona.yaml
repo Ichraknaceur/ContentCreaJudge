@@ -1,0 +1,205 @@
+judge_id: persona
+version: 2
+label: "Persona judge"
+description: >
+  Détecte le persona le plus probablement ciblé par le contenu
+  parmi tous les personas fournis, puis évalue séparément
+  l'adéquation du contenu avec le persona détecté et avec
+  le persona attendu.
+
+persona_rules:
+  is_llm_judge: true
+
+  providers:
+    - openai
+    - mistral
+
+  detection:
+    enabled: true
+    distribution_sum: 100
+    detected_persona_strategy: "highest_score"
+    expected_persona_required: true
+    description: >
+      Le LLM doit d'abord analyser le contenu sans tenir compte du persona attendu.
+      Il répartit ensuite 100 points entre tous les personas fournis selon la cible
+      à laquelle le contenu semble le plus naturellement destiné. Le persona ayant
+      le score le plus élevé est considéré comme le persona détecté.
+
+  scoring:
+    max_score: 100
+    criterion_scale:
+      min: 0
+      max: 3
+      null_allowed: true
+
+    thresholds:
+      pass: 80
+      warn: 60
+
+    final_score_source: "expected_persona_evaluation.score"
+    description: >
+      Le score final du juge persona correspond au score d'évaluation du persona
+      attendu. La distribution sert à identifier le persona réellement ciblé par le
+      contenu, mais le verdict final dépend de l'adéquation avec le persona attendu.
+
+    null_handling:
+      strategy: "exclude_from_weighted_score"
+      description: >
+        Si les informations d'un persona sont insuffisantes pour évaluer un critère,
+        le critère peut être noté null et son poids est exclu du calcul du score
+        d'évaluation de ce persona.
+
+  hard_rules:
+    - rule_id: persona.expected_persona_missing
+      enabled: true
+      severity: blocking
+      description: >
+        Le persona attendu doit être fourni dans le contexte sous forme d'identifiant
+        stable, par exemple expected_persona_id.
+
+    - rule_id: persona.expected_persona_not_found
+      enabled: true
+      severity: blocking
+      description: >
+        Le persona attendu doit exister dans la liste des personas fournis.
+
+    - rule_id: persona.distribution_sum_invalid
+      enabled: true
+      severity: major
+      description: >
+        La somme des scores de distribution des personas doit être égale à 100.
+
+    - rule_id: persona.first_name_mentioned
+      enabled: true
+      severity: blocking
+      description: >
+        Le prénom d'un persona est une donnée interne. Le contenu ne doit jamais
+        mentionner le prénom du persona attendu ou du persona détecté.
+
+    - rule_id: persona.invented_profile_attribute
+      enabled: true
+      severity: blocking
+      description: >
+        Le contenu ne doit pas inventer de motivation, frustration, compétence,
+        besoin, rôle, comportement ou préférence absent des données du persona
+        évalué.
+
+    - rule_id: persona.stereotype_or_overpersonalization
+      enabled: true
+      severity: major
+      description: >
+        Le contenu ne doit pas utiliser l'âge, le genre, le revenu, le statut familial
+        ou tout autre élément démographique pour produire un stéréotype ou une
+        personnalisation artificielle.
+
+  criteria:
+    - criterion_id: persona.relevance
+      label: "Persona relevance"
+      weight: 0.30
+      severity: major
+      description: >
+        Évalue si le contenu semble réellement destiné au persona évalué.
+      questions:
+        - "Le contenu semble-t-il réellement destiné à ce persona ?"
+        - "Une autre audience semblerait-elle plus pertinente ?"
+        - "Les enjeux abordés correspondent-ils au contexte du persona ?"
+        - "Le contenu cible-t-il correctement son rôle et ses responsabilités ?"
+
+    - criterion_id: persona.coverage
+      label: "Persona coverage"
+      weight: 0.25
+      severity: major
+      description: >
+        Évalue si les éléments importants du persona sont exploités : objectifs,
+        frustrations, contraintes, responsabilités, attentes et priorités.
+      questions:
+        - "Les principaux objectifs du persona sont-ils couverts ?"
+        - "Les principales frustrations sont-elles couvertes ?"
+        - "Les contraintes importantes sont-elles adressées ?"
+        - "Le contenu ignore-t-il une partie majeure du persona ?"
+
+    - criterion_id: persona.decision_and_journey
+      label: "Decision and journey alignment"
+      weight: 0.15
+      severity: major
+      description: >
+        Évalue si le contenu est cohérent avec le niveau de maturité, le rôle
+        décisionnel et la manière dont le persona s'informe, arbitre ou s'engage.
+      questions:
+        - "Le contenu correspond-il au rôle du persona dans la décision ?"
+        - "Le contenu respecte-t-il son niveau de maturité ?"
+        - "Le contenu suppose-t-il un pouvoir de décision ou d'action incorrect ?"
+        - "Le contenu respecte-t-il les informations décisionnelles fournies ?"
+
+    - criterion_id: persona.technical_level
+      label: "Technical level fit"
+      weight: 0.15
+      severity: major
+      description: >
+        Évalue si le niveau de technicité, de précision et de vocabulaire est adapté
+        au persona évalué.
+      questions:
+        - "Le niveau de complexité est-il adapté ?"
+        - "Le contenu est-il trop technique pour ce persona ?"
+        - "Le contenu est-il trop simplifié pour ce persona ?"
+        - "Le contenu suppose-t-il des connaissances non justifiées ?"
+
+    - criterion_id: persona.personalization_quality
+      label: "Personalization quality"
+      weight: 0.15
+      severity: major
+      description: >
+        Évalue si le contenu utilise correctement les informations du persona sans
+        sur-personnalisation, stéréotype ni hypothèse non fournie.
+      questions:
+        - "Les informations du persona sont-elles utilisées correctement ?"
+        - "Les exemples ou formulations sont-ils cohérents avec le persona ?"
+        - "Les stéréotypes sont-ils absents ?"
+        - "Les comportements inventés ou hypothèses non fournies sont-ils évités ?"
+
+  output_contract:
+    required_fields:
+      - dimension
+      - status
+      - score
+      - provider
+      - expected_persona_id
+      - detected_persona_id
+      - persona_match
+      - persona_distribution
+      - detected_persona_evaluation
+      - expected_persona_evaluation
+      - findings
+      - summary
+
+    statuses:
+      - pass
+      - warn
+      - fail
+      - unknown
+
+    persona_distribution_item_fields:
+      - persona_id
+      - score
+      - reason
+
+    persona_evaluation_fields:
+      - persona_id
+      - score
+      - criteria_scores
+      - summary
+
+    finding_fields:
+      - rule_id
+      - severity
+      - persona_id
+      - persona_element
+      - message
+      - evidence
+
+  messages:
+    pass: "Le contenu est bien aligné avec le persona attendu."
+    warn: "Le contenu est partiellement aligné avec le persona attendu."
+    fail: "Le contenu ne correspond pas suffisamment au persona attendu."
+    mismatch: "Le contenu semble viser un autre persona que le persona attendu."
+    unknown: "Le juge persona n'a pas pu évaluer le contenu de manière fiable."
