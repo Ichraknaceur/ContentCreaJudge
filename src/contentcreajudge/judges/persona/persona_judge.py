@@ -88,7 +88,7 @@ def _safe_score(result: dict[str, object]) -> int:
     """Return a safe score between 0 and 100."""
     try:
         score = int(result.get("score", 0) or 0)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return 0
 
     return max(0, min(score, 100))
@@ -118,7 +118,7 @@ def _safe_criterion_score(value: object) -> float | None:
 
     try:
         score = float(value)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
     return max(0.0, min(score, 3.0))
@@ -147,7 +147,7 @@ def _get_criteria_weights(
 
         try:
             weights[str(criterion_id)] = float(weight)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             logger.debug("Skipping invalid criterion weight.", exc_info=True)
             continue
 
@@ -220,7 +220,7 @@ def _normalize_distribution(distribution: object) -> list[dict[str, object]]:
 
         try:
             score = int(item.get("score", 0) or 0)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             score = 0
 
         normalized_distribution.append(
