@@ -88,10 +88,19 @@ def _safe_score(result: dict[str, object]) -> int:
     """Return a safe score between 0 and 100."""
     try:
         score = int(result.get("score", 0) or 0)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return 0
 
     return max(0, min(score, 100))
+
+
+def _safe_status(result: dict[str, object]) -> str:
+    """Return a supported status value."""
+    status = str(result.get("status", "unknown"))
+    if status not in {"pass", "warn", "fail", "unknown"}:
+        return "unknown"
+
+    return status
 
 
 def _safe_eval_score(evaluation: object) -> int:
@@ -109,7 +118,7 @@ def _safe_criterion_score(value: object) -> float | None:
 
     try:
         score = float(value)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return None
 
     return max(0.0, min(score, 3.0))
@@ -138,7 +147,7 @@ def _get_criteria_weights(
 
         try:
             weights[str(criterion_id)] = float(weight)
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             logger.debug("Skipping invalid criterion weight.", exc_info=True)
             continue
 
@@ -148,12 +157,12 @@ def _get_criteria_weights(
 def _compute_evaluation_score(
     evaluation: dict[str, object],
     resolved_rules: dict[str, object],
-) -> int:
+) -> int | None:
     """Compute persona evaluation score from criterion scores."""
     criteria_scores = evaluation.get("criteria_scores", {})
 
     if not isinstance(criteria_scores, dict):
-        return 0
+        return None
 
     weights = _get_criteria_weights(resolved_rules)
 
@@ -170,7 +179,7 @@ def _compute_evaluation_score(
         used_weight_sum += weight
 
     if used_weight_sum == 0:
-        return 0
+        return None
 
     score = (weighted_sum / used_weight_sum) * 100 / 3
     return round(score)
@@ -211,7 +220,7 @@ def _normalize_distribution(distribution: object) -> list[dict[str, object]]:
 
         try:
             score = int(item.get("score", 0) or 0)
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             score = 0
 
         normalized_distribution.append(
@@ -300,6 +309,7 @@ def _normalize_persona_result(
     resolved_rules: dict[str, object],
 ) -> dict[str, object]:
     """Normalize one LLM persona result."""
+    status = _safe_status(parsed_response)
     expected_persona_id = parsed_response.get(
         "expected_persona_id",
         resolved_rules.get("expected_persona_id"),
@@ -313,17 +323,26 @@ def _normalize_persona_result(
         parsed_response.get("expected_persona_evaluation", {})
     )
 
-    detected_persona_evaluation["score"] = _compute_evaluation_score(
+    detected_score = _compute_evaluation_score(
         detected_persona_evaluation,
         resolved_rules,
     )
+    if detected_score is not None:
+        detected_persona_evaluation["score"] = detected_score
 
-    expected_persona_evaluation["score"] = _compute_evaluation_score(
+    expected_score = _compute_evaluation_score(
         expected_persona_evaluation,
         resolved_rules,
     )
+    if expected_score is not None:
+        expected_persona_evaluation["score"] = expected_score
 
-    normalized_score = int(expected_persona_evaluation.get("score", 0) or 0)
+    if expected_score is not None:
+        normalized_score = expected_score
+    else:
+        normalized_score = _safe_score(parsed_response)
+        if normalized_score == 0 and expected_persona_evaluation.get("score"):
+            normalized_score = _safe_eval_score(expected_persona_evaluation)
 
     persona_match = parsed_response.get("persona_match")
     if not isinstance(persona_match, bool):
@@ -344,10 +363,12 @@ def _normalize_persona_result(
         for finding in findings
     )
 
-    computed_status = _compute_status_from_score(
-        normalized_score,
-        has_blocking=has_blocking,
-    )
+    if has_blocking:
+        computed_status = "fail"
+    elif status == "unknown":
+        computed_status = status
+    else:
+        computed_status = status
 
     return {
         "dimension": "persona",
