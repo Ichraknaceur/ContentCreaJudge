@@ -20,14 +20,14 @@ def _as_list(value: object) -> list[object]:
 def _safe_int(value: object, fallback: int = 0) -> int:
     try:
         return int(value)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return fallback
 
 
 def _safe_float(value: object, fallback: float = 0.0) -> float:
     try:
         return float(value)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return fallback
 
 
