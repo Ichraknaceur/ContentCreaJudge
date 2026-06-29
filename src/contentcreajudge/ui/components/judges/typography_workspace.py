@@ -66,8 +66,10 @@ def _render_typography_exchange_summary(exchange: dict[str, object]) -> None:
     )
 
 
-def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:  # noqa: ARG001
+def render_typography_form(selected_item: JudgeWorkbenchItem) -> None:
     """Render the typography judge form."""
+    del selected_item
+
     st.markdown("### Typography test input")
 
     if "typography_content_input" not in st.session_state:
