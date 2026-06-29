@@ -25,18 +25,25 @@ def call_openai_json(
     prompt: str,
     model: str | None = None,
     temperature: float = 0.0,
+    max_output_tokens: int | None = None,
 ) -> str:
-    """Call OpenAI and return the raw text response."""
+    """Call OpenAI and return the raw JSON text response."""
     selected_model = model or os.getenv("OPENAI_EVERGREEN_MODEL", "gpt-4.1-mini")
+
+    request_params: dict[str, object] = {
+        "model": selected_model,
+        "input": prompt,
+        "temperature": temperature,
+        "text": {"format": {"type": "json_object"}},
+    }
+
+    if max_output_tokens is not None:
+        request_params["max_output_tokens"] = max_output_tokens
 
     try:
         client = _get_client()
 
-        response = client.responses.create(
-            model=selected_model,
-            input=prompt,
-            temperature=temperature,
-        )
+        response = client.responses.create(**request_params)
 
     except OpenAIError as exc:
         raise LLMClientError(f"OpenAI call failed: {exc}") from exc

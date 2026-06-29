@@ -182,12 +182,14 @@ def run_evergreen_judge(
         llm_config.get("default_model", "gpt-4.1-mini"),
     )
     temperature = _safe_float(llm_config.get("temperature"), 0.0)
+    max_output_tokens = _safe_int(llm_config.get("max_tokens"), 2000)
 
     try:
         raw_response = call_openai_json(
             prompt=prompt,
             model=model,
             temperature=temperature,
+            max_output_tokens=max_output_tokens,
         )
         llm_payload = _parse_llm_json(raw_response)
 
