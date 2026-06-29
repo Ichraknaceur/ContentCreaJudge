@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from fastapi.testclient import TestClient
 
 from contentcreajudge.api.app import app
+
+if TYPE_CHECKING:
+    import pytest
 
 client = TestClient(app)
 
@@ -41,7 +46,35 @@ def _build_payload() -> dict[str, object]:
     }
 
 
-def test_evaluate_seo_judge_returns_200() -> None:
+def _mock_semantic_checks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Avoid downloading the sentence-transformers model in API tests."""
+    monkeypatch.setattr(
+        "contentcreajudge.judges.seo.seo_judge._compute_semantic_signals",
+        lambda _semantic_inputs: {
+            "main_keyword": "différenciation éditoriale en milieu saturé",
+            "top_chunks": [],
+            "best_similarity": 0.85,
+            "semantic_score": 85,
+            "semantic_available": True,
+        },
+    )
+    monkeypatch.setattr(
+        "contentcreajudge.judges.seo.seo_judge."
+        "_compute_overoptimization_sentence_similarities",
+        lambda _overoptimization_inputs: {
+            "main_keyword": "différenciation éditoriale en milieu saturé",
+            "total_words": 100,
+            "paragraphs": [],
+            "semantic_occurrences": 0,
+            "similarity_threshold": 0.75,
+            "semantic_available": True,
+        },
+    )
+
+
+def test_evaluate_seo_judge_returns_200(monkeypatch: pytest.MonkeyPatch) -> None:
+    _mock_semantic_checks(monkeypatch)
+
     response = client.post("/api/v1/judges/seo/evaluate", json=_build_payload())
 
     assert response.status_code == 200
