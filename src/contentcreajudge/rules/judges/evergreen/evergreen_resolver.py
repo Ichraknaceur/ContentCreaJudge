@@ -55,11 +55,11 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "judge_id": config.get("judge_id", "evergreen"),
-        "version": config.get("version", 2),
+        "version": config.get("version", 1),
         "label": config.get("label", "Evergreen judge"),
         "description": config.get(
             "description",
-            "Evaluate the long-term durability of editorial content using an LLM.",
+            "Evaluate temporal references and evergreen compliance.",
         ),
         "mode": str(rules.get("mode", "llm")),
         "is_blocking_rule": bool(rules.get("is_blocking_rule", False)),
