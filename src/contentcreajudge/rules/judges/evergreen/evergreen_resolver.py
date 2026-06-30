@@ -48,7 +48,6 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
 
     llm_config = _as_dict(rules.get("llm"))
     scoring = _as_dict(rules.get("scoring"))
-    weights = _as_dict(rules.get("weights"))
     llm_messages = _as_dict(rules.get("llm_messages"))
 
     allowed_dates = context.get("allowed_dates") or []
@@ -81,19 +80,6 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
             "pass_min_score": int(scoring.get("pass_min_score", 70)),
             "warn_min_score": int(scoring.get("warn_min_score", 50)),
             "levels": _as_dict(scoring.get("levels")),
-        },
-        "weights": {
-            "dependance_temporelle": float(
-                weights.get("dependance_temporelle", 0.25),
-            ),
-            "stabilite_informations": float(
-                weights.get("stabilite_informations", 0.30),
-            ),
-            "utilite_durable": float(weights.get("utilite_durable", 0.20)),
-            "besoin_mise_a_jour": float(weights.get("besoin_mise_a_jour", 0.15)),
-            "reutilisabilite_editoriale": float(
-                weights.get("reutilisabilite_editoriale", 0.10),
-            ),
         },
         "prompt_template": str(rules.get("prompt_template", "")),
         "llm_messages": {

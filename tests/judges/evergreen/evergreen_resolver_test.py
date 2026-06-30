@@ -37,7 +37,6 @@ def test_resolve_evergreen_rules_uses_config_fallbacks_when_sections_are_missing
     }
     assert resolved["scoring"]["pass_min_score"] == 70
     assert resolved["scoring"]["warn_min_score"] == 50
-    assert resolved["weights"]["dependance_temporelle"] == 0.25
     assert resolved["prompt_template"] == ""
     assert resolved["llm_messages"]["llm_error"] == (
         "The evergreen evaluation could not be completed reliably."
@@ -68,7 +67,6 @@ def test_resolve_evergreen_rules_with_evergreen_true() -> None:
     assert resolved["llm"]["provider"] == "openai"
     assert resolved["llm"]["model_env_var"] == "OPENAI_EVERGREEN_MODEL"
     assert resolved["scoring"]["pass_min_score"] == 70
-    assert resolved["weights"]["stabilite_informations"] == 0.30
     assert "prompt_template" in resolved
     assert "llm_messages" in resolved
     assert "temporal_expression_categories" in resolved

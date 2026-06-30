@@ -27,13 +27,6 @@ evergreen_rules:
       low:
         min_score: 0
 
-  weights:
-    dependance_temporelle: 0.25
-    stabilite_informations: 0.30
-    utilite_durable: 0.20
-    besoin_mise_a_jour: 0.15
-    reutilisabilite_editoriale: 0.10
-
   prompt_template: |
     Tu es un évaluateur chargé de juger le caractère evergreen d'un contenu éditorial.
 
@@ -70,7 +63,7 @@ evergreen_rules:
     4. Besoin de mise à jour
     5. Réutilisabilité éditoriale
 
-    Calcule ensuite un score global sur 100 selon les pondérations fournies.
+    Calcule ensuite un score global sur 100 reflétant l'importance relative de ces critères pour le caractère evergreen.
 
     Retourne uniquement un objet JSON valide.
     N'ajoute aucun texte avant ou après le JSON.
