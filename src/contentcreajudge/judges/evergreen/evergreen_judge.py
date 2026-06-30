@@ -106,6 +106,18 @@ def _compute_status(score: int, judge_rules: dict[str, object]) -> str:
     return "fail"
 
 
+def _apply_activation_policy(status: str, judge_rules: dict[str, object]) -> str:
+    """Downgrade a fail to warn when the content is not required to be evergreen."""
+    if judge_rules.get("evergreen_required", True):
+        return status
+
+    activation = _as_dict(judge_rules.get("activation"))
+    if activation.get("downgrade_to_warning_when_evergreen_false") and status == "fail":
+        return "warn"
+
+    return status
+
+
 def _build_findings(llm_payload: dict[str, Any]) -> list[dict[str, object]]:
     findings: list[dict[str, object]] = []
 
@@ -208,6 +220,7 @@ def run_evergreen_judge(
         0,
     )
     status = _compute_status(score, judge_rules)
+    status = _apply_activation_policy(status, judge_rules)
     findings = _build_findings(llm_payload)
 
     return {

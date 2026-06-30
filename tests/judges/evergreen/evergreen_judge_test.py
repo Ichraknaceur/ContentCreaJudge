@@ -130,6 +130,41 @@ def test_run_evergreen_judge_returns_fail_from_low_score(
     assert result["score"] == 30
 
 
+def test_run_evergreen_judge_downgrades_fail_to_warn_when_not_evergreen(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rules = _rules()
+    rules["evergreen_required"] = False
+    rules["activation"] = {"downgrade_to_warning_when_evergreen_false": True}
+
+    monkeypatch.setattr(
+        "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
+        lambda **_kwargs: json.dumps(_llm_payload(score=30)),
+    )
+
+    result = run_evergreen_judge(_preprocessed(), rules)
+
+    assert result["status"] == "warn"
+    assert result["score"] == 30
+
+
+def test_run_evergreen_judge_keeps_fail_when_evergreen_required(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rules = _rules()
+    rules["evergreen_required"] = True
+    rules["activation"] = {"downgrade_to_warning_when_evergreen_false": True}
+
+    monkeypatch.setattr(
+        "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
+        lambda **_kwargs: json.dumps(_llm_payload(score=30)),
+    )
+
+    result = run_evergreen_judge(_preprocessed(), rules)
+
+    assert result["status"] == "fail"
+
+
 def test_run_evergreen_judge_builds_findings_from_problematic_passages(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
