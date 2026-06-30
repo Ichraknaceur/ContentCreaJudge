@@ -17,11 +17,6 @@ def _as_dict(value: object) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
-def _as_list(value: object) -> list[object]:
-    """Return value as list or an empty fallback."""
-    return value if isinstance(value, list) else []
-
-
 def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
     """Resolve evergreen rules with typed context validation."""
     config_path = Path(__file__).with_name("evergreen.yaml")
@@ -79,7 +74,6 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
         "scoring": {
             "pass_min_score": int(scoring.get("pass_min_score", 70)),
             "warn_min_score": int(scoring.get("warn_min_score", 50)),
-            "levels": _as_dict(scoring.get("levels")),
         },
         "prompt_template": str(rules.get("prompt_template", "")),
         "llm_messages": {
@@ -109,14 +103,8 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
             ),
         },
         "activation": _as_dict(rules.get("activation")),
-        "forbidden_temporal_references": _as_dict(
-            rules.get("forbidden_temporal_references"),
-        ),
         "temporal_expression_categories": _as_dict(
             rules.get("temporal_expression_categories"),
         ),
         "context_detection": _as_dict(rules.get("context_detection")),
-        "exceptions": _as_dict(rules.get("exceptions")),
-        "post_creation_checks": _as_dict(rules.get("post_creation_checks")),
-        "rules": _as_list(rules.get("rules")),
     }

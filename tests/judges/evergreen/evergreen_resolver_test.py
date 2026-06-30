@@ -42,7 +42,6 @@ def test_resolve_evergreen_rules_uses_config_fallbacks_when_sections_are_missing
         "The evergreen evaluation could not be completed reliably."
     )
     assert resolved["activation"] == {}
-    assert resolved["rules"] == []
 
 
 def test_resolve_evergreen_rules_with_evergreen_true() -> None:
