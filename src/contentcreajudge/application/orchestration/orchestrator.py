@@ -55,12 +55,9 @@ async def execute_global_evaluation(payload: dict[str, object]) -> dict[str, obj
     if not isinstance(context, dict):
         context = {}
 
-    internal_domain = "https://contentcrea.com"
-
-    if isinstance(context, dict):
-        internal_domain = str(
-            context.get("organization_domain") or "https://contentcrea.com"
-        )
+    internal_domain = str(
+        context.get("organization_domain") or "https://contentcrea.com"
+    )
 
     global_preprocessing = preprocess_global_content(
         content=content,
