@@ -38,8 +38,8 @@ repos:
     rev: 0.17.0
     hooks:
       - id: uv-secure
-        # GHSA-69w3-r845-3855: transformers<5.0.0 via sentence-transformers — fix is 5.0.0rc3 (RC only, not stable yet)
-        args: [ --show-severity, --ignore-unfixed, --severity=medium, --ignore-vulns, GHSA-69w3-r845-3855 ]
+        # Config (ignored vulns, severity threshold) lives in
+        # [tool.uv-secure.vulnerability_criteria] in pyproject.toml — single source of truth.
 
   - repo: https://github.com/checkmake/checkmake.git
     rev: v0.3.2
