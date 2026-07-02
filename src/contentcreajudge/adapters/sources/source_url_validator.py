@@ -8,13 +8,18 @@ from urllib.parse import parse_qs, urlparse
 
 import httpx
 
+from contentcreajudge.adapters.sources.exceptions import InvalidSourceAdapterConfigError
+
 _ALLOWED_METHODS = {"HEAD", "GET"}
 
 
 def _normalize_method_priority(method_priority: object) -> list[str]:
     """Validate and normalize configured HTTP methods."""
     if not isinstance(method_priority, list):
-        raise TypeError("network_rules.method_priority must be a list.")
+        raise InvalidSourceAdapterConfigError(
+            "method_priority",
+            "must be a list.",
+        )
 
     normalized_methods: list[str] = []
 
@@ -22,15 +27,18 @@ def _normalize_method_priority(method_priority: object) -> list[str]:
         normalized_method = str(method).upper().strip()
 
         if normalized_method not in _ALLOWED_METHODS:
-            raise ValueError(
-                f"Unsupported HTTP method in method_priority: {normalized_method}. "
-                "Allowed methods are: HEAD, GET.",
+            raise InvalidSourceAdapterConfigError(
+                "method_priority",
+                f"unsupported HTTP method '{normalized_method}'. Allowed: HEAD, GET.",
             )
 
         normalized_methods.append(normalized_method)
 
     if not normalized_methods:
-        raise ValueError("network_rules.method_priority must not be empty.")
+        raise InvalidSourceAdapterConfigError(
+            "method_priority",
+            "must not be empty.",
+        )
 
     return normalized_methods
 

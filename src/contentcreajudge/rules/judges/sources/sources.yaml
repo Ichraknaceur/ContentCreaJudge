@@ -248,6 +248,7 @@ sources_rules:
     uncertainty_management: "Uncertain, unverifiable, or incomplete sources must be removed."
     recency_policy: "The source may be too old for this type of information."
     content_type_policy: "External links are not allowed for this content type unless officially required."
+    content_type_policy_caution: "External links are allowed with caution for this content type."
     complementary_reading_policy: "Complementary reading links must follow the internal-link policy."
     post_creation_checks: "Post-creation source checks were not fully satisfied."
     conflict_resolution: "Editorial safety prevails: uncertain sources must not be invented or completed."

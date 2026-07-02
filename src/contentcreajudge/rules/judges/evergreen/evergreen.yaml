@@ -1,0 +1,202 @@
+judge_id: evergreen
+version: 1
+label: "Evergreen judge"
+description: "Evaluate temporal references and evergreen compliance."
+
+evergreen_rules:
+  mode: llm
+  is_blocking_rule: false
+
+  llm:
+    provider: openai
+    model_env_var: OPENAI_EVERGREEN_MODEL
+    default_model: gpt-4.1-mini
+    temperature: 0.0
+    max_tokens: 2000
+
+  scoring:
+    pass_min_score: 70
+    warn_min_score: 50
+
+  prompt_template: |
+    Tu es un évaluateur chargé de juger le caractère evergreen d'un contenu éditorial.
+
+    Définition :
+    Un contenu evergreen est un contenu qui reste utile, pertinent et globalement fiable dans le temps,
+    sans dépendre fortement d'une actualité, d'une année précise, d'un prix, d'une réglementation récente,
+    d'un classement temporaire, d'un outil du moment ou d'un événement conjoncturel.
+
+    Ta tâche :
+    Évalue uniquement le caractère evergreen du contenu.
+    Ne juge pas la qualité globale du style ni la qualité SEO générale,
+    sauf si cela influence directement la durabilité du contenu.
+
+    Contenu à évaluer :
+
+    """
+    {{CONTENT}}
+    """
+
+    Informations temporelles détectées automatiquement :
+
+    {{TEMPORAL_SIGNALS}}
+
+    Important :
+    Pour tous les critères, 0 signifie très mauvais pour le caractère evergreen.
+    Pour tous les critères, 5 signifie excellent pour le caractère evergreen.
+    Un contenu très intemporel doit donc recevoir une note élevée en dépendance temporelle et en besoin de mise à jour.
+
+    Évalue les critères suivants sur 0 à 5 :
+
+    1. Dépendance temporelle
+    2. Stabilité des informations
+    3. Utilité durable
+    4. Besoin de mise à jour
+    5. Réutilisabilité éditoriale
+
+    Calcule ensuite un score global sur 100 reflétant l'importance relative de ces critères pour le caractère evergreen.
+
+    Retourne uniquement un objet JSON valide.
+    N'ajoute aucun texte avant ou après le JSON.
+    N'utilise pas de bloc Markdown.
+    N'utilise pas ```json.
+
+    Retourne uniquement ce JSON, avec exactement ces noms de clés :
+
+    {
+      "scores": {
+        "dependance_temporelle": 0,
+        "stabilite_informations": 0,
+        "utilite_durable": 0,
+        "besoin_mise_a_jour": 0,
+        "reutilisabilite_editoriale": 0
+      },
+      "score_global_evergreen": 0,
+      "niveau": "faible | moyen | bon | excellent",
+      "passages_problematiques": [
+        {
+          "extrait": "",
+          "probleme": "",
+          "gravite": "faible | moyenne | forte"
+        }
+      ],
+      "informations_a_surveiller": [],
+      "justification_courte": "",
+      "recommandations": []
+    }
+
+    Contraintes :
+
+    - Ne pas inventer d'informations externes.
+    - Ne pas vérifier les faits sur Internet.
+    - Juger uniquement la durabilité probable du contenu.
+    - Utiliser les signaux temporels comme aide d'analyse.
+    - Si le contenu contient des affirmations juridiques, fiscales, médicales,
+      réglementaires, tarifaires ou liées à des outils récents,
+      pénaliser le besoin de mise à jour.
+    - Si le contenu repose principalement sur des définitions, méthodes,
+      principes ou conseils intemporels, augmenter le score evergreen.
+
+  llm_messages:
+    pass: "The content demonstrates strong evergreen characteristics."
+    warn: "The content contains some time-sensitive elements that may require future updates."
+    fail: "The content is highly dependent on temporal information and has low evergreen value."
+    llm_error: "The evergreen evaluation could not be completed reliably."
+
+  activation:
+    always_detect_temporal_references: true
+    enforce_only_if_evergreen_true: true
+    downgrade_to_warning_when_evergreen_false: true
+    allow_temporal_references_if_provided_in_inputs: true
+
+  temporal_expression_categories:
+    absolute_dates:
+      detect_years: true
+      detect_full_dates: true
+      detect_month_year: true
+
+    relative_dates:
+      fr:
+        - "aujourd'hui"
+        - "cette année"
+        - "ce mois-ci"
+        - "cette semaine"
+        - "récemment"
+        - "actuellement"
+        - "désormais"
+        - "à l'heure actuelle"
+        - "ces derniers mois"
+        - "la semaine dernière"
+        - "l'année dernière"
+      en:
+        - "today"
+        - "this year"
+        - "this month"
+        - "this week"
+        - "recently"
+        - "currently"
+        - "nowadays"
+        - "at the moment"
+        - "in recent months"
+        - "last week"
+        - "last year"
+
+    news_references:
+      fr:
+        - "actualité"
+        - "dernière annonce"
+        - "nouvelle réglementation"
+        - "réforme récente"
+        - "tendance actuelle"
+      en:
+        - "news"
+        - "latest announcement"
+        - "new regulation"
+        - "recent reform"
+        - "current trend"
+
+    version_references:
+      fr:
+        - "dernière version"
+        - "nouvelle version"
+        - "version actuelle"
+        - "mise à jour récente"
+      en:
+        - "latest version"
+        - "new version"
+        - "current version"
+        - "recent update"
+
+  context_detection:
+    detect_source_context: true
+    detect_input_context: true
+    detect_historical_context: true
+
+    source_context_markers:
+      fr:
+        - "selon"
+        - "étude"
+        - "rapport"
+        - "baromètre"
+        - "source"
+        - "publication"
+        - "observatoire"
+      en:
+        - "according to"
+        - "study"
+        - "report"
+        - "source"
+        - "publication"
+        - "survey"
+
+    historical_context_markers:
+      fr:
+        - "depuis"
+        - "historiquement"
+        - "dans les années"
+        - "au cours de"
+      en:
+        - "since"
+        - "historically"
+        - "in the"
+        - "over the years"

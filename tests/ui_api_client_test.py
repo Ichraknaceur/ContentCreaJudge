@@ -20,6 +20,7 @@ class _PlainTextHandler(BaseHTTPRequestHandler):
 
     def log_message(self, format: str, *args: object) -> None:  # noqa: A002
         """Silence request logs during tests."""
+        del format, args
 
 
 def test_request_json_returns_error_for_non_json_response() -> None:
