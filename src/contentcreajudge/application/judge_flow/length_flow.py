@@ -17,7 +17,18 @@ def execute_length_flow(payload: dict[str, object]) -> dict[str, object]:
 
     resolved_length_rules = resolve_length_rules(context)
 
-    preprocessed_content = preprocess_length_content(content)
+    global_preprocessing = payload.get("global_preprocessing")
+
+    if isinstance(global_preprocessing, dict):
+        preprocessed_content = {
+            "original_content": content,
+            "normalized_text": global_preprocessing.get("normalized_text", ""),
+            "word_count": global_preprocessing.get("word_count", 0),
+            "is_empty": global_preprocessing.get("is_empty", True),
+        }
+    else:
+        preprocessed_content = preprocess_length_content(content)
+
     length_result = run_length_judge(
         preprocessed_content=preprocessed_content,
         judge_rules=resolved_length_rules,

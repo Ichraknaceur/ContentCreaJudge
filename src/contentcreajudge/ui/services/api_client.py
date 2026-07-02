@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 HTTP_SUCCESS_MIN = 200
 HTTP_REDIRECT_MIN = 300
+API_TIMEOUT_SECONDS = 120
 
 
 @dataclass(frozen=True)
@@ -48,7 +49,7 @@ def request_json(
         path = f"{path}?{parsed_url.query}"
 
     connection_cls = HTTPSConnection if parsed_url.scheme == "https" else HTTPConnection
-    connection = connection_cls(parsed_url.netloc, timeout=5)
+    connection = connection_cls(parsed_url.netloc, timeout=API_TIMEOUT_SECONDS)
 
     try:
         connection.request(

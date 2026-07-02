@@ -24,6 +24,8 @@ def execute_structure_flow(payload: dict[str, object]) -> dict[str, Any]:
     profile = str(payload.get("profile", "default"))
     request_id = payload.get("request_id")
     context = payload.get("context") or {}
+    if not isinstance(context, dict):
+        context = {}
 
     resolved_structure_rules = resolve_structure_rules(context)
 
@@ -33,8 +35,11 @@ def execute_structure_flow(payload: dict[str, object]) -> dict[str, Any]:
         .get("patterns", [])
     )
 
+    expected_outline_html = str(
+        resolved_structure_rules.get("expected_outline_html", "")
+    )
     preprocessed_content = preprocess_structure_content(
-        expected_outline_html=resolved_structure_rules["expected_outline_html"],
+        expected_outline_html=expected_outline_html,
         generated_html=content,
         internal_comment_patterns=internal_comment_patterns,
     )
