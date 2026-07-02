@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -23,15 +22,17 @@ def _get_client() -> OpenAI:
 def call_openai_json(
     *,
     prompt: str,
-    model: str | None = None,
+    model: str,
     temperature: float = 0.0,
     max_output_tokens: int | None = None,
 ) -> str:
-    """Call OpenAI and return the raw JSON text response."""
-    selected_model = model or os.getenv("OPENAI_EVERGREEN_MODEL", "gpt-4.1-mini")
+    """Call OpenAI and return the raw JSON text response.
 
+    The model is resolved by each judge (per-judge env var and default) and
+    passed in explicitly; this client only executes the request.
+    """
     request_params: dict[str, object] = {
-        "model": selected_model,
+        "model": model,
         "input": prompt,
         "temperature": temperature,
         "text": {"format": {"type": "json_object"}},
