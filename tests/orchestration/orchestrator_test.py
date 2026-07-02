@@ -6,6 +6,7 @@ from io import BytesIO
 
 import pytest
 
+from contentcreajudge.application.orchestration import judge_registry
 from contentcreajudge.application.orchestration.company_context_resolver import (
     build_global_payload_from_content,
     load_company_export_from_zip,
@@ -151,6 +152,39 @@ async def test_execute_global_evaluation_ignores_unknown_judge() -> None:
     assert result["judge_results"] == []
     assert result["dimension_results"] == []
     assert result["technical_errors"] == []
+
+
+@pytest.mark.asyncio
+async def test_execute_global_evaluation_reports_failed_judge_in_results(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def _failing_flow(_payload: dict[str, object]) -> dict[str, object]:
+        raise RuntimeError("boom")
+
+    monkeypatch.setitem(judge_registry.JUDGE_REGISTRY, "length", _failing_flow)
+
+    payload = {
+        "content": "<p>Texte.</p>",
+        "profile": "default",
+        "context": {
+            "content_type": "articles",
+            "expected_length": "MEDIUM",
+            "locale": "fr-FR",
+        },
+        "enabled_judges": ["length"],
+    }
+
+    result = await execute_global_evaluation(payload)
+
+    length_entry = next(
+        judge_result
+        for judge_result in result["judge_results"]
+        if judge_result["judge"] == "length"
+    )
+    assert length_entry["status"] == "error"
+    assert length_entry["error"] == "boom"
+    assert length_entry["score"] is None
+    assert result["technical_errors"]
 
 
 @pytest.mark.asyncio

@@ -121,7 +121,13 @@ async def execute_global_evaluation(payload: dict[str, object]) -> dict[str, obj
 
         dimension_results.append(judge_result)
 
-    judge_results = _build_judge_results(dimension_results)
+    judge_results = _build_judge_results(dimension_results) + [
+        _build_error_judge_result(
+            str(error.get("judge", "unknown")),
+            str(error.get("error", "Judge execution failed.")),
+        )
+        for error in technical_errors
+    ]
 
     return {
         "evaluation_id": request_id,
@@ -173,37 +179,22 @@ def _build_judge_results(
     return judge_results
 
 
-def _resolve_global_status(
-    dimension_results: list[dict[str, object]],
-    technical_errors: list[dict[str, object]],
-) -> str:
-    """Resolve the aggregate business status for the global evaluation."""
-    if technical_errors and not dimension_results:
-        return "error"
-
-    if any(result.get("status") == "fail" for result in dimension_results):
-        return "fail"
-
-    if technical_errors:
-        return "warn"
-
-    return "pass"
-
-
-def _compute_global_score(dimension_results: list[dict[str, object]]) -> int:
-    """Compute a simple average score across completed judge dimensions."""
-    scores = []
-
-    for result in dimension_results:
-        score = result.get("score")
-
-        if isinstance(score, int | float):
-            scores.append(float(score))
-
-    if not scores:
-        return 0
-
-    return round(sum(scores) / len(scores))
+def _build_error_judge_result(
+    judge_name: str,
+    error_message: str,
+) -> dict[str, object]:
+    """Build a judge_results entry for a judge that failed to run."""
+    return {
+        "judge": judge_name,
+        "status": "error",
+        "score": None,
+        "subscores": {},
+        "semantic_signals": {},
+        "semantic_compensation": {},
+        "overoptimization_signals": {},
+        "findings": [],
+        "error": error_message,
+    }
 
 
 def _build_global_summary(
