@@ -211,14 +211,14 @@ def run_evergreen_judge(
             error_message=str(exc),
         )
 
-    score = _safe_int(
-        llm_payload.get("score_global_evergreen")
-        or llm_payload.get("Score_global")
-        or llm_payload.get("Score global")
-        or llm_payload.get("score_global")
-        or llm_payload.get("score"),
-        0,
-    )
+    raw_score = llm_payload.get("score_global_evergreen")
+    if raw_score is None:
+        return _error_result(
+            judge_rules=judge_rules,
+            error_message="Missing 'score_global_evergreen' in LLM response.",
+        )
+
+    score = _safe_int(raw_score, 0)
     status = _compute_status(score, judge_rules)
     status = _apply_activation_policy(status, judge_rules)
     findings = _build_findings(llm_payload)
