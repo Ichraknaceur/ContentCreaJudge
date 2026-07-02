@@ -69,7 +69,13 @@ async def execute_global_evaluation(payload: dict[str, object]) -> dict[str, obj
         "global_preprocessing": global_preprocessing,
     }
 
-    runnable_judges = get_runnable_judges(payload.get("enabled_judges"))
+    requested_judges = payload.get("enabled_judges")
+    runnable_judges = get_runnable_judges(requested_judges)
+    skipped_judges = [
+        name
+        for name in (requested_judges if isinstance(requested_judges, list) else [])
+        if isinstance(name, str) and name not in runnable_judges
+    ]
 
     tasks = [
         _run_judge(
@@ -138,6 +144,7 @@ async def execute_global_evaluation(payload: dict[str, object]) -> dict[str, obj
         "metadata": {
             "profile": profile,
             "enabled_judges": list(runnable_judges.keys()),
+            "skipped_judges": skipped_judges,
         },
     }
 

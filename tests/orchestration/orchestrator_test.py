@@ -152,6 +152,7 @@ async def test_execute_global_evaluation_ignores_unknown_judge() -> None:
     assert result["judge_results"] == []
     assert result["dimension_results"] == []
     assert result["technical_errors"] == []
+    assert result["metadata"]["skipped_judges"] == ["unknown"]
 
 
 @pytest.mark.asyncio
