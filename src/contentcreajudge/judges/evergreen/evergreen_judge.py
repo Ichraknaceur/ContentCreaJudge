@@ -20,14 +20,14 @@ def _as_list(value: object) -> list[object]:
 def _safe_int(value: object, fallback: int = 0) -> int:
     try:
         return int(value)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return fallback
 
 
 def _safe_float(value: object, fallback: float = 0.0) -> float:
     try:
         return float(value)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return fallback
 
 
@@ -106,6 +106,18 @@ def _compute_status(score: int, judge_rules: dict[str, object]) -> str:
     return "fail"
 
 
+def _apply_activation_policy(status: str, judge_rules: dict[str, object]) -> str:
+    """Downgrade a fail to warn when the content is not required to be evergreen."""
+    if judge_rules.get("evergreen_required", True):
+        return status
+
+    activation = _as_dict(judge_rules.get("activation"))
+    if activation.get("downgrade_to_warning_when_evergreen_false") and status == "fail":
+        return "warn"
+
+    return status
+
+
 def _build_findings(llm_payload: dict[str, Any]) -> list[dict[str, object]]:
     findings: list[dict[str, object]] = []
 
@@ -182,12 +194,14 @@ def run_evergreen_judge(
         llm_config.get("default_model", "gpt-4.1-mini"),
     )
     temperature = _safe_float(llm_config.get("temperature"), 0.0)
+    max_output_tokens = _safe_int(llm_config.get("max_tokens"), 2000)
 
     try:
         raw_response = call_openai_json(
             prompt=prompt,
             model=model,
             temperature=temperature,
+            max_output_tokens=max_output_tokens,
         )
         llm_payload = _parse_llm_json(raw_response)
 
@@ -197,15 +211,16 @@ def run_evergreen_judge(
             error_message=str(exc),
         )
 
-    score = _safe_int(
-        llm_payload.get("score_global_evergreen")
-        or llm_payload.get("Score_global")
-        or llm_payload.get("Score global")
-        or llm_payload.get("score_global")
-        or llm_payload.get("score"),
-        0,
-    )
+    raw_score = llm_payload.get("score_global_evergreen")
+    if raw_score is None:
+        return _error_result(
+            judge_rules=judge_rules,
+            error_message="Missing 'score_global_evergreen' in LLM response.",
+        )
+
+    score = _safe_int(raw_score, 0)
     status = _compute_status(score, judge_rules)
+    status = _apply_activation_policy(status, judge_rules)
     findings = _build_findings(llm_payload)
 
     return {

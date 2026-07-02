@@ -17,11 +17,6 @@ def _as_dict(value: object) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
-def _as_list(value: object) -> list[object]:
-    """Return value as list or an empty fallback."""
-    return value if isinstance(value, list) else []
-
-
 def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
     """Resolve evergreen rules with typed context validation."""
     config_path = Path(__file__).with_name("evergreen.yaml")
@@ -48,7 +43,6 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
 
     llm_config = _as_dict(rules.get("llm"))
     scoring = _as_dict(rules.get("scoring"))
-    weights = _as_dict(rules.get("weights"))
     llm_messages = _as_dict(rules.get("llm_messages"))
 
     allowed_dates = context.get("allowed_dates") or []
@@ -56,11 +50,11 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "judge_id": config.get("judge_id", "evergreen"),
-        "version": config.get("version", 2),
+        "version": config.get("version", 1),
         "label": config.get("label", "Evergreen judge"),
         "description": config.get(
             "description",
-            "Evaluate the long-term durability of editorial content using an LLM.",
+            "Evaluate temporal references and evergreen compliance.",
         ),
         "mode": str(rules.get("mode", "llm")),
         "is_blocking_rule": bool(rules.get("is_blocking_rule", False)),
@@ -80,20 +74,6 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
         "scoring": {
             "pass_min_score": int(scoring.get("pass_min_score", 70)),
             "warn_min_score": int(scoring.get("warn_min_score", 50)),
-            "levels": _as_dict(scoring.get("levels")),
-        },
-        "weights": {
-            "dependance_temporelle": float(
-                weights.get("dependance_temporelle", 0.25),
-            ),
-            "stabilite_informations": float(
-                weights.get("stabilite_informations", 0.30),
-            ),
-            "utilite_durable": float(weights.get("utilite_durable", 0.20)),
-            "besoin_mise_a_jour": float(weights.get("besoin_mise_a_jour", 0.15)),
-            "reutilisabilite_editoriale": float(
-                weights.get("reutilisabilite_editoriale", 0.10),
-            ),
         },
         "prompt_template": str(rules.get("prompt_template", "")),
         "llm_messages": {
@@ -123,14 +103,8 @@ def resolve_evergreen_rules(context: dict[str, Any]) -> dict[str, Any]:
             ),
         },
         "activation": _as_dict(rules.get("activation")),
-        "forbidden_temporal_references": _as_dict(
-            rules.get("forbidden_temporal_references"),
-        ),
         "temporal_expression_categories": _as_dict(
             rules.get("temporal_expression_categories"),
         ),
         "context_detection": _as_dict(rules.get("context_detection")),
-        "exceptions": _as_dict(rules.get("exceptions")),
-        "post_creation_checks": _as_dict(rules.get("post_creation_checks")),
-        "rules": _as_list(rules.get("rules")),
     }

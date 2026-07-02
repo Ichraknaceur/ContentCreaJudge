@@ -1,49 +1,66 @@
-"""Evaluation API endpoints."""
+"""Global evaluation API endpoint."""
 
-from fastapi import APIRouter, status
-from pydantic import BaseModel, ConfigDict
+from __future__ import annotations
+
+from typing import Any
+
+from fastapi import APIRouter, Response, status  # noqa: TC002
+from pydantic import BaseModel, ConfigDict, Field
+
+from contentcreajudge.application.orchestration.orchestrator import (
+    execute_global_evaluation,
+)
 
 router = APIRouter(prefix="/api/v1/evaluations", tags=["evaluations"])
 
 
-class EvaluationRequestPayload(BaseModel):
-    """Minimal V1 request payload for an editorial evaluation."""
+class GlobalEvaluationContext(BaseModel):
+    """Context needed by the enabled judges."""
+
+    content_type: str
+    expected_length: str | None = None
+    locale: str | None = None
+
+    organization_website: str | None = None
+    expected_cta: str | None = None
+    funnel_stage: str | None = None
+    evergreen: bool | None = None
+
+    main_keyword: str | None = None
+    secondary_keywords: list[str] = Field(default_factory=list)
+    expected_structure: str | None = None
+    expected_outline_html: str | None = None
+
+
+class GlobalEvaluationRequestPayload(BaseModel):
+    """Request body for running a global evaluation."""
 
     content: str
-    profile: str
-    content_title: str | None = None
-    content_type: str | None = None
-    channel: str | None = None
-    locale: str | None = None
-    target_keywords: list[str] = []
-    declared_sources: list[str] = []
+    profile: str = "default"
+    context: GlobalEvaluationContext | None = None
+    enabled_judges: list[str] | None = None
     request_id: str | None = None
 
     model_config = ConfigDict(extra="forbid")
 
 
-class EvaluationPlaceholderResponse(BaseModel):
-    """Placeholder response for the future evaluation workflow."""
+@router.post("", status_code=status.HTTP_200_OK)
+async def evaluate_global_content(
+    payload: GlobalEvaluationRequestPayload,
+    response: Response,
+) -> dict[str, Any]:
+    """Execute the global evaluation orchestration."""
+    if payload.context is None:
+        response.status_code = status.HTTP_202_ACCEPTED
+        return {
+            "status": "accepted",
+            "message": (
+                "Evaluation orchestration is not implemented yet. "
+                "This endpoint is ready to receive V1 payloads."
+            ),
+            "received_profile": payload.profile,
+            "request_id": payload.request_id,
+            "next_step": "Connect preprocessing, judge orchestration, and aggregation.",
+        }
 
-    status: str
-    message: str
-    received_profile: str
-    request_id: str | None
-    next_step: str
-
-
-@router.post("", status_code=status.HTTP_202_ACCEPTED)
-def create_evaluation(
-    payload: EvaluationRequestPayload,
-) -> EvaluationPlaceholderResponse:
-    """Accept an evaluation request and return a placeholder V1 response."""
-    return EvaluationPlaceholderResponse(
-        status="accepted",
-        message=(
-            "Evaluation orchestration is not implemented yet. "
-            "This endpoint is ready to receive V1 payloads."
-        ),
-        received_profile=payload.profile,
-        request_id=payload.request_id,
-        next_step="Connect preprocessing, judge orchestration, and aggregation.",
-    )
+    return await execute_global_evaluation(payload.model_dump())

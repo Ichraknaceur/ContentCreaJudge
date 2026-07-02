@@ -130,6 +130,41 @@ def test_run_evergreen_judge_returns_fail_from_low_score(
     assert result["score"] == 30
 
 
+def test_run_evergreen_judge_downgrades_fail_to_warn_when_not_evergreen(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rules = _rules()
+    rules["evergreen_required"] = False
+    rules["activation"] = {"downgrade_to_warning_when_evergreen_false": True}
+
+    monkeypatch.setattr(
+        "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
+        lambda **_kwargs: json.dumps(_llm_payload(score=30)),
+    )
+
+    result = run_evergreen_judge(_preprocessed(), rules)
+
+    assert result["status"] == "warn"
+    assert result["score"] == 30
+
+
+def test_run_evergreen_judge_keeps_fail_when_evergreen_required(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rules = _rules()
+    rules["evergreen_required"] = True
+    rules["activation"] = {"downgrade_to_warning_when_evergreen_false": True}
+
+    monkeypatch.setattr(
+        "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
+        lambda **_kwargs: json.dumps(_llm_payload(score=30)),
+    )
+
+    result = run_evergreen_judge(_preprocessed(), rules)
+
+    assert result["status"] == "fail"
+
+
 def test_run_evergreen_judge_builds_findings_from_problematic_passages(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -172,12 +207,11 @@ def test_run_evergreen_judge_parses_json_inside_markdown_fence(
     assert result["score"] == 72
 
 
-def test_run_evergreen_judge_uses_alternate_score_keys(
+def test_run_evergreen_judge_errors_when_score_key_is_missing(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     payload = _llm_payload(score=0)
     payload.pop("score_global_evergreen")
-    payload["score_global"] = 55
     monkeypatch.setattr(
         "contentcreajudge.judges.evergreen.evergreen_judge.call_openai_json",
         lambda **_kwargs: json.dumps(payload),
@@ -185,8 +219,11 @@ def test_run_evergreen_judge_uses_alternate_score_keys(
 
     result = run_evergreen_judge(_preprocessed(), _rules())
 
-    assert result["status"] == "warn"
-    assert result["score"] == 55
+    assert result["status"] == "fail"
+    assert result["findings"][0]["rule_id"] == "evergreen.llm_error"
+    assert result["findings"][0]["evidence"] == {
+        "error": "Missing 'score_global_evergreen' in LLM response.",
+    }
 
 
 def test_run_evergreen_judge_returns_error_when_prompt_template_is_missing() -> None:

@@ -17,22 +17,6 @@ evergreen_rules:
   scoring:
     pass_min_score: 70
     warn_min_score: 50
-    levels:
-      excellent:
-        min_score: 85
-      good:
-        min_score: 70
-      medium:
-        min_score: 50
-      low:
-        min_score: 0
-
-  weights:
-    dependance_temporelle: 0.25
-    stabilite_informations: 0.30
-    utilite_durable: 0.20
-    besoin_mise_a_jour: 0.15
-    reutilisabilite_editoriale: 0.10
 
   prompt_template: |
     Tu es un évaluateur chargé de juger le caractère evergreen d'un contenu éditorial.
@@ -70,7 +54,7 @@ evergreen_rules:
     4. Besoin de mise à jour
     5. Réutilisabilité éditoriale
 
-    Calcule ensuite un score global sur 100 selon les pondérations fournies.
+    Calcule ensuite un score global sur 100 reflétant l'importance relative de ces critères pour le caractère evergreen.
 
     Retourne uniquement un objet JSON valide.
     N'ajoute aucun texte avant ou après le JSON.
@@ -119,24 +103,11 @@ evergreen_rules:
     fail: "The content is highly dependent on temporal information and has low evergreen value."
     llm_error: "The evergreen evaluation could not be completed reliably."
 
-  input_source:
-    use_evergreen_from_input: true
-    input_field: "topic.evergreen"
-
   activation:
     always_detect_temporal_references: true
     enforce_only_if_evergreen_true: true
     downgrade_to_warning_when_evergreen_false: true
     allow_temporal_references_if_provided_in_inputs: true
-
-  forbidden_temporal_references:
-    forbid_dates_if_not_provided: true
-    forbid_years_if_not_provided: true
-    forbid_months_if_not_provided: true
-    forbid_relative_dates: true
-    forbid_news_references: true
-    forbid_version_references_if_not_provided: true
-    forbid_current_trend_references: true
 
   temporal_expression_categories:
     absolute_dates:
@@ -229,53 +200,3 @@ evergreen_rules:
         - "historically"
         - "in the"
         - "over the years"
-
-  exceptions:
-    allow_source_publication_year: true
-    allow_dates_inside_valid_source_context: true
-    allow_historical_context_if_required_by_brief: true
-    allow_dates_explicitly_present_in_inputs: true
-    allow_dates_if_content_is_not_evergreen: true
-
-  rewrite_policy:
-    prefer_timeless_formulation: true
-    replace_relative_time_with_neutral_expression: true
-    remove_unnecessary_temporal_reference: true
-
-  post_creation_checks:
-    check_temporal_references: true
-    check_no_unprovided_dates_when_evergreen_true: true
-    check_no_relative_temporal_expressions_when_evergreen_true: true
-    check_no_unprovided_version_references_when_evergreen_true: true
-    check_no_unnecessary_news_references_when_evergreen_true: true
-    report_temporal_references_as_warning_when_evergreen_false: true
-
-  rules:
-    - rule_id: evergreen.unprovided_dates
-      enabled: true
-      severity_if_evergreen_true: major
-      severity_if_evergreen_false: minor
-
-    - rule_id: evergreen.relative_temporal_references
-      enabled: true
-      severity_if_evergreen_true: major
-      severity_if_evergreen_false: minor
-
-    - rule_id: evergreen.news_references
-      enabled: true
-      severity_if_evergreen_true: major
-      severity_if_evergreen_false: minor
-
-    - rule_id: evergreen.version_references
-      enabled: true
-      severity_if_evergreen_true: major
-      severity_if_evergreen_false: minor
-
-    - rule_id: evergreen.current_trend_references
-      enabled: true
-      severity_if_evergreen_true: minor
-      severity_if_evergreen_false: minor
-
-    - rule_id: evergreen.input_exception
-      enabled: true
-      severity: minor
